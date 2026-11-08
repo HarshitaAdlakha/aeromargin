@@ -1,0 +1,43 @@
+{
+  "id": "04-weight-balance-fuel-burn",
+  "title": "Load sheet: landing CG when the fuel arm moves as the tanks drain",
+  "area": "Flight operations / weight and balance",
+  "who": "Dispatchers, load controllers and pilots",
+  "why_hard": "Takeoff is within limits (29.6% MAC). Burning fuel that sits forward of the zero-fuel CG walks the CG aft, and because the fuel arm changes with quantity the landing CG reaches 32.6% MAC, past the 32.0% aft limit. A constant fuel arm (the ramp value) gives 31.05% MAC: wrongly 'in limits'.",
+  "failure_cost": "Landing aft of the CG envelope reduces longitudinal stability and pitch-control margin in the flare.",
+  "fields": {
+    "takeoff_weight_lb": {
+      "type": "number",
+      "tol_abs": 2,
+      "critical": true
+    },
+    "takeoff_cg_pct_mac": {
+      "type": "number",
+      "tol_abs": 0.2,
+      "critical": true
+    },
+    "landing_weight_lb": {
+      "type": "number",
+      "tol_abs": 2,
+      "critical": true
+    },
+    "landing_cg_pct_mac": {
+      "type": "number",
+      "tol_abs": 0.2,
+      "critical": true,
+      "weight": 2
+    },
+    "takeoff_within_limits": {
+      "type": "bool",
+      "critical": true
+    },
+    "landing_within_limits": {
+      "type": "bool",
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "FAA-H-8083-1B, Aircraft Weight and Balance Handbook (fuel moment tables, %MAC)"
+  ]
+}

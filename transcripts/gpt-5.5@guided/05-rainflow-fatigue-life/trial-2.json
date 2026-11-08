@@ -1,0 +1,65 @@
+{
+  "model": "gpt-5.5@guided",
+  "variant": "guided",
+  "task": "05-rainflow-fatigue-life",
+  "trial": 2,
+  "at": "2026-11-08T18:37:04+00:00",
+  "latency_s": 76.9,
+  "settings": {
+    "model": "gpt-5.5",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 436,
+    "output_tokens": 5781,
+    "reasoning_tokens": 5118,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.5-2026-04-23"
+  },
+  "cost_usd": 0.17561,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "cycles_per_flight": {
+        "ok": true,
+        "why": "got 6, want 6 ± 0",
+        "critical": true
+      },
+      "largest_cycle_max_ksi": {
+        "ok": true,
+        "why": "got 24, want 24 ± 0",
+        "critical": false
+      },
+      "largest_cycle_min_ksi": {
+        "ok": true,
+        "why": "got -6, want -6 ± 0",
+        "critical": false
+      },
+      "damage_per_flight": {
+        "ok": true,
+        "why": "got 1.02925e-05, want 1.02925e-05 ± 3.08776e-07",
+        "critical": false
+      },
+      "life_flights": {
+        "ok": true,
+        "why": "got 97158, want 97158 ± 2914.74",
+        "critical": true
+      }
+    },
+    "answer": {
+      "cycles_per_flight": 6,
+      "largest_cycle_max_ksi": 24,
+      "largest_cycle_min_ksi": -6,
+      "damage_per_flight": 1.02925e-05,
+      "life_flights": 97158
+    }
+  },
+  "prompt": "You are estimating the crack-initiation life of a lower wing skin detail in flights.\n\n**Stress history**\nThe stress at the detail (ksi) follows this sequence of turning points in every flight, starting and ending on the ground:\n\n`-6, 14, 8, 19, 11, 24, 9, 21, 13, 17, 7, 16, -6`\n\nEvery flight repeats this exact sequence, one after another.\n\n**Material and method**\n- Count cycles with rainflow counting (ASTM E1049). Because the history repeats, count it as a repeating history (rearrange it to start and end at the highest peak), so every cycle is a full closed cycle and there are no half cycles.\n- For each cycle: stress amplitude Sa = (Smax − Smin)/2; mean stress Sm = (Smax + Smin)/2.\n- Mean-stress correction: Goodman, with Ftu = 78 ksi: Sa,eq = Sa / (1 − Sm/Ftu) when Sm > 0. When Sm ≤ 0, take Sa,eq = Sa.\n- Fully reversed S-N curve: Sa,eq = 95 · N^(−0.15) (ksi; N = cycles to failure).\n- Cycles with Sa,eq below 6.0 ksi cause no damage.\n- Damage: Palmgren–Miner linear rule; failure when the damage sum reaches 1.0. No scatter factor.\n\n**Report**\n1. Number of rainflow cycles per flight\n2. The maximum and minimum stress of the largest-range cycle\n3. Damage per flight\n4. Life in flights (1 ÷ damage per flight)\n\nShow your working. End your answer with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"cycles_per_flight\": 0, \"largest_cycle_max_ksi\": 0, \"largest_cycle_min_ksi\": 0, \"damage_per_flight\": 0, \"life_flights\": 0}\n```\n",
+  "response": "Rearrange the repeating flight history to start/end at the highest peak, 24 ksi:\n\n\\[\n24,\\ 9,\\ 21,\\ 13,\\ 17,\\ 7,\\ 16,\\ -6,\\ 14,\\ 8,\\ 19,\\ 11,\\ 24\n\\]\n\nRainflow counting gives 6 full cycles per flight:\n\n| Cycle | Smax | Smin | Range | Sa | Sm | Sa,eq | Damage |\n|---:|---:|---:|---:|---:|---:|---:|---:|\n| 1 | 17 | 13 | 4 | 2.0 | 15.0 | 2.476 | 0 |\n| 2 | 21 | 9 | 12 | 6.0 | 15.0 | 7.429 | \\(4.18\\times10^{-8}\\) |\n| 3 | 16 | 7 | 9 | 4.5 | 11.5 | 5.278 | 0 |\n| 4 | 14 | 8 | 6 | 3.0 | 11.0 | 3.493 | 0 |\n| 5 | 19 | 11 | 8 | 4.0 | 15.0 | 4.952 | 0 |\n| 6 | 24 | -6 | 30 | 15.0 | 9.0 | 16.957 | \\(1.025\\times10^{-5}\\) |\n\nGoodman correction:\n\n\\[\nS_{a,eq}=\\frac{S_a}{1-S_m/78}\n\\]\n\nS-N relation:\n\n\\[\nS_{a,eq}=95N^{-0.15}\n\\]\n\n\\[\nN=\\left(\\frac{S_{a,eq}}{95}\\right)^{-1/0.15}\n\\]\n\nDamage per cycle:\n\n\\[\nD=\\frac{1}{N}=\\left(\\frac{S_{a,eq}}{95}\\right)^{1/0.15}\n\\]\n\nOnly cycles with \\(S_{a,eq}\\ge 6.0\\) ksi contribute damage.\n\nTotal damage per flight:\n\n\\[\nD_{\\text{flight}} \\approx 4.18\\times10^{-8}+1.025\\times10^{-5}\n\\]\n\n\\[\nD_{\\text{flight}} \\approx 1.02925\\times10^{-5}\n\\]\n\nLife:\n\n\\[\n\\text{Life}=\\frac{1}{D_{\\text{flight}}}\\approx 97158\\ \\text{flights}\n\\]\n\n```json\n{\"cycles_per_flight\":6,\"largest_cycle_max_ksi\":24,\"largest_cycle_min_ksi\":-6,\"damage_per_flight\":0.0000102925,\"life_flights\":97158}\n```"
+}

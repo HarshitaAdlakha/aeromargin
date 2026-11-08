@@ -1,0 +1,40 @@
+{
+  "model": "gpt-5.5",
+  "variant": "spar-shallower-uppertens-6000",
+  "trial": 1,
+  "familiar_case": false,
+  "passed": true,
+  "fields": {
+    "web_shear_lbf": {
+      "ok": true,
+      "why": "got 7800, want 7800 ± 78"
+    },
+    "web_tau_psi": {
+      "ok": true,
+      "why": "got 32500, want 32500 ± 325"
+    },
+    "ms": {
+      "ok": true,
+      "why": "got -0.0769, want -0.0769231 ± 0.01"
+    }
+  },
+  "reference": {
+    "web_shear_lbf": 7800.0,
+    "web_tau_psi": 32500.0,
+    "ms": -0.07692307692307687
+  },
+  "usage": {
+    "input_tokens": 300,
+    "output_tokens": 1311,
+    "reasoning_tokens": 1024,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.5-2026-04-23"
+  },
+  "settings": {
+    "model": "gpt-5.5",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "prompt": "Stress check request: a cantilevered support beam (an I-section built from two flanges and a stiffened shear web), fixed at its inboard end, carrying loads near its outboard (free) end. It is SHALLOWER at its free end than at its root: going outboard, the upper flange falls and the lower flange rises, each at a slope of 0.03 (tan α) relative to the beam's reference axis.\n\nAt the station being checked, the ultimate internal loads are:\n- Shear: the loads outboard of the station add up to 6,000 lbf upward.\n- Bending moment: 180,000 in·lb, putting the upper flange in tension and the lower flange in compression.\n\nDistance between flange centroids at this station: 6.0 in. Web thickness: 0.04 in. Assume the flanges carry all the bending and the web carries a uniform shear stress over the depth. Web ultimate shear allowable Fsu = 30,000 psi (stiffened web; no buckling).\n\nReport the shear force carried by the web at this station (lbf), the web shear stress (psi) and the margin of safety MS = Fsu / stress − 1.\nEnd with a single JSON object in a ```json code block: {\"web_shear_lbf\": 0, \"web_tau_psi\": 0, \"ms\": 0}",
+  "response": "Flange force from bending:\n\n- \\(F = M / h = 180{,}000 / 6.0 = 30{,}000\\ \\text{lbf}\\)\n\nBecause the beam tapers shallower outboard, both flange axial forces have upward vertical components for the stated bending sense:\n\n- Upper flange tension component: \\(30{,}000(0.03)=900\\ \\text{lbf}\\)\n- Lower flange compression component: \\(30{,}000(0.03)=900\\ \\text{lbf}\\)\n\nSo the web must carry:\n\n\\[\nV_{web}=6000+900+900=7800\\ \\text{lbf}\n\\]\n\nWeb shear area:\n\n\\[\nA_web = t h = 0.04(6.0)=0.24\\ \\text{in}^2\n\\]\n\nShear stress:\n\n\\[\n\\tau = 7800/0.24 = 32{,}500\\ \\text{psi}\n\\]\n\nMargin of safety:\n\n\\[\nMS = 30000/32500 - 1 = -0.0769\n\\]\n\n```json\n{\"web_shear_lbf\": 7800, \"web_tau_psi\": 32500, \"ms\": -0.0769}\n```"
+}

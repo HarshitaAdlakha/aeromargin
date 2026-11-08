@@ -1,0 +1,77 @@
+{
+  "model": "gpt-5.6-sol-none",
+  "variant": "realistic",
+  "task": "01-oblique-lug-fitting",
+  "trial": 2,
+  "at": "2026-11-08T18:33:44+00:00",
+  "latency_s": 6.0,
+  "settings": {
+    "model": "gpt-5.6-sol",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "none"
+  },
+  "usage": {
+    "input_tokens": 488,
+    "output_tokens": 806,
+    "reasoning_tokens": 0,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.6-sol"
+  },
+  "cost_usd": 0.02662,
+  "error": null,
+  "passed": false,
+  "score": 0.5556,
+  "grade": {
+    "parsed": true,
+    "score": 0.5556,
+    "passed": false,
+    "fields": {
+      "ultimate_design_load_lbf": {
+        "ok": true,
+        "why": "got 25875, want 25875 ± 129.375",
+        "critical": false
+      },
+      "axial_component_lbf": {
+        "ok": true,
+        "why": "got 19819, want 19821.4 ± 99.107",
+        "critical": false
+      },
+      "transverse_component_lbf": {
+        "ok": true,
+        "why": "got 16632, want 16632.1 ± 83.1605",
+        "critical": false
+      },
+      "ms_lug_oblique": {
+        "ok": false,
+        "why": "got 0.05446, want -0.0251 ± 0.01",
+        "critical": true
+      },
+      "ms_pin_shear": {
+        "ok": true,
+        "why": "got 1.25279, want 1.2528 ± 0.01",
+        "critical": false
+      },
+      "governing_check": {
+        "ok": true,
+        "why": "got 'lug_oblique', want one of ['lug_oblique']",
+        "critical": true
+      },
+      "verdict": {
+        "ok": false,
+        "why": "got 'pass', want one of ['fail']",
+        "critical": true
+      }
+    },
+    "answer": {
+      "ultimate_design_load_lbf": 25875,
+      "axial_component_lbf": 19819,
+      "transverse_component_lbf": 16632,
+      "ms_lug_oblique": 0.05446,
+      "ms_pin_shear": 1.25279,
+      "governing_check": "lug_oblique",
+      "verdict": "pass"
+    }
+  },
+  "prompt": "Stress check request, transport-category aircraft (14 CFR Part 25). Please substantiate this fitting.\n\n**Fitting**\n- Single aluminium lug, pinned between the two plates of a steel clevis (the pin is in double shear). Pin: steel, 0.625 in diameter, ultimate shear strength 95,000 psi.\n- Limit load: 15,000 lbf, in the plane of the lug, at 40° to the lug axis (the axis from the pin centre towards the lug's attachment).\n- Factor of safety 1.5. Fitting factor 1.15 (14 CFR 25.625), applied to the lug and to the pin.\n\n**Lug allowables (ultimate, already read from the design charts for this geometry and material)**\n- Axial load, shear-bearing (shear-out) failure: 38,000 lbf\n- Axial load, net-section tension failure: 44,000 lbf\n- Transverse load: 21,000 lbf\n\n**Scope**\nAnalyse the lug for this load following standard lug analysis practice (the company stress manual follows Bruhn, *Analysis and Design of Flight Vehicle Structures*, Section D1). Check the pin in shear only; pin bending is covered elsewhere. Margins of safety are written MS = (allowable/applied) − 1, or the equivalent for the method you use.\n\n**Report**\n1. The ultimate design load, in lbf, and its axial and transverse components\n2. The lug's margin of safety for this load\n3. The pin's shear margin of safety\n4. Which check governs: `lug_oblique` (the lug under this load) or `pin_shear`\n5. The verdict: `pass` if every margin is ≥ 0, otherwise `fail`\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers (no units in the values):\n\n```json\n{\"ultimate_design_load_lbf\": 0, \"axial_component_lbf\": 0, \"transverse_component_lbf\": 0, \"ms_lug_oblique\": 0, \"ms_pin_shear\": 0, \"governing_check\": \"lug_oblique|pin_shear\", \"verdict\": \"pass|fail\"}\n```\n",
+  "response": "The fitting factor is combined with the required factor of safety for both the lug and pin:\n\n\\[\nP_u=P_{\\text{limit}}(1.5)(1.15)\n=15{,}000(1.5)(1.15)\n=25{,}875\\ \\text{lbf}\n\\]\n\n## 1. Load components\n\nFor a load acting \\(40^\\circ\\) from the lug axis:\n\n\\[\nP_x=P_u\\cos40^\\circ\n=25{,}875(0.766044)\n=19{,}819\\ \\text{lbf}\n\\]\n\n\\[\nP_y=P_u\\sin40^\\circ\n=25{,}875(0.642788)\n=16{,}632\\ \\text{lbf}\n\\]\n\n## 2. Lug under oblique load\n\nFollowing the standard Bruhn D1 combined-load treatment, use the axial allowable applicable to each axial failure mode together with the transverse allowable:\n\n\\[\nR=\\left[\\left(\\frac{P_x}{P_{ax}}\\right)^2+\n\\left(\\frac{P_y}{P_{tr}}\\right)^2\\right]^{1/2}\n\\]\n\nand\n\n\\[\nMS=\\frac{1}{R}-1\n\\]\n\n### Shear-bearing/shear-out axial mode\n\n\\[\nR_{so}=\n\\sqrt{\n\\left(\\frac{19{,}819}{38{,}000}\\right)^2+\n\\left(\\frac{16{,}632}{21{,}000}\\right)^2\n}\n=0.94835\n\\]\n\n\\[\nMS_{so}=\\frac{1}{0.94835}-1=0.05446\n\\]\n\n### Net-section tension axial mode\n\n\\[\nR_{nt}=\n\\sqrt{\n\\left(\\frac{19{,}819}{44{,}000}\\right)^2+\n\\left(\\frac{16{,}632}{21{,}000}\\right)^2\n}\n=0.91110\n\\]\n\n\\[\nMS_{nt}=\\frac{1}{0.91110}-1=0.09757\n\\]\n\nThe shear-out interaction governs the lug:\n\n\\[\n\\boxed{MS_{\\text{lug, oblique}}=0.05446}\n\\]\n\n## 3. Pin shear\n\nFor a pin in double shear, the total resisting shear area is:\n\n\\[\nA_{\\text{double}}=2\\left(\\frac{\\pi d^2}{4}\\right)\n=\\frac{\\pi d^2}{2}\n\\]\n\n\\[\nA_{\\text{double}}\n=\\frac{\\pi(0.625)^2}{2}\n=0.613592\\ \\text{in}^2\n\\]\n\nUltimate pin shear capacity:\n\n\\[\nP_{\\text{allow}}\n=F_{su}A_{\\text{double}}\n=95{,}000(0.613592)\n=58{,}291\\ \\text{lbf}\n\\]\n\nThe pin transmits the full resultant load, so:\n\n\\[\nMS_{\\text{pin}}\n=\\frac{58{,}291}{25{,}875}-1\n=1.25279\n\\]\n\n## 4. Governing check and verdict\n\nThe lug oblique-load margin, \\(0.05446\\), is less than the pin shear margin, \\(1.25279\\). Therefore, `lug_oblique` governs. Both margins are nonnegative, so the fitting passes the specified checks.\n\n```json\n{\"ultimate_design_load_lbf\":25875,\"axial_component_lbf\":19819,\"transverse_component_lbf\":16632,\"ms_lug_oblique\":0.05446,\"ms_pin_shear\":1.25279,\"governing_check\":\"lug_oblique\",\"verdict\":\"pass\"}\n```"
+}

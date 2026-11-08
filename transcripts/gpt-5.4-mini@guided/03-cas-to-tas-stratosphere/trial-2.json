@@ -1,0 +1,65 @@
+{
+  "model": "gpt-5.4-mini@guided",
+  "variant": "guided",
+  "task": "03-cas-to-tas-stratosphere",
+  "trial": 2,
+  "at": "2026-11-08T18:38:28+00:00",
+  "latency_s": 60.5,
+  "settings": {
+    "model": "gpt-5.4-mini",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 357,
+    "output_tokens": 13339,
+    "reasoning_tokens": 12566,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.4-mini-2026-03-17"
+  },
+  "cost_usd": 0.06029,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "static_pressure_pa": {
+        "ok": true,
+        "why": "got 17874, want 17874 ± 53.622",
+        "critical": true
+      },
+      "oat_k": {
+        "ok": true,
+        "why": "got 226.65, want 226.65 ± 0.2",
+        "critical": false
+      },
+      "mach": {
+        "ok": true,
+        "why": "got 0.8402, want 0.84 ± 0.003",
+        "critical": true
+      },
+      "tas_kt": {
+        "ok": true,
+        "why": "got 493, want 492.8 ± 1.5",
+        "critical": true
+      },
+      "density_altitude_ft": {
+        "ok": true,
+        "why": "got 41939, want 41939 ± 100",
+        "critical": true
+      }
+    },
+    "answer": {
+      "static_pressure_pa": 17874,
+      "oat_k": 226.65,
+      "mach": 0.8402,
+      "tas_kt": 493.0,
+      "density_altitude_ft": 41939
+    }
+  },
+  "prompt": "A business jet is in level cruise. The crew is checking the flight-management system's true airspeed and density altitude by hand.\n\n**Conditions**\n- Pressure altitude: 41,000 ft (standard altimeter setting)\n- Outside air temperature: ISA + 10 °C at that pressure altitude\n- Calibrated airspeed: 250 kt (assume no instrument or position error, so indicated = calibrated)\n\n**Method and constants**\nUse the ICAO Standard Atmosphere: sea-level pressure 101,325 Pa, sea-level temperature 288.15 K, lapse rate 0.0065 K/m up to 11,000 m geopotential, g₀ = 9.80665 m/s², R = 287.05287 J/(kg·K), γ = 1.4, 1 ft = 0.3048 m, 1 kt = 0.514444 m/s. Treat the pressure altitude as geopotential altitude. Air is compressible: do not use incompressible or rule-of-thumb conversions.\n\nDensity altitude is the altitude in the ICAO Standard Atmosphere at which the standard density equals the actual air density.\n\n**Report**\n1. Static pressure at the aircraft (Pa)\n2. Outside air temperature (K)\n3. Mach number\n4. True airspeed (kt)\n5. Density altitude (ft)\n\nShow your working. End your answer with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"static_pressure_pa\": 0, \"oat_k\": 0, \"mach\": 0, \"tas_kt\": 0, \"density_altitude_ft\": 0}\n```\n",
+  "response": "Using the ICAO Standard Atmosphere and compressible subsonic relations:\n\n- Pressure altitude: \\(41000\\ \\text{ft} = 12496.8\\ \\text{m}\\) geopotential\n- This is above the tropopause, so \\(T_{\\text{ISA}} = 216.65\\ \\text{K}\\)\n\n### 1) Static pressure\nFor \\(h > 11000\\ \\text{m}\\):\n\\[\np = p_{11}\\exp\\!\\left(-\\frac{g_0(h-11000)}{RT_{11}}\\right)\n\\]\nwith \\(p_{11}\\approx 22632.06\\ \\text{Pa}\\), \\(T_{11}=216.65\\ \\text{K}\\).\n\n\\[\np \\approx 1.7874\\times 10^4\\ \\text{Pa}\n\\]\n\n### 2) Outside air temperature\nISA + 10 °C at that altitude:\n\\[\nT = 216.65 + 10 = 226.65\\ \\text{K}\n\\]\n\n### 3) Mach number\nConvert CAS to impact pressure:\n\n\\[\nV_{CAS}=250\\ \\text{kt}=128.611\\ \\text{m/s}\n\\]\n\\[\na_0=\\sqrt{\\gamma RT_0}\\approx 340.294\\ \\text{m/s}\n\\]\n\\[\nq_c = p_0\\left[\\left(1+0.2\\left(\\frac{V_{CAS}}{a_0}\\right)^2\\right)^{3.5}-1\\right]\n\\approx 1.05\\times 10^4\\ \\text{Pa}\n\\]\n\nThen:\n\\[\nM=\\sqrt{5\\left[\\left(1+\\frac{q_c}{p}\\right)^{2/7}-1\\right]}\n\\approx 0.8402\n\\]\n\n### 4) True airspeed\n\\[\na=\\sqrt{\\gamma RT}\\approx 301.81\\ \\text{m/s}\n\\]\n\\[\nV_{TAS}=Ma\\approx 253.5\\ \\text{m/s}\\approx 493.0\\ \\text{kt}\n\\]\n\n### 5) Density altitude\nFor the isothermal layer above 11 km:\n\\[\nH=\\frac{RT_{11}}{g_0}\\approx 6341.6\\ \\text{m}\n\\]\n\\[\nh_D = h + H\\ln\\!\\left(\\frac{T}{T_{11}}\\right)\n\\approx 12783\\ \\text{m}\n\\approx 41939\\ \\text{ft}\n\\]\n\n```json\n{\"static_pressure_pa\": 17874, \"oat_k\": 226.65, \"mach\": 0.8402, \"tas_kt\": 493.0, \"density_altitude_ft\": 41939}\n```"
+}

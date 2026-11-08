@@ -1,0 +1,51 @@
+{
+  "id": "01-oblique-lug-fitting",
+  "title": "Oblique-load lug fitting: margin of safety with the fitting factor and the lug interaction curve",
+  "area": "Airframe stress analysis",
+  "who": "Airframe stress engineers signing off fittings (wing-to-fuselage, landing gear, control-surface hinges)",
+  "why_hard": "Each load component looks fine on its own (axial MS +0.92, transverse MS +0.26). Only the oblique-load interaction Ra^1.6 + Rtr^1.6 = 1 (Bruhn D1.8) shows the lug fails (MS -0.025). The fitting factor (14 CFR 25.625) sits on top of the 1.5 factor of safety. A model that checks the components separately, uses a linear or quadratic interaction, or drops the fitting factor signs off a failing part.",
+  "failure_cost": "An unconservative fitting margin is a structural-substantiation error: found in certification review at best, in a test failure or an airworthiness directive at worst.",
+  "fields": {
+    "ultimate_design_load_lbf": {
+      "type": "number",
+      "tol_rel": 0.005
+    },
+    "axial_component_lbf": {
+      "type": "number",
+      "tol_rel": 0.005
+    },
+    "transverse_component_lbf": {
+      "type": "number",
+      "tol_rel": 0.005
+    },
+    "ms_lug_oblique": {
+      "type": "number",
+      "tol_abs": 0.01,
+      "critical": true,
+      "weight": 2
+    },
+    "ms_pin_shear": {
+      "type": "number",
+      "tol_abs": 0.01
+    },
+    "governing_check": {
+      "type": "enum",
+      "accept": [
+        "lug_oblique"
+      ],
+      "critical": true
+    },
+    "verdict": {
+      "type": "enum",
+      "accept": [
+        "fail"
+      ],
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "Bruhn, Analysis and Design of Flight Vehicle Structures (1973), Section D1.8 (lugs under oblique load, interaction exponent 1.6)",
+    "14 CFR 25.303 (factor of safety 1.5), 14 CFR 25.625 (fitting factor 1.15)"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "09-inverted-taper-spar-web",
+  "title": "Tapered beam web shear when the depth grows toward the free end (Resal effect, reversed)",
+  "area": "Airframe stress analysis",
+  "who": "Stress engineers checking spars, beams and frames with tapered depth",
+  "why_hard": "Every textbook states the Resal relief: in a tapered beam the inclined flanges carry part of the shear, V_web = V - (M/h)(tan a1 + tan a2). That relief only exists when the depth grows in the direction of increasing moment. Here the beam is deeper at its free end, so the flange components ADD to the shear: the web carries 7,800 lbf (MS -0.08, fail), not 4,200 lbf (MS +0.71, pass). Applying the familiar formula without drawing the free body is unconservative by 86%.",
+  "failure_cost": "An unconservative web margin in a landing-gear load path: the classic way a 'checked' part fails its static test.",
+  "fields": {
+    "web_shear_lbf": {
+      "type": "number",
+      "tol_rel": 0.01,
+      "critical": true,
+      "weight": 2
+    },
+    "web_tau_psi": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "ms": {
+      "type": "number",
+      "tol_abs": 0.01,
+      "critical": true,
+      "weight": 2
+    },
+    "verdict": {
+      "type": "enum",
+      "accept": [
+        "fail"
+      ],
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "Megson, Aircraft Structures for Engineering Students, 6th ed. (2017), Ch. 16 (tapered beams: flange load components and web shear)",
+    "Bruhn, Analysis and Design of Flight Vehicle Structures, Section A11 (beams of varying depth)"
+  ]
+}

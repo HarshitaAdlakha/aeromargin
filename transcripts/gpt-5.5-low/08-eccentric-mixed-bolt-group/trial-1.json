@@ -1,0 +1,71 @@
+{
+  "model": "gpt-5.5-low",
+  "variant": "realistic",
+  "task": "08-eccentric-mixed-bolt-group",
+  "trial": 1,
+  "at": "2026-11-08T18:35:32+00:00",
+  "latency_s": 31.0,
+  "settings": {
+    "model": "gpt-5.5",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "low"
+  },
+  "usage": {
+    "input_tokens": 494,
+    "output_tokens": 2454,
+    "reasoning_tokens": 1314,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.5-2026-04-23"
+  },
+  "cost_usd": 0.07609,
+  "error": null,
+  "passed": false,
+  "score": 0.4286,
+  "grade": {
+    "parsed": true,
+    "score": 0.4286,
+    "passed": false,
+    "fields": {
+      "centroid_x_in": {
+        "ok": true,
+        "why": "got 1.08, want 1.08 ± 0.01",
+        "critical": false
+      },
+      "eccentricity_in": {
+        "ok": true,
+        "why": "got 7.92, want 7.92 ± 0.01",
+        "critical": false
+      },
+      "critical_bolt": {
+        "ok": false,
+        "why": "got 'L1', want one of ['r1', 'r3']",
+        "critical": true
+      },
+      "critical_bolt_load_lbf": {
+        "ok": false,
+        "why": "got 3550.22, want 2357.5 ± 23.575",
+        "critical": true
+      },
+      "min_ms": {
+        "ok": false,
+        "why": "got 0.314, want 0.1127 ± 0.01",
+        "critical": true
+      },
+      "verdict": {
+        "ok": true,
+        "why": "got 'pass', want one of ['pass']",
+        "critical": true
+      }
+    },
+    "answer": {
+      "centroid_x_in": 1.08,
+      "eccentricity_in": 7.92,
+      "critical_bolt": "L1",
+      "critical_bolt_load_lbf": 3550.22,
+      "min_ms": 0.314,
+      "verdict": "pass"
+    }
+  },
+  "prompt": "Stress check request: a bracket bolted to a frame, loaded in its own plane by an eccentric shear load.\n\n**Bolts** (x to the right from the left bolt column, y up from the middle row; all in single shear)\n\n| Bolt | x (in) | y (in) | Diameter (in) |\n|---|---|---|---|\n| L1 | 0.0 | +2.5 | 0.250 |\n| L2 | 0.0 | 0.0 | 0.250 |\n| L3 | 0.0 | −2.5 | 0.250 |\n| R1 | 3.0 | +2.5 | 0.1875 |\n| R2 | 3.0 | 0.0 | 0.1875 |\n| R3 | 3.0 | −2.5 | 0.1875 |\n\nAll bolts are the same steel, ultimate shear strength 95,000 psi on the full-diameter area (allowable = 95,000 × πd²/4). Bearing and the bracket do not govern.\n\n**Load**\nUltimate 4,200 lbf, straight down (−y), line of action at x = 9.0 in.\n\n**Scope**\nUse the elastic method for an eccentrically loaded fastener group (Bruhn, Section D1), taking each bolt's shear stiffness as proportional to its shear area.\n\n**Report**\n1. The x-coordinate of the fastener group's centroid (in)\n2. The load's eccentricity from that centroid (in)\n3. The critical bolt (lowest margin of safety), its resultant load (lbf) and its margin, MS = allowable/load − 1\n4. The verdict: `pass` if every bolt has MS ≥ 0, otherwise `fail`\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers (bolt by name, e.g. \"L2\"; if two bolts tie, give either):\n\n```json\n{\"centroid_x_in\": 0, \"eccentricity_in\": 0, \"critical_bolt\": \"L1\", \"critical_bolt_load_lbf\": 0, \"min_ms\": 0, \"verdict\": \"pass|fail\"}\n```\n",
+  "response": "Using bolt shear stiffness proportional to shear area:\n\n\\[\nk_i \\propto A_i=\\frac{\\pi d_i^2}{4}\n\\]\n\nThe 0.1875 in bolts have area ratio relative to the 0.250 in bolts of:\n\n\\[\n\\left(\\frac{0.1875}{0.250}\\right)^2=0.5625\n\\]\n\nSo use relative stiffness/area weights:\n\n- Left bolts: \\(w=1.0\\)\n- Right bolts: \\(w=0.5625\\)\n\n## 1. Fastener group centroid\n\nBecause the group is symmetric about \\(y=0\\),\n\n\\[\n\\bar y = 0\n\\]\n\nThe weighted x-centroid is:\n\n\\[\n\\bar x = \\frac{\\sum w_i x_i}{\\sum w_i}\n\\]\n\n\\[\n\\sum w_i = 3(1.0)+3(0.5625)=4.6875\n\\]\n\n\\[\n\\sum w_i x_i = 3(1.0)(0)+3(0.5625)(3.0)=5.0625\n\\]\n\n\\[\n\\bar x = \\frac{5.0625}{4.6875}=1.080 \\text{ in}\n\\]\n\n## 2. Eccentricity\n\nLoad line of action is at \\(x=9.0\\) in, so:\n\n\\[\ne = 9.0 - 1.080 = 7.920 \\text{ in}\n\\]\n\nApplied moment about the fastener group centroid:\n\n\\[\nM = P e = 4200(7.920)=33264 \\text{ in-lbf}\n\\]\n\n## 3. Elastic fastener load distribution\n\nDirect shear is distributed in proportion to bolt area/stiffness:\n\n\\[\nF_{D,i}=P\\frac{w_i}{\\sum w_i}\n\\]\n\nFor 0.250 in bolts:\n\n\\[\nF_D = 4200\\frac{1.0}{4.6875}=896 \\text{ lbf}\n\\]\n\nFor 0.1875 in bolts:\n\n\\[\nF_D = 4200\\frac{0.5625}{4.6875}=504 \\text{ lbf}\n\\]\n\nThe polar stiffness term is:\n\n\\[\nJ = \\sum w_i\\left[(x_i-\\bar x)^2+y_i^2\\right]\n\\]\n\nUsing coordinates relative to the centroid:\n\n- Left column: \\(x=-1.080\\) in\n- Right column: \\(x=+1.920\\) in\n\n\\[\nJ = 29.25125 \\text{ in}^2\n\\]\n\nMoment load coefficient:\n\n\\[\nC = \\frac{M}{J}=\\frac{33264}{29.25125}=1137.70 \\text{ lbf/in}\n\\]\n\nMoment-induced bolt force components:\n\n\\[\nF_{Mx,i}=C w_i(-y_i)\n\\]\n\n\\[\nF_{My,i}=C w_i(x_i)\n\\]\n\nDirect shear acts downward, so:\n\n\\[\nF_{y,i}=F_{My,i}-F_{D,i}\n\\]\n\n### Resultant bolt loads\n\nFor L1 and L3:\n\n\\[\nF_x = \\pm 1137.70(2.5)=2844.24 \\text{ lbf}\n\\]\n\n\\[\nF_y = 1137.70(-1.080)-896=-2124.71 \\text{ lbf}\n\\]\n\n\\[\nF_R=\\sqrt{2844.24^2+2124.71^2}=3550.22 \\text{ lbf}\n\\]\n\nFor L2:\n\n\\[\nF_R = 2124.71 \\text{ lbf}\n\\]\n\nFor R1 and R3:\n\n\\[\nF_x = \\pm 1137.70(0.5625)(2.5)=1599.88 \\text{ lbf}\n\\]\n\n\\[\nF_y = 1137.70(0.5625)(1.920)-504=724.71 \\text{ lbf}\n\\]\n\n\\[\nF_R=\\sqrt{1599.88^2+724.71^2}=1756.37 \\text{ lbf}\n\\]\n\nFor R2:\n\n\\[\nF_R = 724.71 \\text{ lbf}\n\\]\n\n## Allowables and margins\n\n0.250 in bolt allowable:\n\n\\[\nF_{allow}=95000\\frac{\\pi(0.250)^2}{4}=4663.30 \\text{ lbf}\n\\]\n\n0.1875 in bolt allowable:\n\n\\[\nF_{allow}=95000\\frac{\\pi(0.1875)^2}{4}=2623.11 \\text{ lbf}\n\\]\n\nCritical bolts are L1/L3. Taking L1:\n\n\\[\nMS = \\frac{4663.30}{3550.22}-1=0.314\n\\]\n\nAll bolts have positive margin.\n\nVerdict: `pass`\n\n```json\n{\"centroid_x_in\": 1.08, \"eccentricity_in\": 7.92, \"critical_bolt\": \"L1\", \"critical_bolt_load_lbf\": 3550.22, \"min_ms\": 0.314, \"verdict\": \"pass\"}\n```"
+}

@@ -1,0 +1,957 @@
+{
+  "checks": 133,
+  "failures": 0,
+  "tasks": {
+    "01-oblique-lug-fitting": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'ms_lug_oblique' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7778,
+        "ok": true
+      },
+      {
+        "check": "critical field 'governing_check' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8889,
+        "ok": true
+      },
+      {
+        "check": "critical field 'verdict' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7778,
+        "ok": true
+      },
+      {
+        "check": "trap: components checked separately (no interaction)",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5556,
+        "ok": true
+      },
+      {
+        "check": "trap: quadratic interaction instead of the 1.6 exponent",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5556,
+        "ok": true
+      },
+      {
+        "check": "trap: fitting factor dropped",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.1111,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: enum hedged as 'pass|fail'",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.6667,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5556,
+        "ok": true
+      }
+    ],
+    "02-short-strut-buckling": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'regime' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8889,
+        "ok": true
+      },
+      {
+        "check": "critical field 'ms' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7778,
+        "ok": true
+      },
+      {
+        "check": "critical field 'verdict' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7778,
+        "ok": true
+      },
+      {
+        "check": "trap: Euler used because Euler stress < Fcy",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.2222,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: enum hedged as 'pass|fail'",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.6667,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.2222,
+        "ok": true
+      }
+    ],
+    "03-cas-to-tas-stratosphere": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'static_pressure_pa' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "critical field 'mach' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "critical field 'tas_kt' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "critical field 'density_altitude_ft' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "trap: ISA temperature used for speed of sound",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5714,
+        "ok": true
+      },
+      {
+        "check": "trap: incompressible CAS/sqrt(sigma)",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "trap: density altitude by 120 ft per deg C rule",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "trap: troposphere law above the tropopause",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5714,
+        "ok": true
+      }
+    ],
+    "04-weight-balance-fuel-burn": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'takeoff_weight_lb' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.875,
+        "ok": true
+      },
+      {
+        "check": "critical field 'takeoff_cg_pct_mac' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.875,
+        "ok": true
+      },
+      {
+        "check": "critical field 'landing_weight_lb' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.875,
+        "ok": true
+      },
+      {
+        "check": "critical field 'landing_cg_pct_mac' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.75,
+        "ok": true
+      },
+      {
+        "check": "critical field 'takeoff_within_limits' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.875,
+        "ok": true
+      },
+      {
+        "check": "critical field 'landing_within_limits' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.75,
+        "ok": true
+      },
+      {
+        "check": "trap: constant fuel arm (ramp value)",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5,
+        "ok": true
+      },
+      {
+        "check": "trap: taxi fuel not deducted",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.75,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.125,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5,
+        "ok": true
+      }
+    ],
+    "05-rainflow-fatigue-life": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'cycles_per_flight' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8333,
+        "ok": true
+      },
+      {
+        "check": "critical field 'life_flights' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.6667,
+        "ok": true
+      },
+      {
+        "check": "trap: reversals counted in order as half cycles (GAG cycle missed)",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.3333,
+        "ok": true
+      },
+      {
+        "check": "trap: no Goodman mean-stress correction",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.5,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.3333,
+        "ok": true
+      }
+    ],
+    "06-takeoff-true-wind": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'headwind_component_kt' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.875,
+        "ok": true
+      },
+      {
+        "check": "critical field 'total_over_50ft_ft' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.75,
+        "ok": true
+      },
+      {
+        "check": "critical field 'meets_company_rule' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.75,
+        "ok": true
+      },
+      {
+        "check": "trap: METAR wind treated as magnetic",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.375,
+        "ok": true
+      },
+      {
+        "check": "trap: variation applied the wrong way",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.375,
+        "ok": true
+      },
+      {
+        "check": "trap: grass +15% of total distance",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.625,
+        "ok": true
+      },
+      {
+        "check": "trap: NOTAM missed: published 2,700 ft used instead of 2,500 ft TORA",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.75,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.375,
+        "ok": true
+      }
+    ],
+    "07-gust-light-weight": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'n_gust_min_weight' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "critical field 'governing_min_weight' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "critical field 'va_min_weight_keas' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "trap: VA not reduced at light weight",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "trap: assumed heavy weight is critical",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.4286,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: enum hedged as 'pass|fail'",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      }
+    ],
+    "08-eccentric-mixed-bolt-group": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'critical_bolt' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "critical field 'critical_bolt_load_lbf' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "critical field 'min_ms' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "critical field 'verdict' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8571,
+        "ok": true
+      },
+      {
+        "check": "trap: bolts treated as equal (geometric centroid)",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.1429,
+        "ok": true
+      },
+      {
+        "check": "trap: most-loaded bolt taken as critical",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.4286,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: enum hedged as 'pass|fail'",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.1429,
+        "ok": true
+      }
+    ],
+    "09-inverted-taper-spar-web": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'web_shear_lbf' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "critical field 'ms' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "critical field 'verdict' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "trap: textbook Resal relief applied (wrong sign for this taper)",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "trap: taper ignored",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: enum hedged as 'pass|fail'",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.7143,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      }
+    ],
+    "10-z-section-unsymmetric-bending": [
+      {
+        "check": "reference solution",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "reference, reformatted (strings, commas, case, extra key)",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "every number nudged to 80% of tolerance",
+        "expect": "pass",
+        "got": "pass",
+        "score": 1.0,
+        "ok": true
+      },
+      {
+        "check": "critical field 'stress_A_psi' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8,
+        "ok": true
+      },
+      {
+        "check": "critical field 'stress_B_psi' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.9,
+        "ok": true
+      },
+      {
+        "check": "critical field 'max_abs_stress_psi' wrong",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8,
+        "ok": true
+      },
+      {
+        "check": "trap: sigma = My/I (product of inertia ignored)",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.2,
+        "ok": true
+      },
+      {
+        "check": "trap: unsymmetric formula with the sign of Ixy flipped",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.8,
+        "ok": true
+      },
+      {
+        "check": "gaming: no JSON at all",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: template echoed back",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: every field a list of candidates",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.0,
+        "ok": true
+      },
+      {
+        "check": "gaming: correct JSON, then a different final JSON",
+        "expect": "fail",
+        "got": "fail",
+        "score": 0.2,
+        "ok": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "10-z-section-unsymmetric-bending",
+  "title": "Z-section floor beam: unsymmetric bending",
+  "area": "Airframe stress analysis",
+  "who": "Stress engineers sizing floor beams, stringers and frames (Z and angle sections are everywhere in airframes)",
+  "why_hard": "A Z-section has a non-zero product of inertia, so a vertical moment bends it about an inclined neutral axis. The peak stress (22,200 psi at the web-flange corners) is twice what sigma = My/I gives (11,100 psi), and the tip of the 'compressed' top flange is actually in TENSION (+11,100 psi). Using My/I halves the peak stress and gets the sign wrong at the flange tips.",
+  "failure_cost": "A 2x unconservative bending stress; wrong-sign stresses also corrupt crippling and fatigue checks at the flange tips.",
+  "fields": {
+    "ix_in4": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "iy_in4": {
+      "type": "number",
+      "tol_rel": 0.02
+    },
+    "ixy_in4": {
+      "type": "number",
+      "tol_abs": 0.003
+    },
+    "stress_A_psi": {
+      "type": "number",
+      "tol_rel": 0.01,
+      "critical": true,
+      "weight": 2
+    },
+    "stress_B_psi": {
+      "type": "number",
+      "tol_rel": 0.01,
+      "critical": true
+    },
+    "stress_C_psi": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "stress_D_psi": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "max_abs_stress_psi": {
+      "type": "number",
+      "tol_rel": 0.01,
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "Megson, Aircraft Structures for Engineering Students, Ch. 16 (unsymmetrical bending, Z-section example)",
+    "Bruhn, Section A5 (bending of unsymmetrical sections)"
+  ]
+}

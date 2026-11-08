@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AeroMargin market brief</title>
+<meta name="description" content="Who relies on aerospace hand calculations, how fast engineers are adopting AI tools, what regulators require, and why a method-selection eval matters now.">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #eef1f4; --card: #ffffff; --ink: #0f1720; --ink-2: #3c4856; --muted: #7b8794; --line: #d8dee5; --accent: #e8590c; --blue: #1c64f2; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #0c1117; --card: #151c24; --ink: #eef1f4; --ink-2: #c3ccd6; --muted: #8592a0; --line: #26313d; --blue: #6ea8ff; } }
+  :root[data-theme="dark"] { --paper: #0c1117; --card: #151c24; --ink: #eef1f4; --ink-2: #c3ccd6; --muted: #8592a0; --line: #26313d; --blue: #6ea8ff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16.5px/1.62 Inter, system-ui, sans-serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 56px 16px 96px; }
+  .label { font: 500 11px "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 400 clamp(38px, 7vw, 60px)/1.02 "Instrument Serif", serif; letter-spacing: -.02em; margin: 14px 0 18px; }
+  h1 em, h2 em { color: var(--accent); }
+  h2 { font: 400 31px/1.1 "Instrument Serif", serif; margin: 48px 0 12px; }
+  p, li { color: var(--ink-2); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 22px 0; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .stat .n { font: 400 40px/1 "Instrument Serif", serif; color: var(--accent); }
+  .stat .d { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  .stat .s { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  a { color: var(--blue); }
+  .tbl { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); font-size: 14.5px; min-width: 560px; }
+  th, td { text-align: left; padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--ink); color: var(--paper); font: 500 11px "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<main>
+  <div class="label">AeroMargin · market brief · Paras Adlakha &amp; Harshita Adlakha · 8 Nov 2026</div>
+  <h1>Engineers already use AI for this work. <em>Nobody measures the step that matters.</em></h1>
+
+  <div class="stats">
+    <div class="stat"><div class="n">79%</div><div class="d">of aerospace &amp; defense design engineers whose companies have <b>not</b> approved AI tools use them anyway</div><div class="s"><a href="https://www.molex.com/en-us/industries-applications/defense-connectors/the-state-of-design-engineering-in-aerospace-and-defense">Molex survey, 1,021 engineering stakeholders, Sept 2025</a></div></div>
+    <div class="stat"><div class="n">43%</div><div class="d">of design engineers who use AI regularly report significant concerns about it</div><div class="s">Same survey</div></div>
+    <div class="stat"><div class="n">$4B</div><div class="d">valuation of micro1, built on expert data and evals; &gt;$1B reported run rate</div><div class="s"><a href="https://fourweekmba.com/ai-micro1-passes-1b-run-rate-prices-series-b-at-4b-valuation/">FourWeekMBA</a>, <a href="https://www.forbes.com.au/news/uncategorized/this-25-year-old-raised-us100-million-for-his-ai-startup-at-a-us4-billion-valuation/">Forbes</a>, 2026</div></div>
+    <div class="stat"><div class="n">1.5 × 1.15</div><div class="d">The certification factors (safety × fitting) that every Part 25 fitting margin must carry</div><div class="s">14 CFR 25.303, 25.625</div></div>
+  </div>
+
+  <h2>Who relies on this work</h2>
+  <div class="tbl"><table>
+    <tr><th>Practitioner</th><th>What they compute by hand (or ask a model)</th><th>What a wrong answer costs</th></tr>
+    <tr><td>Airframe stress engineers (OEMs, Tier 1s, repair/STC houses)</td><td>Fitting, column, beam and fastener margins (tasks 01, 02, 08, 09, 10)</td><td>An unconservative margin in a certified load path: a failed static test, a redesign, or an airworthiness directive</td></tr>
+    <tr><td>Fatigue &amp; damage-tolerance engineers</td><td>Spectrum counting and life (task 05)</td><td>Inspection thresholds set too late</td></tr>
+    <tr><td>Loads &amp; certification engineers</td><td>Gust and maneuver envelopes (task 07)</td><td>Structure under-designed at light weights</td></tr>
+    <tr><td>Pilots, instructors, dispatchers, load controllers</td><td>Air data, takeoff distance, weight and balance (tasks 03, 04, 06)</td><td>Runway excursions; landing outside the CG envelope</td></tr>
+  </table></div>
+
+  <h2>Why <em>now</em></h2>
+  <ul>
+    <li><b>Adoption is ahead of policy.</b> Engineers already paste problems into chat models, mostly without company approval (Molex, above). Leadership cannot see where the models are wrong.</li>
+    <li><b>Regulators are writing the rules.</b> The FAA published its first <a href="https://backend.ainonline.com/aviation-news/futureflight/2024-08-21/faa-issues-first-artificial-intelligence-roadmap">Roadmap for AI Safety Assurance</a> in 2024. EASA's <a href="https://www.easa.europa.eu/en/node/137921">AI Roadmap 2.0</a> and its follow-up concept paper set out assurance expectations. Tool-qualification standards such as DO-330 were written for deterministic tools.</li>
+    <li><b>Frontier labs pay for expert evals.</b> The market for expert-built data and evals (micro1, Mercor, Surge, Scale, Snorkel) is now measured in billions. Narrow, high-consequence domains such as certification-grade engineering are where generic evals say the least.</li>
+  </ul>
+
+  <h2>Where AeroMargin fits</h2>
+  <p>Existing aerospace benchmarks test knowledge recall (multiple choice, true/false) or language tasks. AeroMargin tests the expert step: <b>picking the governing method and its sign before calculating</b>, graded deterministically, with a reference solution and known traps. It is small enough to run in minutes for a few dollars, so a team can rerun it before trusting a new model in its workflow. The same format can be extended to any engineering group's own hand-calculation methods.</p>
+
+  <h2>Business uses</h2>
+  <ul>
+    <li><b>Model selection for engineering teams:</b> which model, at which reasoning setting, is safe to use as a checker's assistant, and on which task types.</li>
+    <li><b>Training data for labs:</b> each failure mode here (sign reversals, regime switches, reporting conventions) can be extended into hundreds of graded variants by changing the numbers, in the style of GSM-Symbolic.</li>
+    <li><b>Assurance evidence:</b> a reproducible, deterministic test record fits the "learned AI" assurance thinking in the FAA and EASA roadmaps.</li>
+  </ul>
+  <p class="label" style="margin-top:40px">Figures are from the linked sources. Company-reported numbers (micro1 run rate) are not independently verified.</p>
+</main>
+</body>
+</html>

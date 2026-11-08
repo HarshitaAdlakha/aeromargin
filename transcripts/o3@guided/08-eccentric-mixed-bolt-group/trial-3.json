@@ -1,0 +1,71 @@
+{
+  "model": "o3@guided",
+  "variant": "guided",
+  "task": "08-eccentric-mixed-bolt-group",
+  "trial": 3,
+  "at": "2026-11-08T18:40:57+00:00",
+  "latency_s": 97.4,
+  "settings": {
+    "model": "o3",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 550,
+    "output_tokens": 12219,
+    "reasoning_tokens": 11136,
+    "finish_reason": "stop",
+    "served_model": "o3-2025-04-16"
+  },
+  "cost_usd": 0.09885,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "centroid_x_in": {
+        "ok": true,
+        "why": "got 1.08, want 1.08 ± 0.01",
+        "critical": false
+      },
+      "eccentricity_in": {
+        "ok": true,
+        "why": "got 7.92, want 7.92 ± 0.01",
+        "critical": false
+      },
+      "critical_bolt": {
+        "ok": true,
+        "why": "got 'R1', want one of ['r1', 'r3']",
+        "critical": true
+      },
+      "critical_bolt_load_lbf": {
+        "ok": true,
+        "why": "got 2357, want 2357.5 ± 23.575",
+        "critical": true
+      },
+      "min_ms": {
+        "ok": true,
+        "why": "got 0.11, want 0.1127 ± 0.01",
+        "critical": true
+      },
+      "verdict": {
+        "ok": true,
+        "why": "got 'pass', want one of ['pass']",
+        "critical": true
+      }
+    },
+    "answer": {
+      "centroid_x_in": 1.08,
+      "eccentricity_in": 7.92,
+      "critical_bolt": "R1",
+      "critical_bolt_load_lbf": 2357,
+      "min_ms": 0.11,
+      "verdict": "pass"
+    }
+  },
+  "prompt": "You are checking a bolted bracket loaded in its own plane by an eccentric shear load.\n\n**Bolt pattern** (x measured to the right from the left bolt column, y measured up from the middle row; all bolts in single shear)\n\n| Bolt | x (in) | y (in) | Diameter (in) |\n|---|---|---|---|\n| L1 | 0.0 | +2.5 | 0.250 |\n| L2 | 0.0 | 0.0 | 0.250 |\n| L3 | 0.0 | −2.5 | 0.250 |\n| R1 | 3.0 | +2.5 | 0.1875 |\n| R2 | 3.0 | 0.0 | 0.1875 |\n| R3 | 3.0 | −2.5 | 0.1875 |\n\n- Bolt ultimate shear strength: 95,000 psi, on the full-diameter shear area. Bolt shear allowable = 95,000 × πd²/4.\n- Bearing and the bracket itself do not govern; ignore them.\n\n**Load**\n- Ultimate load: 4,200 lbf acting straight down (−y), with its line of action at x = 9.0 in.\n\n**Method**\nUse the elastic method for an eccentrically loaded bolt group. The bolts have different sizes: treat each bolt's shear stiffness as proportional to its shear area, and apply that consistently to the group centroid, the polar moment, and the distribution of both the direct and the moment-induced loads. Combine the direct and moment-induced components on each bolt as vectors.\n\n**Report**\n1. The x-coordinate of the bolt group's centroid (in)\n2. The eccentricity of the load from that centroid (in)\n3. The critical bolt (the one with the lowest margin of safety), its resultant load (lbf), and its margin of safety, MS = allowable / load − 1\n4. The verdict: `pass` if every bolt has MS ≥ 0, otherwise `fail`\n\nShow your working. End your answer with a single JSON object in a ```json code block, with exactly these keys and plain numbers (the critical bolt as its name, e.g. \"L2\"; if two bolts tie, give either):\n\n```json\n{\"centroid_x_in\": 0, \"eccentricity_in\": 0, \"critical_bolt\": \"L1\", \"critical_bolt_load_lbf\": 0, \"min_ms\": 0, \"verdict\": \"pass|fail\"}\n```\n",
+  "response": "Elastic-method check of the 6-bolt group (stiffness ∝ shear area)\n\n1. Bolt shear areas  \n   A = πd²/4\n\n   • ¼-in bolts (L1–L3):  \n     d = 0.250 in → A_L = π(0.25)²/4 = 0.049087 in²  \n\n   • 3⁄16-in bolts (R1–R3):  \n     d = 0.1875 in → A_R = π(0.1875)²/4 = 0.027599 in²  \n\n   Total stiffness ( Σk )  \n   Σk = 3A_L + 3A_R = 3(0.049087+0.027599) = 0.230058 in²  \n\n2. Centroid of the bolt group (x-coordinate)  \n   x̄ = Σk·x / Σk = (3A_R·3 in)/Σk  \n       = 9A_R / Σk = 9(0.027599)/0.230058 = 1.080 in\n\n3. Eccentricity of the 4 200 lbf vertical load  \n   e = x_load  –  x̄ = 9.0 – 1.080 = 7.920 in  \n\n   Horizontal (clockwise) moment: M = V·e = 4 200×7.920 = 33 265 in·lbf  \n\n4. Polar “moment of inertia” of the weighted group  \n   J = Σ k_i r_i² = 1.4356 in²·in²  \n\n   (where r_i is the distance of each bolt from the centroid)\n\n5. Direct shear on each bolt  \n   F_d,i = V (k_i / Σk)\n\n   • ¼-in bolts: F_d = 4 200(0.049087/0.230058) = 896 lbf ↓  \n   • 3⁄16-in bolts: F_d = 4 200(0.027599/0.230058) = 504 lbf ↓  \n\n6. Moment–induced shear on each bolt  \n\n   Constant C = |M| / J = 33 265 / 1.4356 = 23 171 lbf/in  \n\n   Components (x̄ subtracted):  \n   F_ix =  C k_i y_i  \n   F_iy = –C k_i x′_i  (x′ = x – x̄)  \n\n   Results (lbf):\n\n   Bolt | x′ (in) | y (in) | F_ix | F_iy | add F_d (↓) | ΣF_x | ΣF_y | |F|\n   -----|---------|--------|------|------|--------------|-------|-------|-----\n   L1   | –1.080  | +2.5 | +2 844 | +1 228 | –896 | +2 844 | +332 | 2 863  \n   L2   | –1.080  |  0   |   0   | +1 228 | –896 |    0   | +332 | 332  \n   L3   | –1.080  | –2.5 | –2 844 | +1 228 | –896 | –2 844 | +332 | 2 863  \n   R1   | +1.920  | +2.5 | +1 599 | –1 228 | –504 | +1 599 | –1 732 | 2 357  \n   R2   | +1.920  |  0   |   0   | –1 228 | –504 |    0   | –1 732 | 1 732  \n   R3   | +1.920  | –2.5 | –1 599 | –1 228 | –504 | –1 599 | –1 732 | 2 357  \n\n7. Allowable shear and margins  \n   • ¼-in bolts: 95 000×0.049087 = 4 663 lbf  \n     MS_L1 = 4 663/2 863 – 1 = 0.63  \n\n   • 3⁄16-in bolts: 95 000×0.027599 = 2 622 lbf  \n     MS_R1 = 2 622/2 357 – 1 = 0.11   (critical)  \n\n   All bolts have MS ≥ 0 ⇒ group passes.\n\n```json\n{\"centroid_x_in\": 1.08, \"eccentricity_in\": 7.92, \"critical_bolt\": \"R1\", \"critical_bolt_load_lbf\": 2357, \"min_ms\": 0.11, \"verdict\": \"pass\"}\n```"
+}

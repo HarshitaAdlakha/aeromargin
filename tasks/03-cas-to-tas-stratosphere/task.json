@@ -1,0 +1,41 @@
+{
+  "id": "03-cas-to-tas-stratosphere",
+  "title": "CAS to TAS and density altitude above the tropopause, ISA+10",
+  "area": "Flight performance",
+  "who": "Pilots, dispatchers, flight-test and performance engineers",
+  "why_hard": "Three things must all be right: the isothermal (stratosphere) pressure law above 36,089 ft, the compressible CAS-to-Mach relation (not CAS/sqrt(sigma)), and the actual ISA+10 temperature for the speed of sound. Density altitude above the tropopause needs the isothermal density law; the 120 ft per deg C rule of thumb does not hold there.",
+  "failure_cost": "Wrong TAS feeds fuel planning and navigation; wrong density altitude feeds engine and buffet margins.",
+  "fields": {
+    "static_pressure_pa": {
+      "type": "number",
+      "tol_rel": 0.003,
+      "critical": true
+    },
+    "oat_k": {
+      "type": "number",
+      "tol_abs": 0.2
+    },
+    "mach": {
+      "type": "number",
+      "tol_abs": 0.003,
+      "critical": true
+    },
+    "tas_kt": {
+      "type": "number",
+      "tol_abs": 1.5,
+      "critical": true,
+      "weight": 2
+    },
+    "density_altitude_ft": {
+      "type": "number",
+      "tol_abs": 100,
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "ICAO Doc 7488/3, Manual of the ICAO Standard Atmosphere",
+    "ISO 2533:1975 Standard Atmosphere",
+    "Subsonic compressible pitot-static relations (e.g. Gracey, NASA RP-1046, Measurement of Aircraft Speed and Altitude, 1980)"
+  ]
+}

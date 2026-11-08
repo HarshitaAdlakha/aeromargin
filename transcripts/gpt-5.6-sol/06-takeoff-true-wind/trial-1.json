@@ -1,0 +1,71 @@
+{
+  "model": "gpt-5.6-sol",
+  "variant": "realistic",
+  "task": "06-takeoff-true-wind",
+  "trial": 1,
+  "at": "2026-11-08T18:26:08+00:00",
+  "latency_s": 18.1,
+  "settings": {
+    "model": "gpt-5.6-sol",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 640,
+    "output_tokens": 2121,
+    "reasoning_tokens": 1466,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.6-sol"
+  },
+  "cost_usd": 0.06683,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "pressure_altitude_ft": {
+        "ok": true,
+        "why": "got 1750, want 1750 ± 1",
+        "critical": false
+      },
+      "headwind_component_kt": {
+        "ok": true,
+        "why": "got 5.47, want 5.47 ± 0.3",
+        "critical": true
+      },
+      "ground_roll_ft": {
+        "ok": true,
+        "why": "got 1330, want 1330 ± 13.3",
+        "critical": false
+      },
+      "total_over_50ft_ft": {
+        "ok": true,
+        "why": "got 2124, want 2124 ± 21.24",
+        "critical": true
+      },
+      "required_runway_ft": {
+        "ok": true,
+        "why": "got 2655, want 2655 ± 26.55",
+        "critical": false
+      },
+      "meets_company_rule": {
+        "ok": true,
+        "why": "got False, want False",
+        "critical": true
+      }
+    },
+    "answer": {
+      "pressure_altitude_ft": 1750,
+      "headwind_component_kt": 5.47,
+      "ground_roll_ft": 1330,
+      "total_over_50ft_ft": 2124,
+      "required_runway_ft": 2655,
+      "meets_company_rule": false
+    }
+  },
+  "prompt": "A student pilot asks you, their instructor, to check this morning's takeoff planning. The aircraft is a single-engine piston at 2,550 lb; short-field technique, flaps 10°.\n\n**Takeoff distance table (flight manual), feet: ground roll / total over a 50 ft obstacle**\n\n| Pressure altitude | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C |\n|---|---|---|---|---|---|\n| Sea level | 860 / 1465 | 925 / 1575 | 995 / 1690 | 1070 / 1810 | 1150 / 1945 |\n| 2000 ft | 1030 / 1740 | 1110 / 1875 | 1195 / 2015 | 1285 / 2165 | 1380 / 2330 |\n| 4000 ft | 1235 / 2085 | 1335 / 2255 | 1440 / 2440 | 1550 / 2640 | 1670 / 2865 |\n\nFlight manual notes:\n1. Decrease distances 10% for each 9 knots headwind. For operation with tailwinds up to 10 knots, increase distances by 10% for each 2 knots. (Apply proportionally.)\n2. For operation on a dry, grass runway, increase distances by 15% of the \"ground roll\" figure (add that amount to both figures).\n3. Apply the wind correction first, then the surface correction. Interpolate the table linearly.\n\n**Airfield data (from the chart supplement)**\nElevation 1,450 ft. Magnetic variation 15° E. Runway 18/36, dry grass, 2,700 ft. Runway 18 magnetic heading 178°.\n\n**NOTAM**\nRWY 18 TORA 2,500 FT. FIRST 200 FT RWY 18 CLSD WIP.\n\n**Weather**\nMETAR: `27/12 A2962`, wind `26014KT`, no gusts, visibility and cloud not limiting.\n\n**School rule**\nTotal distance over 50 ft × 1.25 must not exceed the take-off run available.\n\n**Report**\n1. Pressure altitude (ft)\n2. Headwind component on the departure runway (kt; negative for a tailwind)\n3. Corrected ground roll and corrected total distance over 50 ft (ft)\n4. Runway required under the school rule (ft)\n5. Whether the takeoff meets the school rule (true/false)\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys, plain numbers and a JSON boolean:\n\n```json\n{\"pressure_altitude_ft\": 0, \"headwind_component_kt\": 0, \"ground_roll_ft\": 0, \"total_over_50ft_ft\": 0, \"required_runway_ft\": 0, \"meets_company_rule\": true}\n```\n",
+  "response": "1. **Pressure altitude**\n\n\\[\nPA=1450+(29.92-29.62)\\times1000=1750\\text{ ft}\n\\]\n\n2. **Headwind component**\n\nMETAR wind directions are true. Convert runway 18’s magnetic heading to true:\n\n\\[\n178^\\circ+15^\\circ=193^\\circ T\n\\]\n\nWind/runway angle:\n\n\\[\n260^\\circ-193^\\circ=67^\\circ\n\\]\n\n\\[\nHW=14\\cos(67^\\circ)=5.47\\text{ kt}\n\\]\n\n3. **Interpolate takeoff distances**\n\nAt 27 °C:\n\n- Sea level:\n  - Ground roll: \\(995+0.7(1070-995)=1047.5\\) ft\n  - Total: \\(1690+0.7(1810-1690)=1774\\) ft\n- 2,000 ft:\n  - Ground roll: \\(1195+0.7(1285-1195)=1258\\) ft\n  - Total: \\(2015+0.7(2165-2015)=2120\\) ft\n\nPressure altitude 1,750 ft is \\(1750/2000=0.875\\) of the interval:\n\n\\[\nGR=1047.5+0.875(1258-1047.5)=1231.69\\text{ ft}\n\\]\n\n\\[\nT_{50}=1774+0.875(2120-1774)=2076.75\\text{ ft}\n\\]\n\nWind factor:\n\n\\[\n1-\\frac{5.47}{9}(0.10)=0.93922\n\\]\n\nAfter wind correction:\n\n\\[\nGR_w=1231.69(0.93922)=1156.83\\text{ ft}\n\\]\n\n\\[\nT_{50,w}=2076.75(0.93922)=1950.52\\text{ ft}\n\\]\n\nGrass addition, applied after wind correction:\n\n\\[\n0.15(1156.83)=173.52\\text{ ft}\n\\]\n\nThus:\n\n\\[\nGR_c=1156.83+173.52=1330.35\\approx1330\\text{ ft}\n\\]\n\n\\[\nT_{50,c}=1950.52+173.52=2124.05\\approx2124\\text{ ft}\n\\]\n\n4. **School-rule runway requirement**\n\n\\[\n2124.05(1.25)=2655.06\\approx2655\\text{ ft}\n\\]\n\nThe NOTAM’s published TORA is 2,500 ft; the closure is not subtracted again. Since \\(2655>2500\\), the takeoff does **not** meet the rule.\n\n```json\n{\"pressure_altitude_ft\":1750,\"headwind_component_kt\":5.47,\"ground_roll_ft\":1330,\"total_over_50ft_ft\":2124,\"required_runway_ft\":2655,\"meets_company_rule\":false}\n```"
+}

@@ -1,0 +1,71 @@
+{
+  "model": "gpt-5.6-sol-low",
+  "variant": "realistic",
+  "task": "08-eccentric-mixed-bolt-group",
+  "trial": 1,
+  "at": "2026-11-08T18:34:28+00:00",
+  "latency_s": 24.3,
+  "settings": {
+    "model": "gpt-5.6-sol",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "low"
+  },
+  "usage": {
+    "input_tokens": 494,
+    "output_tokens": 2626,
+    "reasoning_tokens": 1784,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.6-sol"
+  },
+  "cost_usd": 0.08125,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "centroid_x_in": {
+        "ok": true,
+        "why": "got 1.08, want 1.08 ± 0.01",
+        "critical": false
+      },
+      "eccentricity_in": {
+        "ok": true,
+        "why": "got 7.92, want 7.92 ± 0.01",
+        "critical": false
+      },
+      "critical_bolt": {
+        "ok": true,
+        "why": "got 'R1', want one of ['r1', 'r3']",
+        "critical": true
+      },
+      "critical_bolt_load_lbf": {
+        "ok": true,
+        "why": "got 2357.47, want 2357.5 ± 23.575",
+        "critical": true
+      },
+      "min_ms": {
+        "ok": true,
+        "why": "got 0.1127, want 0.1127 ± 0.01",
+        "critical": true
+      },
+      "verdict": {
+        "ok": true,
+        "why": "got 'pass', want one of ['pass']",
+        "critical": true
+      }
+    },
+    "answer": {
+      "centroid_x_in": 1.08,
+      "eccentricity_in": 7.92,
+      "critical_bolt": "R1",
+      "critical_bolt_load_lbf": 2357.47,
+      "min_ms": 0.1127,
+      "verdict": "pass"
+    }
+  },
+  "prompt": "Stress check request: a bracket bolted to a frame, loaded in its own plane by an eccentric shear load.\n\n**Bolts** (x to the right from the left bolt column, y up from the middle row; all in single shear)\n\n| Bolt | x (in) | y (in) | Diameter (in) |\n|---|---|---|---|\n| L1 | 0.0 | +2.5 | 0.250 |\n| L2 | 0.0 | 0.0 | 0.250 |\n| L3 | 0.0 | −2.5 | 0.250 |\n| R1 | 3.0 | +2.5 | 0.1875 |\n| R2 | 3.0 | 0.0 | 0.1875 |\n| R3 | 3.0 | −2.5 | 0.1875 |\n\nAll bolts are the same steel, ultimate shear strength 95,000 psi on the full-diameter area (allowable = 95,000 × πd²/4). Bearing and the bracket do not govern.\n\n**Load**\nUltimate 4,200 lbf, straight down (−y), line of action at x = 9.0 in.\n\n**Scope**\nUse the elastic method for an eccentrically loaded fastener group (Bruhn, Section D1), taking each bolt's shear stiffness as proportional to its shear area.\n\n**Report**\n1. The x-coordinate of the fastener group's centroid (in)\n2. The load's eccentricity from that centroid (in)\n3. The critical bolt (lowest margin of safety), its resultant load (lbf) and its margin, MS = allowable/load − 1\n4. The verdict: `pass` if every bolt has MS ≥ 0, otherwise `fail`\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers (bolt by name, e.g. \"L2\"; if two bolts tie, give either):\n\n```json\n{\"centroid_x_in\": 0, \"eccentricity_in\": 0, \"critical_bolt\": \"L1\", \"critical_bolt_load_lbf\": 0, \"min_ms\": 0, \"verdict\": \"pass|fail\"}\n```\n",
+  "response": "Bolt shear stiffness is proportional to shear area, and since all areas contain the common factor \\(\\pi/4\\), \\(d^2\\) can be used as the relative stiffness.\n\n### 1. Fastener-group centroid\n\nBy symmetry, \\(\\bar y=0\\).\n\n\\[\n\\bar x=\n\\frac{\\sum d_i^2x_i}{\\sum d_i^2}\n=\n\\frac{3(0.1875^2)(3)}\n{3(0.25^2)+3(0.1875^2)}\n=1.080\\ \\text{in}\n\\]\n\n### 2. Load eccentricity\n\n\\[\ne=9.0-1.080=7.920\\ \\text{in}\n\\]\n\nThe applied moment about the fastener-group centroid is\n\n\\[\nM_z=-Pe=-(4200)(7.920)=-33{,}264\\ \\text{lbf-in}\n\\]\n\nwhere the negative sign denotes clockwise moment.\n\n### 3. Direct shear\n\nThe direct load on each bolt is distributed in proportion to \\(d_i^2\\):\n\n\\[\n\\sum d_i^2\n=3(0.25^2)+3(0.1875^2)\n=0.29296875\n\\]\n\nThus:\n\n\\[\nF_{D,L}=4200\\frac{0.25^2}{0.29296875}=896.0\\ \\text{lbf downward}\n\\]\n\n\\[\nF_{D,R}=4200\\frac{0.1875^2}{0.29296875}=504.0\\ \\text{lbf downward}\n\\]\n\n### 4. Moment-induced shear\n\nRelative bolt-column coordinates are\n\n\\[\nx_L=-1.080\\ \\text{in},\\qquad x_R=1.920\\ \\text{in}\n\\]\n\nThe weighted polar sum is\n\n\\[\nJ_w=\\sum d_i^2(x_i^2+y_i^2)\n\\]\n\n\\[\nJ_w=\n0.25^2[3(1.080^2)+2(2.5^2)]\n+\n0.1875^2[3(1.920^2)+2(2.5^2)]\n\\]\n\n\\[\nJ_w=1.828203125\n\\]\n\nFor each bolt,\n\n\\[\nF_{Mx}=\\frac{M_zd_i^2}{J_w}(-y_i),\n\\qquad\nF_{My}=\\frac{M_zd_i^2}{J_w}x_i\n\\]\n\nCombining moment-induced and direct shear gives:\n\n| Bolt(s) | Resultant load (lbf) | Allowable (lbf) | MS |\n|---|---:|---:|---:|\n| L1, L3 | 2862.29 | 4663.30 | 0.629 |\n| L2 | 332.16 | 4663.30 | 13.039 |\n| R1, R3 | 2357.47 | 2623.11 | 0.1127 |\n| R2 | 1732.16 | 2623.11 | 0.514 |\n\nThe allowable bolt shear is\n\n\\[\nF_{\\text{allow}}=95{,}000\\frac{\\pi d^2}{4}\n\\]\n\nThe critical bolts are R1 and R3, which tie. Selecting R1:\n\n\\[\nMS_{\\min}=\\frac{2623.107}{2357.475}-1=0.1127\n\\]\n\nEvery bolt has a nonnegative margin, so the group passes.\n\n```json\n{\"centroid_x_in\":1.08,\"eccentricity_in\":7.92,\"critical_bolt\":\"R1\",\"critical_bolt_load_lbf\":2357.47,\"min_ms\":0.1127,\"verdict\":\"pass\"}\n```"
+}

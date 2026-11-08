@@ -1,0 +1,40 @@
+{
+  "model": "gpt-5.6-sol",
+  "variant": "spar-deeper-uppercomp-4500",
+  "trial": 1,
+  "familiar_case": false,
+  "passed": true,
+  "fields": {
+    "web_shear_lbf": {
+      "ok": true,
+      "why": "got 6000, want 6000 ± 60"
+    },
+    "web_tau_psi": {
+      "ok": true,
+      "why": "got 23437.5, want 23437.5 ± 234.375"
+    },
+    "ms": {
+      "ok": true,
+      "why": "got 0.28, want 0.28 ± 0.01"
+    }
+  },
+  "reference": {
+    "web_shear_lbf": 6000.0,
+    "web_tau_psi": 23437.5,
+    "ms": 0.28
+  },
+  "usage": {
+    "input_tokens": 300,
+    "output_tokens": 794,
+    "reasoning_tokens": 512,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.6-sol"
+  },
+  "settings": {
+    "model": "gpt-5.6-sol",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "prompt": "Stress check request: a cantilevered support beam (an I-section built from two flanges and a stiffened shear web), fixed at its inboard end, carrying loads near its outboard (free) end. It is DEEPER at its free end than at its root: going outboard, the upper flange rises and the lower flange falls, each at a slope of 0.025 (tan α) relative to the beam's reference axis.\n\nAt the station being checked, the ultimate internal loads are:\n- Shear: the loads outboard of the station add up to 4,500 lbf upward.\n- Bending moment: 240,000 in·lb, putting the upper flange in compression and the lower flange in tension.\n\nDistance between flange centroids at this station: 8.0 in. Web thickness: 0.032 in. Assume the flanges carry all the bending and the web carries a uniform shear stress over the depth. Web ultimate shear allowable Fsu = 30,000 psi (stiffened web; no buckling).\n\nReport the shear force carried by the web at this station (lbf), the web shear stress (psi) and the margin of safety MS = Fsu / stress − 1.\nEnd with a single JSON object in a ```json code block: {\"web_shear_lbf\": 0, \"web_tau_psi\": 0, \"ms\": 0}",
+  "response": "The bending force in each flange is\n\n\\[\nF_f=\\frac{M}{h}=\\frac{240{,}000}{8.0}=30{,}000\\ \\text{lbf}\n\\]\n\nEach sloped flange contributes an upward transverse component:\n\n\\[\nF_{f,v}=F_f\\tan\\alpha=30{,}000(0.025)=750\\ \\text{lbf}\n\\]\n\nBoth flange components act upward, so the web must carry:\n\n\\[\nV_{\\text{web}}=4{,}500+2(750)=6{,}000\\ \\text{lbf}\n\\]\n\nThe web shear area is\n\n\\[\nA_{\\text{web}}=th=0.032(8.0)=0.256\\ \\text{in}^2\n\\]\n\nThus,\n\n\\[\n\\tau_{\\text{web}}=\\frac{6{,}000}{0.256}=23{,}437.5\\ \\text{psi}\n\\]\n\nand\n\n\\[\nMS=\\frac{30{,}000}{23{,}437.5}-1=0.28\n\\]\n\n```json\n{\"web_shear_lbf\":6000,\"web_tau_psi\":23437.5,\"ms\":0.28}\n```"
+}

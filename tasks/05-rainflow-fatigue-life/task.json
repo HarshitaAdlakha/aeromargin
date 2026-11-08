@@ -1,0 +1,37 @@
+{
+  "id": "05-rainflow-fatigue-life",
+  "title": "Fatigue life from a repeating flight: rainflow, Goodman, Miner",
+  "area": "Fatigue and damage tolerance",
+  "who": "Fatigue engineers setting inspection thresholds",
+  "why_hard": "The damaging cycle is the ground-air-ground cycle (-6 to 24 ksi), which appears only when the repeating history is rainflow-counted from its highest peak. Counting reversals in order as half cycles misses it and overstates life about 12x (1.18 million vs 97,000 flights). Skipping the Goodman correction overstates life about 2.3x.",
+  "failure_cost": "An unconservative life sets inspection thresholds too late.",
+  "fields": {
+    "cycles_per_flight": {
+      "type": "number",
+      "tol_abs": 0,
+      "critical": true
+    },
+    "largest_cycle_max_ksi": {
+      "type": "number",
+      "tol_abs": 0
+    },
+    "largest_cycle_min_ksi": {
+      "type": "number",
+      "tol_abs": 0
+    },
+    "damage_per_flight": {
+      "type": "number",
+      "tol_rel": 0.06
+    },
+    "life_flights": {
+      "type": "number",
+      "tol_rel": 0.06,
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "ASTM E1049-85 (2017), Standard Practices for Cycle Counting in Fatigue Analysis",
+    "Schijve, Fatigue of Structures and Materials, 2nd ed. (2009): ground-air-ground cycle, Goodman, Miner"
+  ]
+}

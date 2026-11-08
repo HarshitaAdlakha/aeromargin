@@ -1,0 +1,65 @@
+{
+  "model": "gpt-5.4",
+  "variant": "realistic",
+  "task": "05-rainflow-fatigue-life",
+  "trial": 1,
+  "at": "2026-11-08T18:30:06+00:00",
+  "latency_s": 78.2,
+  "settings": {
+    "model": "gpt-5.4",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 356,
+    "output_tokens": 7346,
+    "reasoning_tokens": 5989,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.4-2026-03-05"
+  },
+  "cost_usd": 0.11108,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "cycles_per_flight": {
+        "ok": true,
+        "why": "got 6, want 6 ± 0",
+        "critical": true
+      },
+      "largest_cycle_max_ksi": {
+        "ok": true,
+        "why": "got 24, want 24 ± 0",
+        "critical": false
+      },
+      "largest_cycle_min_ksi": {
+        "ok": true,
+        "why": "got -6, want -6 ± 0",
+        "critical": false
+      },
+      "damage_per_flight": {
+        "ok": true,
+        "why": "got 1.02897e-05, want 1.02925e-05 ± 3.08776e-07",
+        "critical": false
+      },
+      "life_flights": {
+        "ok": true,
+        "why": "got 97184.3, want 97158 ± 2914.74",
+        "critical": true
+      }
+    },
+    "answer": {
+      "cycles_per_flight": 6,
+      "largest_cycle_max_ksi": 24,
+      "largest_cycle_min_ksi": -6,
+      "damage_per_flight": 1.028966e-05,
+      "life_flights": 97184.3
+    }
+  },
+  "prompt": "Estimate the crack-initiation life, in flights, of a lower wing skin detail.\n\n**Stress history**\nEach flight produces this sequence of turning points at the detail (ksi), ground to ground:\n\n`-6, 14, 8, 19, 11, 24, 9, 21, 13, 17, 7, 16, -6`\n\nFlights follow one another with the identical sequence.\n\n**Data and practice**\n- Cycle counting: rainflow (ASTM E1049), applied to the history as it repeats flight after flight, so that every counted cycle is closed.\n- Mean-stress correction: Goodman with Ftu = 78 ksi, Sa,eq = Sa / (1 − Sm/Ftu) for Sm > 0; Sa,eq = Sa for Sm ≤ 0.\n- Fully reversed S-N curve: Sa,eq = 95 · N^(−0.15) (ksi; N = cycles to failure). Cycles with Sa,eq below 6.0 ksi do no damage.\n- Palmgren–Miner linear damage; failure at a damage sum of 1.0; no scatter factor.\n\n**Report**\n1. Rainflow cycles per flight\n2. Maximum and minimum stress of the largest-range cycle\n3. Damage per flight\n4. Life in flights\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"cycles_per_flight\": 0, \"largest_cycle_max_ksi\": 0, \"largest_cycle_min_ksi\": 0, \"damage_per_flight\": 0, \"life_flights\": 0}\n```\n",
+  "response": "Using rainflow on the **repeating** flight history, it is best to treat one flight as a **closed loop** by starting at a global extremum. Rotate the turning-point sequence to start/end at the peak 24 ksi:\n\n\\[\n24,\\ 9,\\ 21,\\ 13,\\ 17,\\ 7,\\ 16,\\ -6,\\ 14,\\ 8,\\ 19,\\ 11,\\ 24\n\\]\n\n## 1) Rainflow cycles per flight\n\nApplying ASTM E1049 rainflow to that closed sequence gives these **6 full cycles per flight**:\n\n| Cycle | \\(\\sigma_{\\min}\\) (ksi) | \\(\\sigma_{\\max}\\) (ksi) | Range \\(\\Delta \\sigma\\) | Amplitude \\(S_a\\) | Mean \\(S_m\\) |\n|---|---:|---:|---:|---:|---:|\n| 1 | 13 | 17 | 4 | 2.0 | 15.0 |\n| 2 | 9 | 21 | 12 | 6.0 | 15.0 |\n| 3 | 7 | 16 | 9 | 4.5 | 11.5 |\n| 4 | 8 | 14 | 6 | 3.0 | 11.0 |\n| 5 | 11 | 19 | 8 | 4.0 | 15.0 |\n| 6 | -6 | 24 | 30 | 15.0 | 9.0 |\n\nSo:\n\n- **Rainflow cycles per flight = 6**\n\n## 2) Largest-range cycle\n\nLargest range is the last one:\n\n- \\(\\sigma_{\\max} = 24\\) ksi\n- \\(\\sigma_{\\min} = -6\\) ksi\n\n## 3) Damage per flight\n\nGoodman correction:\n\n\\[\nS_{a,\\mathrm{eq}} = \\frac{S_a}{1-S_m/F_{tu}}, \\qquad F_{tu}=78\\ \\text{ksi}, \\quad (S_m>0)\n\\]\n\nS–N curve:\n\n\\[\nS_{a,\\mathrm{eq}} = 95\\,N^{-0.15}\n\\quad\\Rightarrow\\quad\nN=\\left(\\frac{95}{S_{a,\\mathrm{eq}}}\\right)^{1/0.15}\n=\\left(\\frac{95}{S_{a,\\mathrm{eq}}}\\right)^{6.6667}\n\\]\n\nMiner damage per cycle:\n\n\\[\nd=\\frac{1}{N}\n\\]\n\n### Cycle-by-cycle\n\n#### Cycle 1: 13–17\n\\[\nS_a=\\frac{17-13}{2}=2,\\quad S_m=\\frac{17+13}{2}=15\n\\]\n\\[\nS_{a,\\mathrm{eq}}=\\frac{2}{1-15/78}=2.476\n\\]\nBelow 6 ksi threshold \\(\\rightarrow d=0\\)\n\n#### Cycle 2: 9–21\n\\[\nS_a=6,\\quad S_m=15\n\\]\n\\[\nS_{a,\\mathrm{eq}}=\\frac{6}{1-15/78}=7.4286\n\\]\n\\[\nN=\\left(\\frac{95}{7.4286}\\right)^{6.6667}\\approx 2.392\\times 10^7\n\\]\n\\[\nd_2 \\approx 4.180\\times 10^{-8}\n\\]\n\n#### Cycle 3: 7–16\n\\[\nS_a=4.5,\\quad S_m=11.5\n\\]\n\\[\nS_{a,\\mathrm{eq}}=\\frac{4.5}{1-11.5/78}=5.278\n\\]\nBelow threshold \\(\\rightarrow d=0\\)\n\n#### Cycle 4: 8–14\n\\[\nS_a=3,\\quad S_m=11\n\\]\n\\[\nS_{a,\\mathrm{eq}}=\\frac{3}{1-11/78}=3.493\n\\]\nBelow threshold \\(\\rightarrow d=0\\)\n\n#### Cycle 5: 11–19\n\\[\nS_a=4,\\quad S_m=15\n\\]\n\\[\nS_{a,\\mathrm{eq}}=\\frac{4}{1-15/78}=4.952\n\\]\nBelow threshold \\(\\rightarrow d=0\\)\n\n#### Cycle 6: -6–24\n\\[\nS_a=15,\\quad S_m=9\n\\]\n\\[\nS_{a,\\mathrm{eq}}=\\frac{15}{1-9/78}=16.9565\n\\]\n\\[\nN=\\left(\\frac{95}{16.9565}\\right)^{6.6667}\\approx 9.758\\times 10^4\n\\]\n\\[\nd_6 \\approx 1.0248\\times 10^{-5}\n\\]\n\n### Total damage per flight\n\n\\[\nD_{\\text{flight}} = d_2+d_6\n\\]\n\\[\nD_{\\text{flight}} \\approx 4.180\\times 10^{-8} + 1.0248\\times 10^{-5}\n\\]\n\\[\nD_{\\text{flight}} \\approx 1.02897\\times 10^{-5}\n\\]\n\n## 4) Life in flights\n\nWith Miner failure at \\(D=1\\),\n\n\\[\n\\text{Life}=\\frac{1}{D_{\\text{flight}}}\n=\\frac{1}{1.02897\\times 10^{-5}}\n\\approx 9.718\\times 10^4\n\\]\n\n\\[\n\\boxed{\\text{Life} \\approx 97{,}184\\ \\text{flights}}\n\\]\n\n```json\n{\"cycles_per_flight\": 6, \"largest_cycle_max_ksi\": 24, \"largest_cycle_min_ksi\": -6, \"damage_per_flight\": 0.00001028966, \"life_flights\": 97184.3}\n```"
+}

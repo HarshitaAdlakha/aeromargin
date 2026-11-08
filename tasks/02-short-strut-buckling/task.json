@@ -1,0 +1,51 @@
+{
+  "id": "02-short-strut-buckling",
+  "title": "Short pinned strut: Euler or Johnson?",
+  "area": "Airframe stress analysis",
+  "who": "Stress engineers sizing struts, stiffeners and gear-bay members",
+  "why_hard": "The Euler stress (26,800 psi) is below yield (35,000 psi), so Euler looks valid. It is not: below the tangency slenderness pi*sqrt(2E/Fcy) = 74.7 the Johnson parabola governs, giving 23,580 psi. Euler says MS +0.10 (pass); the correct answer is MS -0.03 (fail). 'Euler stress below yield' is a common but wrong validity test.",
+  "failure_cost": "An unconservative column margin in a primary load path.",
+  "fields": {
+    "slenderness_ratio": {
+      "type": "number",
+      "tol_rel": 0.005
+    },
+    "transition_slenderness": {
+      "type": "number",
+      "tol_rel": 0.005
+    },
+    "regime": {
+      "type": "enum",
+      "accept": [
+        "johnson"
+      ],
+      "critical": true
+    },
+    "critical_stress_psi": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "critical_load_lbf": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "ms": {
+      "type": "number",
+      "tol_abs": 0.01,
+      "critical": true,
+      "weight": 2
+    },
+    "verdict": {
+      "type": "enum",
+      "accept": [
+        "fail"
+      ],
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "Bruhn, Section C2 (column curves, Johnson parabola)",
+    "Niu, Airframe Stress Analysis and Sizing, columns chapter"
+  ]
+}

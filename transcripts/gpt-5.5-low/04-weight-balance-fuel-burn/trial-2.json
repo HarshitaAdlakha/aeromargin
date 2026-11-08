@@ -1,0 +1,71 @@
+{
+  "model": "gpt-5.5-low",
+  "variant": "realistic",
+  "task": "04-weight-balance-fuel-burn",
+  "trial": 2,
+  "at": "2026-11-08T18:35:05+00:00",
+  "latency_s": 17.5,
+  "settings": {
+    "model": "gpt-5.5",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "low"
+  },
+  "usage": {
+    "input_tokens": 525,
+    "output_tokens": 1629,
+    "reasoning_tokens": 780,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.5-2026-04-23"
+  },
+  "cost_usd": 0.05149,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "takeoff_weight_lb": {
+        "ok": true,
+        "why": "got 15945, want 15945 ± 2",
+        "critical": true
+      },
+      "takeoff_cg_pct_mac": {
+        "ok": true,
+        "why": "got 29.6, want 29.6 ± 0.2",
+        "critical": true
+      },
+      "landing_weight_lb": {
+        "ok": true,
+        "why": "got 13345, want 13345 ± 2",
+        "critical": true
+      },
+      "landing_cg_pct_mac": {
+        "ok": true,
+        "why": "got 32.59, want 32.59 ± 0.2",
+        "critical": true
+      },
+      "takeoff_within_limits": {
+        "ok": true,
+        "why": "got True, want True",
+        "critical": true
+      },
+      "landing_within_limits": {
+        "ok": true,
+        "why": "got False, want False",
+        "critical": true
+      }
+    },
+    "answer": {
+      "takeoff_weight_lb": 15945,
+      "takeoff_cg_pct_mac": 29.6,
+      "landing_weight_lb": 13345,
+      "landing_cg_pct_mac": 32.59,
+      "takeoff_within_limits": true,
+      "landing_within_limits": false
+    }
+  },
+  "prompt": "You are the dispatcher preparing the load sheet for a light business jet. Arms are inches aft of the datum.\n\n**Load**\n\n| Item | Weight (lb) | Arm (in) |\n|---|---|---|\n| Basic empty weight | 9,850 | 312.4 |\n| Crew (2 × 190 lb) | 380 | 128.0 |\n| Passengers, club seats (4 × 185 lb) | 740 | 335.0 |\n| Passengers, aft bench (2 × 185 lb) | 370 | 372.0 |\n| Aft baggage | 350 | 455.0 |\n\n**Fuel**\n- Ramp fuel 660 US gal of Jet-A at 6.75 lb/US gal\n- Taxi burn 200 lb; planned trip burn 2,600 lb\n- Fuel moment table from the flight manual (moment ÷ 1000, in·lb, at 6.75 lb/gal); interpolate linearly in moment between rows:\n\n| US gal | 0 | 100 | 200 | 300 | 400 | 500 | 600 | 700 |\n|---|---|---|---|---|---|---|---|---|\n| Moment/1000 | 0.0 | 214.7 | 426.6 | 634.8 | 839.7 | 1041.2 | 1239.3 | 1436.4 |\n\n**Limits**\n- LEMAC 288.0 in; MAC 80.0 in\n- CG envelope, all weights: 15.0 % to 32.0 % MAC\n- Maximum takeoff weight 16,600 lb; maximum landing weight 15,200 lb\n\n**Report**\n1. Takeoff weight (lb) and CG (%MAC)\n2. Planned landing weight (lb) and CG (%MAC)\n3. Whether takeoff is within all the limits above (true/false)\n4. Whether the planned landing is within all the limits above (true/false)\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys, plain numbers and JSON booleans:\n\n```json\n{\"takeoff_weight_lb\": 0, \"takeoff_cg_pct_mac\": 0, \"landing_weight_lb\": 0, \"landing_cg_pct_mac\": 0, \"takeoff_within_limits\": true, \"landing_within_limits\": true}\n```\n",
+  "response": "Fixed load (excluding fuel):\n\n| Item | Weight (lb) | Moment (in·lb) |\n|---|---:|---:|\n| Basic empty weight | 9,850 | 3,077,140 |\n| Crew | 380 | 48,640 |\n| Club seats | 740 | 247,900 |\n| Aft bench | 370 | 137,640 |\n| Aft baggage | 350 | 159,250 |\n| **Subtotal** | **11,690** | **3,670,570** |\n\nFuel calculations:\n\n- Ramp fuel:  \n  \\(660 \\times 6.75 = 4,455 \\text{ lb}\\)\n\n- Takeoff fuel after taxi:  \n  \\(4,455 - 200 = 4,255 \\text{ lb}\\)  \n  \\(4,255 / 6.75 = 630.37 \\text{ gal}\\)\n\nInterpolated fuel moment at 630.37 gal:\n\n\\[\n1239.3 + (630.37 - 600)\\frac{1436.4 - 1239.3}{100}\n= 1299.16\n\\]\n\nFuel moment:\n\n\\[\n1299.16 \\times 1000 = 1,299,160 \\text{ in·lb}\n\\]\n\nTakeoff totals:\n\n\\[\nW_{TO} = 11,690 + 4,255 = 15,945 \\text{ lb}\n\\]\n\n\\[\nM_{TO} = 3,670,570 + 1,299,160 = 4,969,730 \\text{ in·lb}\n\\]\n\n\\[\nCG_{TO} = \\frac{4,969,730}{15,945} = 311.68 \\text{ in}\n\\]\n\n\\[\n\\%MAC_{TO} = \\frac{311.68 - 288.0}{80.0} \\times 100 = 29.60\\%\n\\]\n\nTakeoff is within limits:\n\n- Weight: \\(15,945 \\le 16,600\\) lb\n- CG: \\(15.0\\% \\le 29.60\\% \\le 32.0\\%\\)\n\nSo takeoff is within limits: **true**\n\n---\n\nPlanned landing fuel:\n\n\\[\n4,255 - 2,600 = 1,655 \\text{ lb}\n\\]\n\n\\[\n1,655 / 6.75 = 245.19 \\text{ gal}\n\\]\n\nInterpolated fuel moment at 245.19 gal:\n\n\\[\n426.6 + (245.19 - 200)\\frac{634.8 - 426.6}{100}\n= 520.68\n\\]\n\nFuel moment:\n\n\\[\n520.68 \\times 1000 = 520,676 \\text{ in·lb}\n\\]\n\nLanding totals:\n\n\\[\nW_{LDG} = 11,690 + 1,655 = 13,345 \\text{ lb}\n\\]\n\n\\[\nM_{LDG} = 3,670,570 + 520,676 = 4,191,246 \\text{ in·lb}\n\\]\n\n\\[\nCG_{LDG} = \\frac{4,191,246}{13,345} = 314.07 \\text{ in}\n\\]\n\n\\[\n\\%MAC_{LDG} = \\frac{314.07 - 288.0}{80.0} \\times 100 = 32.59\\%\n\\]\n\nLanding limits:\n\n- Weight: \\(13,345 \\le 15,200\\) lb\n- CG: \\(32.59\\% > 32.0\\%\\)\n\nSo planned landing is within limits: **false**\n\n```json\n{\"takeoff_weight_lb\":15945,\"takeoff_cg_pct_mac\":29.6,\"landing_weight_lb\":13345,\"landing_cg_pct_mac\":32.59,\"takeoff_within_limits\":true,\"landing_within_limits\":false}\n```"
+}

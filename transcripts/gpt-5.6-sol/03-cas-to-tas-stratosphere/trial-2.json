@@ -1,0 +1,65 @@
+{
+  "model": "gpt-5.6-sol",
+  "variant": "realistic",
+  "task": "03-cas-to-tas-stratosphere",
+  "trial": 2,
+  "at": "2026-11-08T18:26:47+00:00",
+  "latency_s": 56.7,
+  "settings": {
+    "model": "gpt-5.6-sol",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 304,
+    "output_tokens": 6426,
+    "reasoning_tokens": 5371,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.6-sol"
+  },
+  "cost_usd": 0.1943,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "static_pressure_pa": {
+        "ok": true,
+        "why": "got 17873.9, want 17874 ± 53.622",
+        "critical": true
+      },
+      "oat_k": {
+        "ok": true,
+        "why": "got 226.65, want 226.65 ± 0.2",
+        "critical": false
+      },
+      "mach": {
+        "ok": true,
+        "why": "got 0.84003, want 0.84 ± 0.003",
+        "critical": true
+      },
+      "tas_kt": {
+        "ok": true,
+        "why": "got 492.81, want 492.8 ± 1.5",
+        "critical": true
+      },
+      "density_altitude_ft": {
+        "ok": true,
+        "why": "got 41938.8, want 41939 ± 100",
+        "critical": true
+      }
+    },
+    "answer": {
+      "static_pressure_pa": 17873.9,
+      "oat_k": 226.65,
+      "mach": 0.84003,
+      "tas_kt": 492.81,
+      "density_altitude_ft": 41938.8
+    }
+  },
+  "prompt": "A business jet is in level cruise. The crew wants a hand check of the flight-management system's air data.\n\n**Conditions**\n- Pressure altitude 41,000 ft (standard altimeter setting)\n- Outside air temperature ISA + 10 °C\n- Calibrated airspeed 250 kt (no instrument or position error)\n\n**Constants to use**\nICAO Standard Atmosphere: 101,325 Pa and 288.15 K at sea level, lapse rate 0.0065 K/m to 11,000 m; g₀ = 9.80665 m/s²; R = 287.05287 J/(kg·K); γ = 1.4; 1 ft = 0.3048 m; 1 kt = 0.514444 m/s. Treat pressure altitude as geopotential altitude.\n\n**Report**\n1. Static pressure at the aircraft (Pa)\n2. Outside air temperature (K)\n3. Mach number\n4. True airspeed (kt)\n5. Density altitude (ft): the ICAO Standard Atmosphere altitude whose density equals the actual air density\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"static_pressure_pa\": 0, \"oat_k\": 0, \"mach\": 0, \"tas_kt\": 0, \"density_altitude_ft\": 0}\n```\n",
+  "response": "The geopotential altitude is\n\n\\[\nh=41{,}000(0.3048)=12{,}496.8\\ {\\rm m}.\n\\]\n\n### 1. Static pressure\n\nThe ISA tropopause temperature is\n\n\\[\nT_{11}=288.15-0.0065(11{,}000)=216.65\\ {\\rm K}.\n\\]\n\nPressure at 11,000 m:\n\n\\[\np_{11}=101325\n\\left(\\frac{216.65}{288.15}\\right)^{g_0/(RL)}\n=22632.04\\ {\\rm Pa}.\n\\]\n\nAbove 11,000 m the ISA temperature is constant, so\n\n\\[\np=p_{11}\\exp\\left[\n-\\frac{g_0(h-11000)}{RT_{11}}\n\\right].\n\\]\n\nThus,\n\n\\[\np=22632.04\\exp\\left[\n-\\frac{9.80665(12496.8-11000)}\n{287.05287(216.65)}\n\\right]\n=17873.9\\ {\\rm Pa}.\n\\]\n\n### 2. Outside air temperature\n\nAt 41,000 ft, ISA temperature is 216.65 K. Therefore,\n\n\\[\nT=216.65+10=226.65\\ {\\rm K}.\n\\]\n\n### 3. Mach number\n\nThe calibrated airspeed in SI units is\n\n\\[\nV_C=250(0.514444)=128.611\\ {\\rm m/s}.\n\\]\n\nThe standard sea-level speed of sound is\n\n\\[\na_0=\\sqrt{\\gamma RT_0}\n=\\sqrt{1.4(287.05287)(288.15)}\n=340.294\\ {\\rm m/s}.\n\\]\n\nThe impact pressure represented by the calibrated airspeed is\n\n\\[\nq_c=p_0\\left[\n\\left(1+\\frac{\\gamma-1}{2}\n\\left(\\frac{V_C}{a_0}\\right)^2\\right)^{\\gamma/(\\gamma-1)}\n-1\\right],\n\\]\n\ngiving\n\n\\[\nq_c=10498.2\\ {\\rm Pa}.\n\\]\n\nAt the aircraft,\n\n\\[\n\\frac{q_c}{p}\n=\n\\left(1+\\frac{\\gamma-1}{2}M^2\\right)^{\\gamma/(\\gamma-1)}-1.\n\\]\n\nTherefore,\n\n\\[\nM=\n\\sqrt{\\frac{2}{\\gamma-1}\n\\left[\n\\left(1+\\frac{q_c}{p}\\right)^{(\\gamma-1)/\\gamma}-1\n\\right]}\n=0.84003.\n\\]\n\n### 4. True airspeed\n\nThe local speed of sound is\n\n\\[\na=\\sqrt{\\gamma RT}\n=\\sqrt{1.4(287.05287)(226.65)}\n=301.8025\\ {\\rm m/s}.\n\\]\n\nHence,\n\n\\[\nV_{\\rm TAS}=Ma=0.840028(301.8025)\n=253.523\\ {\\rm m/s},\n\\]\n\nor\n\n\\[\nV_{\\rm TAS}=\\frac{253.523}{0.514444}\n=492.81\\ {\\rm kt}.\n\\]\n\n### 5. Density altitude\n\nThe actual density is\n\n\\[\n\\rho=\\frac{p}{RT}\n=\\frac{17873.9}{287.05287(226.65)}\n\\approx0.27473\\ {\\rm kg/m^3}.\n\\]\n\nBecause the density altitude is also above 11,000 m, the ISA temperature there is 216.65 K. Equating actual and standard densities gives\n\n\\[\n\\frac{p}{R(226.65)}\n=\n\\frac{p_{11}\\exp[-g_0(h_\\rho-11000)/(R\\,216.65)]}\n{R(216.65)}.\n\\]\n\nUsing the fact that \\(p\\) corresponds to the ISA pressure at \\(h=12496.8\\) m,\n\n\\[\nh_\\rho\n=h+\\frac{R(216.65)}{g_0}\n\\ln\\left(\\frac{226.65}{216.65}\\right).\n\\]\n\nThus,\n\n\\[\nh_\\rho=12496.8+286.158=12782.958\\ {\\rm m},\n\\]\n\n\\[\nh_\\rho=\\frac{12782.958}{0.3048}\n=41938.8\\ {\\rm ft}.\n\\]\n\n```json\n{\"static_pressure_pa\":17873.9,\"oat_k\":226.65,\"mach\":0.84003,\"tas_kt\":492.81,\"density_altitude_ft\":41938.8}\n```"
+}

@@ -1,0 +1,57 @@
+{
+  "model": "o3",
+  "variant": "realistic",
+  "task": "07-gust-light-weight",
+  "trial": 2,
+  "at": "2026-11-08T18:30:51+00:00",
+  "latency_s": 21.9,
+  "settings": {
+    "model": "o3",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 353,
+    "output_tokens": 3610,
+    "reasoning_tokens": 2880,
+    "finish_reason": "stop",
+    "served_model": "o3-2025-04-16"
+  },
+  "cost_usd": 0.02959,
+  "error": null,
+  "passed": false,
+  "score": 0.0,
+  "grade": {
+    "parsed": false,
+    "score": 0.0,
+    "passed": false,
+    "fields": {
+      "n_gust_max_weight": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "n_gust_min_weight": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "design_n_max_weight": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "design_n_min_weight": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "governing_min_weight": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "va_min_weight_keas": {
+        "ok": false,
+        "why": "no JSON answer found"
+      }
+    }
+  },
+  "prompt": "Loads check for a normal-category twin certified to 14 CFR Part 23 before Amendment 23-64.\n\n**Aircraft data**\n- Wing area 175 ft²; mean geometric chord 5.4 ft; wing lift-curve slope 5.5 per radian\n- Design cruising speed V_C = 190 KEAS\n- Maximum weight 6,000 lb; minimum flying weight 4,200 lb\n- Positive limit maneuvering load factor 3.8\n- Design maneuvering speed at maximum weight: 130 KEAS\n\n**Conditions**\nPositive gust of 50 ft/s (EAS) at V_C, sea level (ρ₀ = 0.002377 slug/ft³, g = 32.2 ft/s²), using the 14 CFR 23.341 gust load factor formula of that certification basis.\n\n**Report**\n1. Positive gust load factor at V_C, maximum weight\n2. Positive gust load factor at V_C, minimum flying weight\n3. Design positive limit load factor at each weight (the larger of gust and maneuver)\n4. What governs at minimum flying weight: `gust` or `maneuver`\n5. Design maneuvering speed V_A at minimum flying weight (KEAS)\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"n_gust_max_weight\": 0, \"n_gust_min_weight\": 0, \"design_n_max_weight\": 0, \"design_n_min_weight\": 0, \"governing_min_weight\": \"gust|maneuver\", \"va_min_weight_keas\": 0}\n```\n",
+  "response": "Working steps\n\nConstants  \nρ₀ = 0.002377 slug ft⁻³  g = 32.2 ft s⁻²  U_de = 50 ft s⁻¹  \nV_C = 190 KEAS = 190 × 1.68781 = 320.684 ft s⁻¹  \nWing area S = 175 ft² Mean chord c = 5.4 ft  \nLift-curve slope a = 5.5 rad⁻¹  \nPositive manoeuvre limit n_m = 3.8  \n\nGust formula of 14 CFR 23.341 (pre-23-64)  \n\nΔn = K_g · ρ · V · a · U_de / (2 W⁄S)  n_gust = 1 + Δn  \n\nwith the alleviation factor  \nμ_g = (2 W⁄S)/(ρ g c a)  \nK_g = 0.88 μ_g /(5.3 + μ_g)\n\n--------------------------------------------------------------------\n1. Gust load factor at V_C, W_max = 6000 lb\nWing loading W/S = 6000 / 175 = 34.286 lb ft⁻²\n\nμ_g = 2·34.286 / (0.002377·32.2·5.4·5.5) = 30.13  \nK_g = 0.88·30.13 /(5.3+30.13) = 0.7486\n\nΔn = 0.7486·0.002377·320.684·5.5·50 /(2·34.286) = 2.29  \nn_gust(max wt) = 1 + 2.29 = 3.29\n\n--------------------------------------------------------------------\n2. Gust load factor at V_C, W_min = 4200 lb\nWing loading W/S = 4200 / 175 = 24.00 lb ft⁻²\n\nμ_g = 2·24.00 / (0.002377·32.2·5.4·5.5) = 21.10  \nK_g = 0.88·21.10 /(5.3+21.10) = 0.7036\n\nΔn = 0.7036·0.002377·320.684·5.5·50 /(2·24.00) = 3.07  \nn_gust(min wt) = 1 + 3.07 = 4.07\n\n--------------------------------------------------------------------\n3. Design positive limit load factors (larger of gust and manoeuvre)\n\nMaximum weight n_design = max(3.8 , 3.29) = 3.8  \nMinimum weight n_design = max(3.8 , 4.07) = 4.07\n\n--------------------------------------------------------------------\n4. Governing case at minimum weight  \nSince 4.07 (gust) > 3.8 (manoeuvre), GUST governs.\n\n--------------------------------------------------------------------\n5. Design manoeuvring speed at minimum weight  \nV_A scales with √W : V_A(min) = 130 KEAS × √(4200/6000)\n                     = 130 × √0.70 = 130 × 0.83666 ≈ 109 KEAS\n\n--------------------------------------------------------------------\nResults"
+}

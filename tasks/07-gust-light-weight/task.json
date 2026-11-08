@@ -1,0 +1,45 @@
+{
+  "id": "07-gust-light-weight",
+  "title": "Gust load factor: the light aircraft is the critical one",
+  "area": "Loads",
+  "who": "Loads engineers and certification specialists; pilots (VA vs weight)",
+  "why_hard": "Gust load factor rises as wing loading falls, so at minimum flying weight the gust value (4.08) exceeds the 3.8 maneuver limit and governs, while at maximum weight maneuver governs. Maneuvering speed falls with weight (VA x sqrt(W/Wmax)): 108.8 KEAS, not 130. Both are widely misunderstood.",
+  "failure_cost": "Under-designed structure at light weights; a pilot flying the max-weight VA when light can overstress the airframe.",
+  "fields": {
+    "n_gust_max_weight": {
+      "type": "number",
+      "tol_abs": 0.02
+    },
+    "n_gust_min_weight": {
+      "type": "number",
+      "tol_abs": 0.02,
+      "critical": true,
+      "weight": 2
+    },
+    "design_n_max_weight": {
+      "type": "number",
+      "tol_abs": 0.02
+    },
+    "design_n_min_weight": {
+      "type": "number",
+      "tol_abs": 0.02
+    },
+    "governing_min_weight": {
+      "type": "enum",
+      "accept": [
+        "gust"
+      ],
+      "critical": true
+    },
+    "va_min_weight_keas": {
+      "type": "number",
+      "tol_abs": 0.5,
+      "critical": true
+    }
+  },
+  "sources": [
+    "14 CFR 23.341 (before Amendment 23-64): gust load factor formula",
+    "Pratt & Walker, NACA Report 1206 (1954): gust alleviation factor",
+    "FAA-H-8083-25: maneuvering speed decreases with weight"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "model": "gpt-5.5",
+  "variant": "zsec-topleft-comptop",
+  "trial": 1,
+  "familiar_case": false,
+  "passed": true,
+  "fields": {
+    "stress_A_psi": {
+      "ok": true,
+      "why": "got 9574.47, want 9574.47 ± 95.7447"
+    },
+    "stress_B_psi": {
+      "ok": true,
+      "why": "got -19148.9, want -19148.9 ± 191.489"
+    },
+    "max_abs_stress_psi": {
+      "ok": true,
+      "why": "got 19148.9, want 19148.9 ± 191.489"
+    }
+  },
+  "reference": {
+    "stress_A_psi": 9574.46808510638,
+    "stress_B_psi": -19148.93617021276,
+    "max_abs_stress_psi": 19148.93617021276
+  },
+  "usage": {
+    "input_tokens": 243,
+    "output_tokens": 3466,
+    "reasoning_tokens": 3072,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.5-2026-04-23"
+  },
+  "settings": {
+    "model": "gpt-5.5",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "prompt": "Stress check request: a cabin floor beam with a thin-walled Z cross-section (uniform thickness 0.08 in; use centre-line dimensions and the thin-wall approximation, dropping terms in t³).\n- Web: vertical, 4.0 in between the flange centre lines\n- Top flange: 1.25 in long, extending horizontally to the LEFT from the top of the web\n- Bottom flange: 1.25 in long, extending horizontally to the RIGHT from the bottom of the web\nPoint A = free tip of the top flange; point B = top web–flange corner.\n\nThe beam is loaded vertically and has no lateral restraint. At the section checked, the bending moment is 6,000 in·lb about the horizontal centroidal axis, in the sense that compresses the top of the section.\n\nReport the bending stress at A and at B (psi, tension positive) and the largest magnitude of bending stress on the section.\nEnd with a single JSON object in a ```json code block: {\"stress_A_psi\": 0, \"stress_B_psi\": 0, \"max_abs_stress_psi\": 0}",
+  "response": "Using thin-wall center-line properties about the centroid:\n\n- Centroid: at the web mid-height, \\(x_c=0,\\ y_c=2.0\\) in from the bottom web-flange corner.\n- \\(I_x = 1.2267\\ \\text{in}^4\\)\n- \\(I_y = 0.10417\\ \\text{in}^4\\)\n- \\(I_{xy} = -0.2500\\ \\text{in}^4\\)\n\nFor unrestrained unsymmetric bending with \\(M_x=6000\\ \\text{in·lb}\\), \\(M_y=0\\), tension positive:\n\n\\[\n\\sigma = \\frac{M_x\\left(I_{xy}x-I_y y\\right)}{I_x I_y-I_{xy}^2}\n\\]\n\nwhere \\(x,y\\) are centroidal coordinates.\n\n- Point A: \\(x=-1.25,\\ y=+2.0\\) in  \n  \\(\\sigma_A \\approx +9{,}574\\ \\text{psi}\\)\n\n- Point B: \\(x=0,\\ y=+2.0\\) in  \n  \\(\\sigma_B \\approx -19{,}149\\ \\text{psi}\\)\n\nLargest magnitude occurs at the web-flange corners at \\(x=0,\\ y=\\pm2.0\\):\n\n\\[\n|\\sigma|_{\\max} \\approx 19{,}149\\ \\text{psi}\n\\]\n\n```json\n{\"stress_A_psi\": 9574.47, \"stress_B_psi\": -19148.94, \"max_abs_stress_psi\": 19148.94}\n```"
+}

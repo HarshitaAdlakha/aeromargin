@@ -1,0 +1,506 @@
+[
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-deeper-uppertens-6000",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 4200, want 4200 \u00b1 42"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 17500, want 17500 \u00b1 175"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.714, want 0.714286 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-deeper-uppercomp-4500",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 6000, want 6000 \u00b1 60"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 23437.5, want 23437.5 \u00b1 234.375"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.28, want 0.28 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-deeper-uppertens-4500",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 3000, want 3000 \u00b1 30"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 11718.8, want 11718.8 \u00b1 117.188"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 1.56, want 1.56 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-shallower-uppercomp-4500",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 3000, want 3000 \u00b1 30"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 11718.8, want 11718.8 \u00b1 117.188"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 1.56, want 1.56 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-shallower-uppercomp-6000",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 4200, want 4200 \u00b1 42"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 17500, want 17500 \u00b1 175"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.7143, want 0.714286 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-shallower-uppertens-4500",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 6000, want 6000 \u00b1 60"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 23437.5, want 23437.5 \u00b1 234.375"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.28, want 0.28 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-deeper-uppercomp-6000",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 7800, want 7800 \u00b1 78"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 32500, want 32500 \u00b1 325"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got -0.0769, want -0.0769231 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "spar-shallower-uppertens-6000",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 7800, want 7800 \u00b1 78"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 32500, want 32500 \u00b1 325"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got -0.0769, want -0.0769231 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "zsec-topleft-compbottom",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got -9574.47, want -9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got 19148.9, want 19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19148.9, want 19148.9 \u00b1 191.489"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "zsec-topright-compbottom",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got -9574.47, want -9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got 19148.9, want 19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19148.9, want 19148.9 \u00b1 191.489"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "zsec-topleft-comptop",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got 9574, want 9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got -19149, want -19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19149, want 19148.9 \u00b1 191.489"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "variant": "zsec-topright-comptop",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got 9574, want 9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got -19149, want -19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19149, want 19148.9 \u00b1 191.489"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-deeper-uppertens-6000",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 4200, want 4200 \u00b1 42"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 17500, want 17500 \u00b1 175"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.714, want 0.714286 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-deeper-uppercomp-4500",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 6000, want 6000 \u00b1 60"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 23437.5, want 23437.5 \u00b1 234.375"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.28, want 0.28 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-shallower-uppertens-6000",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 7800, want 7800 \u00b1 78"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 32500, want 32500 \u00b1 325"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got -0.0769, want -0.0769231 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-deeper-uppertens-4500",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 3000, want 3000 \u00b1 30"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 11718.8, want 11718.8 \u00b1 117.188"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 1.56, want 1.56 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-shallower-uppercomp-6000",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 4200, want 4200 \u00b1 42"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 17500, want 17500 \u00b1 175"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.714, want 0.714286 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "zsec-topright-comptop",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got 9574, want 9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got -19149, want -19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19149, want 19148.9 \u00b1 191.489"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-shallower-uppercomp-4500",
+    "trial": 1,
+    "familiar_case": true,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 3000, want 3000 \u00b1 30"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 11718.8, want 11718.8 \u00b1 117.188"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 1.56, want 1.56 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-deeper-uppercomp-6000",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 7800, want 7800 \u00b1 78"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 32500, want 32500 \u00b1 325"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got -0.0769, want -0.0769231 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "spar-shallower-uppertens-4500",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 6000, want 6000 \u00b1 60"
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 23437.5, want 23437.5 \u00b1 234.375"
+      },
+      "ms": {
+        "ok": true,
+        "why": "got 0.28, want 0.28 \u00b1 0.01"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "zsec-topright-compbottom",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got -9574, want -9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got 19149, want 19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19149, want 19148.9 \u00b1 191.489"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "zsec-topleft-comptop",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got 9574.47, want 9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got -19148.9, want -19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19148.9, want 19148.9 \u00b1 191.489"
+      }
+    }
+  },
+  {
+    "model": "gpt-5.5",
+    "variant": "zsec-topleft-compbottom",
+    "trial": 1,
+    "familiar_case": false,
+    "passed": true,
+    "fields": {
+      "stress_A_psi": {
+        "ok": true,
+        "why": "got -9574.47, want -9574.47 \u00b1 95.7447"
+      },
+      "stress_B_psi": {
+        "ok": true,
+        "why": "got 19148.9, want 19148.9 \u00b1 191.489"
+      },
+      "max_abs_stress_psi": {
+        "ok": true,
+        "why": "got 19148.9, want 19148.9 \u00b1 191.489"
+      }
+    }
+  }
+]

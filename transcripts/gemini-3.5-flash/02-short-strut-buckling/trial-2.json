@@ -1,0 +1,51 @@
+{
+  "model": "gemini-3.5-flash",
+  "variant": "realistic",
+  "task": "02-short-strut-buckling",
+  "trial": 2,
+  "at": "2026-11-08T18:31:24+00:00",
+  "latency_s": 302.9,
+  "settings": {},
+  "usage": {},
+  "cost_usd": 0.0,
+  "error": "HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceede",
+  "passed": false,
+  "score": 0.0,
+  "grade": {
+    "parsed": false,
+    "score": 0.0,
+    "passed": false,
+    "fields": {
+      "slenderness_ratio": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "transition_slenderness": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "regime": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "critical_stress_psi": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "critical_load_lbf": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "ms": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "verdict": {
+        "ok": false,
+        "why": "no JSON answer found"
+      }
+    }
+  },
+  "prompt": "Stress check request: compression strut in a light aircraft's landing-gear bay.\n\n**Strut**\n- Round aluminium tube, 1.000 in outside diameter, 0.065 in wall\n- 20.0 in between pin centres; pinned at both ends (end-fixity coefficient c = 1)\n- E = 9.9 × 10⁶ psi; compressive yield stress Fcy = 35,000 psi\n- Local crippling of the tube wall does not govern.\n\n**Load**\nLimit axial compression 3,100 lbf. Factor of safety 1.5; no fitting factor.\n\n**Scope**\nCheck the strut for primary column buckling with the classical column curves the company stress manual uses (Bruhn, Section C2), with Fcy as the material cut-off.\n\n**Report**\n1. The slenderness ratio L′/ρ\n2. The slenderness ratio that separates the short-column and long-column curves\n3. Which curve applies: `johnson` or `euler`\n4. The critical stress (psi) and critical load (lbf)\n5. The margin of safety at ultimate load, MS = P_cr/P_ult − 1\n6. The verdict: `pass` if MS ≥ 0, otherwise `fail`\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"slenderness_ratio\": 0, \"transition_slenderness\": 0, \"regime\": \"johnson|euler\", \"critical_stress_psi\": 0, \"critical_load_lbf\": 0, \"ms\": 0, \"verdict\": \"pass|fail\"}\n```\n",
+  "response": ""
+}

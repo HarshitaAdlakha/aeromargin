@@ -1,0 +1,43 @@
+{
+  "id": "06-takeoff-true-wind",
+  "title": "Takeoff planning from a METAR, a chart supplement and a NOTAM",
+  "area": "Flight operations / performance",
+  "who": "Pilots, flight instructors, dispatchers",
+  "why_hard": "Three independent things must all be caught. (1) METAR winds are reported from TRUE north while runway headings are magnetic: with 15 deg E variation, 260 true = 245 magnetic, giving 5.5 kt of headwind on runway 18 (treating it as magnetic gives 2.0 kt). (2) The grass correction is 15% of the GROUND ROLL, added to both figures. (3) A NOTAM cuts the take-off run available from 2,700 ft to 2,500 ft. Required runway is 2,655 ft, so the takeoff does NOT meet the rule; a planner who misses the NOTAM approves it.",
+  "failure_cost": "Wrong go/no-go decisions on short grass strips.",
+  "fields": {
+    "pressure_altitude_ft": {
+      "type": "number",
+      "tol_abs": 1
+    },
+    "headwind_component_kt": {
+      "type": "number",
+      "tol_abs": 0.6,
+      "critical": true
+    },
+    "ground_roll_ft": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "total_over_50ft_ft": {
+      "type": "number",
+      "tol_rel": 0.01,
+      "critical": true,
+      "weight": 2
+    },
+    "required_runway_ft": {
+      "type": "number",
+      "tol_rel": 0.01
+    },
+    "meets_company_rule": {
+      "type": "bool",
+      "critical": true,
+      "weight": 2
+    }
+  },
+  "sources": [
+    "ICAO Annex 3 / WMO-No. 306 Manual on Codes (METAR wind direction in degrees true)",
+    "FAA Aeronautical Information Manual, Chapter 7 (METAR winds true; ATIS and tower winds magnetic)",
+    "FAA-H-8083-25, Pilot's Handbook of Aeronautical Knowledge, Ch. 11 (takeoff charts)"
+  ]
+}

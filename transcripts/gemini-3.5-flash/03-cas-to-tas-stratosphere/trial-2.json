@@ -1,0 +1,43 @@
+{
+  "model": "gemini-3.5-flash",
+  "variant": "realistic",
+  "task": "03-cas-to-tas-stratosphere",
+  "trial": 2,
+  "at": "2026-11-08T18:33:30+00:00",
+  "latency_s": 303.3,
+  "settings": {},
+  "usage": {},
+  "cost_usd": 0.0,
+  "error": "HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceede",
+  "passed": false,
+  "score": 0.0,
+  "grade": {
+    "parsed": false,
+    "score": 0.0,
+    "passed": false,
+    "fields": {
+      "static_pressure_pa": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "oat_k": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "mach": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "tas_kt": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "density_altitude_ft": {
+        "ok": false,
+        "why": "no JSON answer found"
+      }
+    }
+  },
+  "prompt": "A business jet is in level cruise. The crew wants a hand check of the flight-management system's air data.\n\n**Conditions**\n- Pressure altitude 41,000 ft (standard altimeter setting)\n- Outside air temperature ISA + 10 °C\n- Calibrated airspeed 250 kt (no instrument or position error)\n\n**Constants to use**\nICAO Standard Atmosphere: 101,325 Pa and 288.15 K at sea level, lapse rate 0.0065 K/m to 11,000 m; g₀ = 9.80665 m/s²; R = 287.05287 J/(kg·K); γ = 1.4; 1 ft = 0.3048 m; 1 kt = 0.514444 m/s. Treat pressure altitude as geopotential altitude.\n\n**Report**\n1. Static pressure at the aircraft (Pa)\n2. Outside air temperature (K)\n3. Mach number\n4. True airspeed (kt)\n5. Density altitude (ft): the ICAO Standard Atmosphere altitude whose density equals the actual air density\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"static_pressure_pa\": 0, \"oat_k\": 0, \"mach\": 0, \"tas_kt\": 0, \"density_altitude_ft\": 0}\n```\n",
+  "response": ""
+}

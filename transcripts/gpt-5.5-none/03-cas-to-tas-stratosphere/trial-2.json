@@ -1,0 +1,65 @@
+{
+  "model": "gpt-5.5-none",
+  "variant": "realistic",
+  "task": "03-cas-to-tas-stratosphere",
+  "trial": 2,
+  "at": "2026-11-08T18:34:37+00:00",
+  "latency_s": 15.5,
+  "settings": {
+    "model": "gpt-5.5",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "none"
+  },
+  "usage": {
+    "input_tokens": 304,
+    "output_tokens": 1634,
+    "reasoning_tokens": 0,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.5-2026-04-23"
+  },
+  "cost_usd": 0.05054,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "static_pressure_pa": {
+        "ok": true,
+        "why": "got 17874.8, want 17874 ± 53.622",
+        "critical": true
+      },
+      "oat_k": {
+        "ok": true,
+        "why": "got 226.65, want 226.65 ± 0.2",
+        "critical": false
+      },
+      "mach": {
+        "ok": true,
+        "why": "got 0.8419, want 0.84 ± 0.003",
+        "critical": true
+      },
+      "tas_kt": {
+        "ok": true,
+        "why": "got 493.91, want 492.8 ± 1.5",
+        "critical": true
+      },
+      "density_altitude_ft": {
+        "ok": true,
+        "why": "got 41941.9, want 41939 ± 100",
+        "critical": true
+      }
+    },
+    "answer": {
+      "static_pressure_pa": 17874.77,
+      "oat_k": 226.65,
+      "mach": 0.8419,
+      "tas_kt": 493.91,
+      "density_altitude_ft": 41941.9
+    }
+  },
+  "prompt": "A business jet is in level cruise. The crew wants a hand check of the flight-management system's air data.\n\n**Conditions**\n- Pressure altitude 41,000 ft (standard altimeter setting)\n- Outside air temperature ISA + 10 °C\n- Calibrated airspeed 250 kt (no instrument or position error)\n\n**Constants to use**\nICAO Standard Atmosphere: 101,325 Pa and 288.15 K at sea level, lapse rate 0.0065 K/m to 11,000 m; g₀ = 9.80665 m/s²; R = 287.05287 J/(kg·K); γ = 1.4; 1 ft = 0.3048 m; 1 kt = 0.514444 m/s. Treat pressure altitude as geopotential altitude.\n\n**Report**\n1. Static pressure at the aircraft (Pa)\n2. Outside air temperature (K)\n3. Mach number\n4. True airspeed (kt)\n5. Density altitude (ft): the ICAO Standard Atmosphere altitude whose density equals the actual air density\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"static_pressure_pa\": 0, \"oat_k\": 0, \"mach\": 0, \"tas_kt\": 0, \"density_altitude_ft\": 0}\n```\n",
+  "response": "Given pressure altitude is to be treated as geopotential altitude.\n\n### 1. Static pressure at 41,000 ft\n\nConvert altitude:\n\n\\[\nh = 41000 \\times 0.3048 = 12496.8 \\text{ m}\n\\]\n\nThis is above the ICAO troposphere limit of 11,000 m, so compute pressure at 11,000 m first.\n\nSea-level standard conditions:\n\n\\[\nP_0 = 101325 \\text{ Pa}\n\\]\n\n\\[\nT_0 = 288.15 \\text{ K}\n\\]\n\n\\[\nL = 0.0065 \\text{ K/m}\n\\]\n\nTemperature at 11,000 m:\n\n\\[\nT_{11} = 288.15 - 0.0065(11000) = 216.65 \\text{ K}\n\\]\n\nPressure at 11,000 m:\n\n\\[\nP_{11} = P_0 \\left(\\frac{T_{11}}{T_0}\\right)^{g_0/(RL)}\n\\]\n\n\\[\nP_{11} = 101325\\left(\\frac{216.65}{288.15}\\right)^{9.80665/(287.05287 \\times 0.0065)}\n\\]\n\n\\[\nP_{11} \\approx 22632.04 \\text{ Pa}\n\\]\n\nAbove 11,000 m, the ICAO standard atmosphere is isothermal:\n\n\\[\nP = P_{11}\\exp\\left[-\\frac{g_0(h-11000)}{R T_{11}}\\right]\n\\]\n\n\\[\nP = 22632.04 \\exp\\left[-\\frac{9.80665(12496.8-11000)}{287.05287 \\times 216.65}\\right]\n\\]\n\n\\[\nP \\approx 17874.77 \\text{ Pa}\n\\]\n\nSo:\n\n\\[\n\\boxed{P \\approx 17874.77 \\text{ Pa}}\n\\]\n\n---\n\n### 2. Outside air temperature\n\nAt 41,000 ft, the ICAO standard temperature is isothermal:\n\n\\[\nT_{\\text{ISA}} = 216.65 \\text{ K}\n\\]\n\nGiven OAT is ISA + 10 °C:\n\n\\[\nT = 216.65 + 10 = 226.65 \\text{ K}\n\\]\n\n\\[\n\\boxed{T = 226.65 \\text{ K}}\n\\]\n\n---\n\n### 3. Mach number from calibrated airspeed\n\nGiven calibrated airspeed is 250 kt with no instrument or position error, use sea-level standard compressible impact pressure relation.\n\nConvert CAS:\n\n\\[\nV_C = 250 \\times 0.514444 = 128.611 \\text{ m/s}\n\\]\n\nSea-level speed of sound:\n\n\\[\na_0 = \\sqrt{\\gamma R T_0}\n\\]\n\n\\[\na_0 = \\sqrt{1.4 \\times 287.05287 \\times 288.15}\n\\]\n\n\\[\na_0 \\approx 340.294 \\text{ m/s}\n\\]\n\nEquivalent sea-level Mach for CAS:\n\n\\[\nM_C = \\frac{V_C}{a_0}\n\\]\n\n\\[\nM_C \\approx \\frac{128.611}{340.294} = 0.37794\n\\]\n\nSea-level impact pressure corresponding to CAS:\n\n\\[\nq_c = P_0\\left[\\left(1+\\frac{\\gamma-1}{2}M_C^2\\right)^{\\gamma/(\\gamma-1)}-1\\right]\n\\]\n\n\\[\nq_c = 101325\\left[\\left(1+0.2M_C^2\\right)^{3.5}-1\\right]\n\\]\n\n\\[\nq_c \\approx 10308.65 \\text{ Pa}\n\\]\n\nAt the aircraft altitude, solve:\n\n\\[\nq_c = P\\left[\\left(1+0.2M^2\\right)^{3.5}-1\\right]\n\\]\n\n\\[\n\\frac{q_c}{P}+1 = \\left(1+0.2M^2\\right)^{3.5}\n\\]\n\n\\[\nM = \\sqrt{\\frac{2}{\\gamma-1}\\left[\\left(1+\\frac{q_c}{P}\\right)^{(\\gamma-1)/\\gamma}-1\\right]}\n\\]\n\n\\[\nM = \\sqrt{5\\left[\\left(1+\\frac{10308.65}{17874.77}\\right)^{2/7}-1\\right]}\n\\]\n\n\\[\nM \\approx 0.8419\n\\]\n\n\\[\n\\boxed{M \\approx 0.842}\n\\]\n\n---\n\n### 4. True airspeed\n\nActual speed of sound:\n\n\\[\na = \\sqrt{\\gamma R T}\n\\]\n\n\\[\na = \\sqrt{1.4 \\times 287.05287 \\times 226.65}\n\\]\n\n\\[\na \\approx 301.770 \\text{ m/s}\n\\]\n\nTrue airspeed:\n\n\\[\nV_T = Ma\n\\]\n\n\\[\nV_T \\approx 0.8419 \\times 301.770 = 254.09 \\text{ m/s}\n\\]\n\nConvert to knots:\n\n\\[\nV_T = \\frac{254.09}{0.514444}\n\\]\n\n\\[\nV_T \\approx 493.91 \\text{ kt}\n\\]\n\n\\[\n\\boxed{TAS \\approx 493.91 \\text{ kt}}\n\\]\n\n---\n\n### 5. Density altitude\n\nActual density:\n\n\\[\n\\rho = \\frac{P}{RT}\n\\]\n\n\\[\n\\rho = \\frac{17874.77}{287.05287 \\times 226.65}\n\\]\n\n\\[\n\\rho \\approx 0.27472 \\text{ kg/m}^3\n\\]\n\nFind the ICAO Standard Atmosphere altitude where density equals this value.\n\nAt 11,000 m:\n\n\\[\n\\rho_{11} = \\frac{P_{11}}{RT_{11}}\n\\]\n\n\\[\n\\rho_{11} = \\frac{22632.04}{287.05287 \\times 216.65}\n\\]\n\n\\[\n\\rho_{11} \\approx 0.36392 \\text{ kg/m}^3\n\\]\n\nSince actual density is lower than \\(\\rho_{11}\\), the density altitude is above 11,000 m in the isothermal layer.\n\nFor the isothermal layer:\n\n\\[\n\\rho = \\rho_{11}\\exp\\left[-\\frac{g_0(h-11000)}{R T_{11}}\\right]\n\\]\n\nSolve for \\(h\\):\n\n\\[\nh = 11000 - \\frac{R T_{11}}{g_0}\\ln\\left(\\frac{\\rho}{\\rho_{11}}\\right)\n\\]\n\n\\[\nh = 11000 - \\frac{287.05287 \\times 216.65}{9.80665}\n\\ln\\left(\\frac{0.27472}{0.36392}\\right)\n\\]\n\n\\[\nh \\approx 12783.89 \\text{ m}\n\\]\n\nConvert to ft:\n\n\\[\nh = \\frac{12783.89}{0.3048}\n\\]\n\n\\[\nh \\approx 41941.9 \\text{ ft}\n\\]\n\n\\[\n\\boxed{\\text{Density altitude} \\approx 41942 \\text{ ft}}\n\\]\n\n```json\n{\"static_pressure_pa\":17874.77,\"oat_k\":226.65,\"mach\":0.8419,\"tas_kt\":493.91,\"density_altitude_ft\":41941.9}\n```"
+}

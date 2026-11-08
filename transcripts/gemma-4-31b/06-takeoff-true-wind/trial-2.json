@@ -1,0 +1,70 @@
+{
+  "model": "gemma-4-31b",
+  "variant": "realistic",
+  "task": "06-takeoff-true-wind",
+  "trial": 2,
+  "at": "2026-11-08T18:50:16+00:00",
+  "latency_s": 209.5,
+  "settings": {
+    "model": "gemma-4-31b-it",
+    "maxOutputTokens": 32000
+  },
+  "usage": {
+    "input_tokens": 758,
+    "output_tokens": 6859,
+    "reasoning_tokens": 5458,
+    "finish_reason": "STOP",
+    "served_model": "gemma-4-31b-it"
+  },
+  "cost_usd": 0.0,
+  "error": null,
+  "passed": false,
+  "score": 0.375,
+  "grade": {
+    "parsed": true,
+    "score": 0.375,
+    "passed": false,
+    "fields": {
+      "pressure_altitude_ft": {
+        "ok": true,
+        "why": "got 1750, want 1750 ± 1",
+        "critical": false
+      },
+      "headwind_component_kt": {
+        "ok": false,
+        "why": "got 1.95, want 5.47 ± 0.6",
+        "critical": true
+      },
+      "ground_roll_ft": {
+        "ok": false,
+        "why": "got 1385.75, want 1330 ± 13.3",
+        "critical": false
+      },
+      "total_over_50ft_ft": {
+        "ok": false,
+        "why": "got 2212.45, want 2124 ± 21.24",
+        "critical": true
+      },
+      "required_runway_ft": {
+        "ok": false,
+        "why": "got 2765.56, want 2655 ± 26.55",
+        "critical": false
+      },
+      "meets_company_rule": {
+        "ok": true,
+        "why": "got False, want False",
+        "critical": true
+      }
+    },
+    "answer": {
+      "pressure_altitude_ft": 1750,
+      "headwind_component_kt": 1.95,
+      "ground_roll_ft": 1385.75,
+      "total_over_50ft_ft": 2212.45,
+      "required_runway_ft": 2765.56,
+      "meets_company_rule": false
+    }
+  },
+  "prompt": "A student pilot asks you, their instructor, to check this morning's takeoff planning. The aircraft is a single-engine piston at 2,550 lb; short-field technique, flaps 10°.\n\n**Takeoff distance table (flight manual), feet: ground roll / total over a 50 ft obstacle**\n\n| Pressure altitude | 0 °C | 10 °C | 20 °C | 30 °C | 40 °C |\n|---|---|---|---|---|---|\n| Sea level | 860 / 1465 | 925 / 1575 | 995 / 1690 | 1070 / 1810 | 1150 / 1945 |\n| 2000 ft | 1030 / 1740 | 1110 / 1875 | 1195 / 2015 | 1285 / 2165 | 1380 / 2330 |\n| 4000 ft | 1235 / 2085 | 1335 / 2255 | 1440 / 2440 | 1550 / 2640 | 1670 / 2865 |\n\nFlight manual notes:\n1. Decrease distances 10% for each 9 knots headwind. For operation with tailwinds up to 10 knots, increase distances by 10% for each 2 knots. (Apply proportionally.)\n2. For operation on a dry, grass runway, increase distances by 15% of the \"ground roll\" figure (add that amount to both figures).\n3. Apply the wind correction first, then the surface correction. Interpolate the table linearly.\n\n**Airfield data (from the chart supplement)**\nElevation 1,450 ft. Magnetic variation 15° E. Runway 18/36, dry grass, 2,700 ft. Runway 18 magnetic heading 178°.\n\n**NOTAM**\nRWY 18 TORA 2,500 FT. FIRST 200 FT RWY 18 CLSD WIP.\n\n**Weather**\nMETAR: `27/12 A2962`, wind `26014KT`, no gusts, visibility and cloud not limiting.\n\n**School rule**\nTotal distance over 50 ft × 1.25 must not exceed the take-off run available.\n\n**Report**\n1. Pressure altitude (ft)\n2. Headwind component on the departure runway (kt; negative for a tailwind)\n3. Corrected ground roll and corrected total distance over 50 ft (ft)\n4. Runway required under the school rule (ft)\n5. Whether the takeoff meets the school rule (true/false)\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys, plain numbers and a JSON boolean:\n\n```json\n{\"pressure_altitude_ft\": 0, \"headwind_component_kt\": 0, \"ground_roll_ft\": 0, \"total_over_50ft_ft\": 0, \"required_runway_ft\": 0, \"meets_company_rule\": true}\n```\n",
+  "response": "To determine if the takeoff meets the school rule, we will calculate the pressure altitude, headwind component, and the corrected takeoff distances.\n\n### 1. Pressure Altitude (PA)\nPressure altitude is calculated by adjusting the elevation for the difference between the current altimeter setting and the standard altimeter setting (29.92 inHg).\n$$\\text{PA} = \\text{Elevation} + (29.92 - \\text{Altimeter}) \\times 1,000\\text{ ft/inHg}$$\n$$\\text{PA} = 1,450 + (29.92 - 29.62) \\times 1,000 = 1,450 + 300 = 1,750\\text{ ft}$$\n\n### 2. Headwind Component\nThe headwind component is the wind speed multiplied by the cosine of the angle between the wind direction and the runway heading.\n$$\\text{Runway 18 Heading} = 178^\\circ$$\n$$\\text{Wind Direction} = 260^\\circ, \\text{ Speed} = 14\\text{ kt}$$\n$$\\text{Angle} = 260^\\circ - 178^\\circ = 82^\\circ$$\n$$\\text{Headwind} = 14 \\times \\cos(82^\\circ) \\approx 14 \\times 0.13917 = 1.95\\text{ kt}$$\n\n### 3. Corrected Takeoff Distances\n**Step A: Linear Interpolation for Temperature (27 °C)**\n*   At 0 ft PA:\n    *   $\\text{Ground Roll} = 995 + \\frac{27-20}{30-20} \\times (1070-995) = 995 + 0.7(75) = 1,047.5\\text{ ft}$\n    *   $\\text{Total Distance} = 1690 + \\frac{27-20}{30-20} \\times (1810-1690) = 1690 + 0.7(120) = 1,774\\text{ ft}$\n*   At 2,000 ft PA:\n    *   $\\text{Ground Roll} = 1195 + \\frac{27-20}{30-20} \\times (1285-1195) = 1195 + 0.7(90) = 1,258\\text{ ft}$\n    *   $\\text{Total Distance} = 2015 + \\frac{27-20}{30-20} \\times (2165-2015) = 2015 + 0.7(150) = 2,120\\text{ ft}$\n\n**Step B: Linear Interpolation for Pressure Altitude (1,750 ft)**\n*   $\\text{Ground Roll} = 1047.5 + \\frac{1750}{2000} \\times (1258 - 1047.5) = 1047.5 + 0.875(210.5) = 1,231.69\\text{ ft}$\n*   $\\text{Total Distance} = 1774 + \\frac{1750}{2000} \\times (2120 - 1774) = 1774 + 0.875(346) = 2,076.75\\text{ ft}$\n\n**Step C: Wind Correction**\nDecrease distances by 10% for every 9 kt headwind.\n$$\\text{Correction Factor} = \\frac{1.95}{9} \\times 0.10 \\approx 0.0217\\text{ (2.17\\% decrease)}$$\n*   $\\text{Wind-Corrected Ground Roll} = 1231.69 \\times (1 - 0.0217) \\approx 1,205.0\\text{ ft}$\n*   $\\text{Wind-Corrected Total Distance} = 2076.75 \\times (1 - 0.0217) \\approx 2,031.7\\text{ ft}$\n\n**Step D: Surface Correction (Dry Grass)**\nIncrease both figures by 15% of the ground roll.\n$$\\text{Correction} = 1205.0 \\times 0.15 = 180.75\\text{ ft}$$\n*   $\\text{Corrected Ground Roll} = 1205.0 + 180.75 = 1,385.75\\text{ ft}$\n*   $\\text{Corrected Total Distance} = 2031.7 + 180.75 = 2,212.45\\text{ ft}$\n\n### 4. School Rule Check\n*   $\\text{Required Distance} = 2,212.45\\text{ ft} \\times 1.25 = 2,765.56\\text{ ft}$\n*   $\\text{Take-off Run Available (TORA)} = 2,500\\text{ ft (TORA)} - 200\\text{ ft (closed)} = 2,300\\text{ ft}$\n*   Since $2,765.56\\text{ ft} > 2,300\\text{ ft}$, the takeoff does **not** meet the rule.\n\n```json\n{\"pressure_altitude_ft\": 1750, \"headwind_component_kt\": 1.95, \"ground_roll_ft\": 1385.75, \"total_over_50ft_ft\": 2212.45, \"required_runway_ft\": 2765.56, \"meets_company_rule\": false}\n```"
+}

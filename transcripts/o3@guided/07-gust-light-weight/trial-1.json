@@ -1,0 +1,71 @@
+{
+  "model": "o3@guided",
+  "variant": "guided",
+  "task": "07-gust-light-weight",
+  "trial": 1,
+  "at": "2026-11-08T18:39:33+00:00",
+  "latency_s": 28.0,
+  "settings": {
+    "model": "o3",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 416,
+    "output_tokens": 3914,
+    "reasoning_tokens": 3136,
+    "finish_reason": "stop",
+    "served_model": "o3-2025-04-16"
+  },
+  "cost_usd": 0.03214,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "n_gust_max_weight": {
+        "ok": true,
+        "why": "got 3.29, want 3.29 ± 0.02",
+        "critical": false
+      },
+      "n_gust_min_weight": {
+        "ok": true,
+        "why": "got 4.07, want 4.075 ± 0.02",
+        "critical": true
+      },
+      "design_n_max_weight": {
+        "ok": true,
+        "why": "got 3.8, want 3.8 ± 0.02",
+        "critical": false
+      },
+      "design_n_min_weight": {
+        "ok": true,
+        "why": "got 4.07, want 4.075 ± 0.02",
+        "critical": false
+      },
+      "governing_min_weight": {
+        "ok": true,
+        "why": "got 'gust', want one of ['gust']",
+        "critical": true
+      },
+      "va_min_weight_keas": {
+        "ok": true,
+        "why": "got 109, want 108.8 ± 0.5",
+        "critical": true
+      }
+    },
+    "answer": {
+      "n_gust_max_weight": 3.29,
+      "n_gust_min_weight": 4.07,
+      "design_n_max_weight": 3.8,
+      "design_n_min_weight": 4.07,
+      "governing_min_weight": "gust",
+      "va_min_weight_keas": 109
+    }
+  },
+  "prompt": "You are checking the design limit load factors of a normal-category twin (14 CFR Part 23, certification basis before Amendment 23-64).\n\n**Aircraft data**\n- Wing area S = 175 ft²; mean geometric chord c = 5.4 ft\n- Wing lift-curve slope a = 5.5 per radian\n- Design cruising speed V_C = 190 KEAS\n- Maximum weight 6,000 lb; minimum flying weight 4,200 lb\n- Positive limit maneuvering load factor: 3.8\n- Design maneuvering speed at maximum weight: 130 KEAS\n\n**Conditions**\n- Positive derived gust velocity at V_C: 50 ft/s (EAS), sea level, ρ₀ = 0.002377 slug/ft³, g = 32.2 ft/s²\n- Use the gust load factor formula of 14 CFR 23.341 as it stood before Amendment 23-64, including its gust alleviation factor and the 498 constant for V in knots.\n\n**Report**\n1. The positive gust load factor at V_C at maximum weight\n2. The positive gust load factor at V_C at minimum flying weight\n3. The design positive limit load factor at each weight (the larger of the gust and maneuver values)\n4. Which condition governs at minimum flying weight: `gust` or `maneuver`\n5. The design maneuvering speed V_A at minimum flying weight (KEAS), scaling the maximum-weight value the standard way for a lighter aircraft\n\nShow your working. End your answer with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"n_gust_max_weight\": 0, \"n_gust_min_weight\": 0, \"design_n_max_weight\": 0, \"design_n_min_weight\": 0, \"governing_min_weight\": \"gust|maneuver\", \"va_min_weight_keas\": 0}\n```\n",
+  "response": "Step-by-step calculations\n\nGiven data  \nS = 175 ft² , c = 5.4 ft , a = 5.5 rad⁻¹  \nρ₀ = 0.002377 slug ft⁻³ , g = 32.2 ft s⁻²  \nV C = 190 KEAS = 190 × 1.68781 = 320.684 ft s⁻¹  \nUde (positive) = 50 ft s⁻¹  \nWmax = 6000 lb , Wmin = 4200 lb  \nnlimit (maneuver) = 3.8 (Normal category)  \nV A,max-wt = 130 KEAS\n\n1. Auxiliary constants used for both weights  \n\nρ S c a = 0.002377 × 175 × 5.4 × 5.5 = 12.35465  \nρ S c a g = 12.35465 × 32.2 = 398.202  \n\nK_g and μ_g formulas from 14 CFR 23.341 (pre-23-64)  \nμ_g = 2W /(ρ S c a g)  \nK_g = 0.88 μ_g /(5.3 + μ_g)  \n\nCommon numerator in Δn expression  \nN = ρ V Ude a S = 0.002377 × 320.684 × 50 × 5.5 × 175 = 36 681.98  \n\nΔn = K_g N /(2W) ;     n_gust = 1 + Δn  \n\n2. Maximum weight (6000 lb)  \n\nμ_g = 2·6000 /398.202 = 30.129  \nK_g = 0.88·30.129 /(5.3+30.129) = 0.7487  \n\nΔn = 0.7487 × 36 681.98 /(2·6000) = 2.2875  \nn_gust,max-wt = 1 + 2.2875 = 3.29  \n\n3. Minimum flying weight (4200 lb)  \n\nμ_g = 2·4200 /398.202 = 21.089  \nK_g = 0.88·21.089 /(5.3+21.089) = 0.7035  \n\nΔn = 0.7035 × 36 681.98 /(2·4200) = 3.071  \nn_gust,min-wt = 1 + 3.071 = 4.07  \n\n4. Design positive limit load factors  \n\nMax weight: larger of 3.29 (gust) and 3.8 (maneuver) → 3.80  \nMin weight: larger of 4.07 (gust) and 3.8 (maneuver) → 4.07  \n\nThus gust governs at the minimum flying weight.  \n\n5. Maneuvering speed at minimum weight  \n\nV_A ∝ √W , so  \nV_A,min = 130 KEAS × √(4200/6000)  \n          = 130 × √0.70 = 130 × 0.83666 ≈ 109 KEAS  \n\nResulting summary:\n\n```json\n{\"n_gust_max_weight\": 3.29, \"n_gust_min_weight\": 4.07, \"design_n_max_weight\": 3.8, \"design_n_min_weight\": 4.07, \"governing_min_weight\": \"gust\", \"va_min_weight_keas\": 109}\n```\n"
+}

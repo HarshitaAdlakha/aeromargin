@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AeroMargin research brief</title>
+<meta name="description" content="The eval-design research, prior aerospace benchmarks and engineering references behind AeroMargin, and what we took from each.">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #eef1f4; --card: #ffffff; --ink: #0f1720; --ink-2: #3c4856; --muted: #7b8794; --line: #d8dee5; --accent: #e8590c; --blue: #1c64f2; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #0c1117; --card: #151c24; --ink: #eef1f4; --ink-2: #c3ccd6; --muted: #8592a0; --line: #26313d; --blue: #6ea8ff; } }
+  :root[data-theme="dark"] { --paper: #0c1117; --card: #151c24; --ink: #eef1f4; --ink-2: #c3ccd6; --muted: #8592a0; --line: #26313d; --blue: #6ea8ff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16.5px/1.62 Inter, system-ui, sans-serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 56px 16px 96px; }
+  .label { font: 500 11px "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 400 clamp(38px, 7vw, 60px)/1.02 "Instrument Serif", serif; letter-spacing: -.02em; margin: 14px 0 18px; }
+  h1 em, h2 em { color: var(--accent); }
+  h2 { font: 400 31px/1.1 "Instrument Serif", serif; margin: 48px 0 12px; }
+  p, li { color: var(--ink-2); }
+  .paper { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin: 12px 0; }
+  .paper .t { font-weight: 600; color: var(--ink); }
+  .paper .m { font-size: 13px; color: var(--muted); margin: 2px 0 8px; }
+  .paper .took { border-top: 1px dashed var(--line); padding-top: 8px; margin-top: 8px; font-size: 14.5px; }
+  .paper .took b { color: var(--accent); font: 500 11px "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; margin-right: 6px; }
+  a { color: var(--blue); }
+  .tbl { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); font-size: 14.5px; min-width: 560px; }
+  th, td { text-align: left; padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--ink); color: var(--paper); font: 500 11px "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+  code { font: 13.5px "JetBrains Mono", monospace; }
+</style>
+</head>
+<body>
+<main>
+  <div class="label">AeroMargin · research brief · Paras Adlakha &amp; Harshita Adlakha · 8 Nov 2026</div>
+  <h1>What the research says about <em>evals that experts can trust</em>.</h1>
+  <p>Three questions shaped AeroMargin. How should an expert eval be built so that judges can trust it? What already exists for aerospace? And which engineering rules does each task rest on, so that two independent stress or performance engineers reach the same answer? For each one we used the strongest sources we could find: the guidance the hackathon points to, highly cited peer-reviewed work, and 2025–26 preprints where the field is too new for journals.</p>
+
+  <h2>1 · How to build an eval <em>you can trust</em></h2>
+  <div class="paper"><div class="t"><a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents">Demystifying evals for AI agents</a></div>
+    <div class="m">Anthropic engineering guidance · the hackathon's recommended reading</div>
+    Vocabulary (task, trial, grader, transcript, outcome, harness), the case for code-based graders, pass@k against pass^k, and a roadmap from a handful of hand-checked tasks to a trusted suite.
+    <div class="took"><b>Took</b>The repository mirrors that vocabulary: <code>tasks/</code>, <code>graders/</code>, <code>run_eval.py</code> (harness), <code>transcripts/</code>. We report pass^3 next to the pass rate, because a stress engineer has to be right every time.</div></div>
+  <div class="paper"><div class="t">SWE-bench Verified, Terminal-Bench 2.0 (Harbor) and τ-bench</div>
+    <div class="m">Jimenez et al. 2024 / OpenAI 2024 · Terminal-Bench team 2025 · Yao et al. 2024</div>
+    Each task ships with a reference solution that must pass its own tests. Humans remove tasks that experts cannot agree on. Graders check the end state, not the path. τ-bench introduced pass^k to measure consistency.
+    <div class="took"><b>Took</b>Every task has <code>solution.py</code>. An oracle run pushes each reference through the same harness and grader (10/10 pass). The graders check only the final JSON, so any valid method passes.</div></div>
+  <div class="paper"><div class="t"><a href="https://consensus.app/papers/details/88dc4cd88c44598a90a595dd43372d92/">The Coin Flip Judge? Reliability and Bias in LLM-as-a-Judge Evaluation</a> · <a href="https://consensus.app/papers/details/c1e804dd3c1d5f39bab35205905f683f/">Reliability without Validity</a></div>
+    <div class="m">Yagubyan, arXiv 2026 · Norman et al., arXiv 2026 (21 judges, ~541,000 judgments)</div>
+    Repeated identical LLM-judge runs flip pairwise verdicts 13.6% of the time on average. Cross-judge agreement was only κ = 0.51. Judge rankings shift by up to 14 places across benchmarks.
+    <div class="took"><b>Took</b>No LLM judge at all. Every task has a defensible number or label, so all ten graders are deterministic code, with tolerances set from the precision of the input data.</div></div>
+  <div class="paper"><div class="t"><a href="https://consensus.app/papers/details/cd3618ac46e15447b9a943510708dc4b/">GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in LLMs</a></div>
+    <div class="m">Mirzadeh et al. (Apple), 2024 · ~730 citations</div>
+    Performance drops when only the numbers change, and falls by up to 65% when one irrelevant-but-plausible clause is added. The authors argue that models replicate reasoning steps seen in training rather than reasoning.
+    <div class="took"><b>Took</b>This is the mechanism we test in engineering form. Each task contains one condition that reverses a textbook default (a taper running the other way, an unsymmetric section, a wind in true degrees). A model that replays the familiar steps gets a confident, wrong answer.</div></div>
+  <div class="paper"><div class="t"><a href="https://consensus.app/papers/details/a42b2be99eaa508f924c859bb3e684e0/">Large Language Model Reasoning Failures</a></div>
+    <div class="m">Song et al., <i>Transactions on Machine Learning Research</i>, 2026</div>
+    A taxonomy of fundamental failures, application-specific limitations and robustness issues (inconsistent performance across minor variations).
+    <div class="took"><b>Took</b>We report spread across trials as well as accuracy. The failures we see are mostly the "robustness" kind: the same model gets the same task right on one trial and wrong on the next.</div></div>
+
+  <h2>2 · What exists for <em>aerospace</em></h2>
+  <div class="tbl"><table>
+    <tr><th>Benchmark</th><th>What it tests</th><th>Gap AeroMargin fills</th></tr>
+    <tr><td><a href="https://www.executivegov.com/articles/mitre-faa-alue-benchmark-aerospace-llm-evaluation">ALUE</a> (MITRE + FAA, 2025)</td><td>Aerospace language understanding: air traffic, the National Airspace System, documents</td><td>Engineering calculations with a single defensible answer</td></tr>
+    <tr><td><a href="https://arxiv.org/abs/2607.01829">Pre-Flight</a> (arXiv 2607.01829, 2026)</td><td>300 multiple-choice questions on aviation operational knowledge</td><td>Free-form numeric work, graded with tolerances; no options to guess from</td></tr>
+    <tr><td><a href="https://arc.aiaa.org/doi/10.2514/6.2025-0702">Aerospace Engineering Evaluation Set</a> (AIAA SciTech 2025)</td><td>True/false and short-answer aerospace questions</td><td>Multi-step margin-of-safety work where the verdict can flip</td></tr>
+    <tr><td><a href="https://arxiv.org/abs/2512.20732">FEM-Bench</a> (arXiv 2512.20732)</td><td>Code generation for finite-element problems</td><td>Hand methods stress engineers sign off on: lugs, columns, tapered beams, unsymmetric bending, fastener groups</td></tr>
+    <tr><td><a href="https://arxiv.org/abs/2610.07580">LOGIC</a> (arXiv 2610.07580)</td><td>Change-impact analysis in aerospace electrical systems</td><td>Structures, loads, fatigue and flight performance</td></tr>
+  </table></div>
+  <p>None of these targets the step practitioners actually worry about: <b>choosing the governing method and the right sign before doing the arithmetic</b>. AeroMargin does, in ten tasks, each built around one known trap.</p>
+
+  <h2>3 · The engineering each task <em>rests on</em></h2>
+  <div class="tbl"><table>
+    <tr><th>Task</th><th>Rule</th><th>Source</th></tr>
+    <tr><td>01 Oblique lug</td><td>Interaction R<sub>a</sub><sup>1.6</sup> + R<sub>tr</sub><sup>1.6</sup> = 1; factor of safety 1.5 × fitting factor 1.15</td><td>Bruhn D1.8; 14 CFR 25.303, 25.625</td></tr>
+    <tr><td>02 Short strut</td><td>Johnson parabola below L′/ρ = π√(2E/F<sub>cy</sub>)</td><td>Bruhn C2</td></tr>
+    <tr><td>03 CAS → TAS</td><td>Isothermal layer above 11 km; compressible pitot relation; speed of sound at the actual temperature</td><td>ICAO Doc 7488/3; ISO 2533</td></tr>
+    <tr><td>04 Weight &amp; balance</td><td>Fuel moment varies with quantity; %MAC</td><td>FAA-H-8083-1B</td></tr>
+    <tr><td>05 Fatigue</td><td>Rainflow on a repeating history (ground-air-ground cycle), Goodman, Miner</td><td>ASTM E1049; Schijve 2009</td></tr>
+    <tr><td>06 Takeoff</td><td>METAR wind in degrees true; runway magnetic; NOTAM-reduced TORA</td><td>ICAO Annex 3 / WMO-306; FAA AIM ch. 7</td></tr>
+    <tr><td>07 Gust</td><td>Pratt gust formula; light weight gives the higher n; V<sub>A</sub> ∝ √W</td><td>14 CFR 23.341 (pre-Amdt 64); NACA Rep. 1206</td></tr>
+    <tr><td>08 Bolt group</td><td>Elastic method, stiffness ∝ bolt area</td><td>Bruhn D1; Niu</td></tr>
+    <tr><td>09 Tapered spar</td><td>Flange components relieve web shear only when depth grows with moment</td><td>Megson ch. 16; Bruhn A11</td></tr>
+    <tr><td>10 Z-section</td><td>Unsymmetric bending with I<sub>xy</sub> ≠ 0</td><td>Megson ch. 16; Bruhn A5</td></tr>
+  </table></div>
+
+  <h2>4 · What we deliberately <em>did not</em> do</h2>
+  <ul>
+    <li><b>No chart reading.</b> Lug and column allowables that normally come from charts are given as numbers, so a correct answer never depends on how a curve is digitised.</li>
+    <li><b>No contested regulations.</b> Where a factor's applicability is debated (for example, fitting factors on particular parts), the task states it.</li>
+    <li><b>No trick questions.</b> Every trap is a condition a practitioner meets in real work and is expected to catch.</li>
+    <li><b>No copied benchmark items.</b> All ten tasks, data sets and reference solutions are original. Borrowed ideas (task format, pass^k, oracle runs) are credited above.</li>
+  </ul>
+  <p class="label" style="margin-top:40px">Paper metadata via Consensus (Semantic Scholar / OpenAlex). Engineering references are standard textbooks and regulations.</p>
+</main>
+</body>
+</html>

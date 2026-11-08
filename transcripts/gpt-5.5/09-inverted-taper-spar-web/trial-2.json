@@ -1,0 +1,59 @@
+{
+  "model": "gpt-5.5",
+  "variant": "realistic",
+  "task": "09-inverted-taper-spar-web",
+  "trial": 2,
+  "at": "2026-11-08T18:28:28+00:00",
+  "latency_s": 42.8,
+  "settings": {
+    "model": "gpt-5.5",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 370,
+    "output_tokens": 2662,
+    "reasoning_tokens": 2304,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.5-2026-04-23"
+  },
+  "cost_usd": 0.08171,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "web_shear_lbf": {
+        "ok": true,
+        "why": "got 7800, want 7800 ± 78",
+        "critical": true
+      },
+      "web_tau_psi": {
+        "ok": true,
+        "why": "got 32500, want 32500 ± 325",
+        "critical": false
+      },
+      "ms": {
+        "ok": true,
+        "why": "got -0.0769231, want -0.0769 ± 0.01",
+        "critical": true
+      },
+      "verdict": {
+        "ok": true,
+        "why": "got 'fail', want one of ['fail']",
+        "critical": true
+      }
+    },
+    "answer": {
+      "web_shear_lbf": 7800,
+      "web_tau_psi": 32500,
+      "ms": -0.0769230769,
+      "verdict": "fail"
+    }
+  },
+  "prompt": "Stress check request: a cantilevered support beam for a main-landing-gear side brace. The beam is an I-section built from two flanges and a stiffened shear web. It is fixed at its inboard end and carries the brace load near its outboard (free) end, where it is DEEPER than at the root: going outboard, the upper flange rises and the lower flange falls, each at a slope of 0.03 (tan α) relative to the beam's reference axis.\n\nAt the station being checked, the ultimate internal loads are:\n- Shear: the loads outboard of the station add up to 6,000 lbf upward.\n- Bending moment: 180,000 in·lb, putting the upper flange in compression and the lower flange in tension.\n\nDistance between flange centroids at this station: 6.0 in. Web thickness: 0.040 in. Assume the flanges carry all the bending and the web carries a uniform shear stress over the 6.0 in depth. Web ultimate shear allowable Fsu = 30,000 psi (stiffened web; no buckling).\n\n**Report**\n1. The shear force carried by the web at this station (lbf)\n2. The web shear stress (psi)\n3. The margin of safety, MS = Fsu / stress − 1\n4. The verdict: `pass` if MS ≥ 0, otherwise `fail`\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"web_shear_lbf\": 0, \"web_tau_psi\": 0, \"ms\": 0, \"verdict\": \"pass|fail\"}\n```\n",
+  "response": "Flange bending load:\n\n\\[\nF_f=\\frac{M}{h}=\\frac{180000}{6.0}=30000\\ \\text{lbf}\n\\]\n\nBecause the beam deepens outboard, the upper compression flange and lower tension flange both contribute vertical components that oppose the applied upward shear on the inboard free body. Therefore the web must carry the applied shear plus both flange vertical components.\n\nVertical component per flange:\n\n\\[\nF_v=F_f \\tan\\alpha = 30000(0.03)=900\\ \\text{lbf}\n\\]\n\nTotal flange vertical contribution:\n\n\\[\n2F_v = 1800\\ \\text{lbf}\n\\]\n\nWeb shear force:\n\n\\[\nV_{web}=6000+1800=7800\\ \\text{lbf}\n\\]\n\nWeb shear area:\n\n\\[\nA_{web}=t h = 0.040(6.0)=0.24\\ \\text{in}^2\n\\]\n\nWeb shear stress:\n\n\\[\n\\tau=\\frac{V_{web}}{A_{web}}=\\frac{7800}{0.24}=32500\\ \\text{psi}\n\\]\n\nMargin of safety:\n\n\\[\nMS=\\frac{F_{su}}{\\tau}-1=\\frac{30000}{32500}-1=-0.0769\n\\]\n\nVerdict: **fail**\n\n```json\n{\"web_shear_lbf\":7800,\"web_tau_psi\":32500,\"ms\":-0.0769230769,\"verdict\":\"fail\"}\n```"
+}

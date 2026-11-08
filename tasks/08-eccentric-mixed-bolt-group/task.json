@@ -1,0 +1,48 @@
+{
+  "id": "08-eccentric-mixed-bolt-group",
+  "title": "Eccentric shear on a bolt group with two bolt sizes",
+  "area": "Airframe stress analysis",
+  "who": "Stress engineers checking bracket and splice joints",
+  "why_hard": "With mixed bolt sizes, the elastic method weights the centroid, the polar moment and the load sharing by bolt area. The most heavily loaded bolt (L1, 2,862 lbf) is not the critical one; the smaller R1/R3 bolts have the lowest margin (+0.11). Treating the bolts as equal puts the centroid at 1.5 in and gives MS -0.07: a false failure that triggers needless rework.",
+  "failure_cost": "Wrong critical fastener and wrong margin: needless rework here, and an unconservative joint in other geometries.",
+  "fields": {
+    "centroid_x_in": {
+      "type": "number",
+      "tol_abs": 0.01
+    },
+    "eccentricity_in": {
+      "type": "number",
+      "tol_abs": 0.01
+    },
+    "critical_bolt": {
+      "type": "enum",
+      "accept": [
+        "r1",
+        "r3"
+      ],
+      "critical": true
+    },
+    "critical_bolt_load_lbf": {
+      "type": "number",
+      "tol_rel": 0.01,
+      "critical": true
+    },
+    "min_ms": {
+      "type": "number",
+      "tol_abs": 0.01,
+      "critical": true,
+      "weight": 2
+    },
+    "verdict": {
+      "type": "enum",
+      "accept": [
+        "pass"
+      ],
+      "critical": true
+    }
+  },
+  "sources": [
+    "Bruhn, Section D1 (eccentrically loaded bolt groups, elastic method)",
+    "Niu, Airframe Structural Design, fastener load distribution"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "model": "gpt-5.4-mini@guided",
+  "variant": "guided",
+  "task": "04-weight-balance-fuel-burn",
+  "trial": 1,
+  "at": "2026-11-08T18:37:55+00:00",
+  "latency_s": 25.7,
+  "settings": {
+    "model": "gpt-5.4-mini",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 582,
+    "output_tokens": 5653,
+    "reasoning_tokens": 4609,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.4-mini-2026-03-17"
+  },
+  "cost_usd": 0.02587,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "takeoff_weight_lb": {
+        "ok": true,
+        "why": "got 15945, want 15945 ± 2",
+        "critical": true
+      },
+      "takeoff_cg_pct_mac": {
+        "ok": true,
+        "why": "got 29.6, want 29.6 ± 0.2",
+        "critical": true
+      },
+      "landing_weight_lb": {
+        "ok": true,
+        "why": "got 13345, want 13345 ± 2",
+        "critical": true
+      },
+      "landing_cg_pct_mac": {
+        "ok": true,
+        "why": "got 32.59, want 32.59 ± 0.2",
+        "critical": true
+      },
+      "takeoff_within_limits": {
+        "ok": true,
+        "why": "got True, want True",
+        "critical": true
+      },
+      "landing_within_limits": {
+        "ok": true,
+        "why": "got False, want False",
+        "critical": true
+      }
+    },
+    "answer": {
+      "takeoff_weight_lb": 15945,
+      "takeoff_cg_pct_mac": 29.6,
+      "landing_weight_lb": 13345,
+      "landing_cg_pct_mac": 32.59,
+      "takeoff_within_limits": true,
+      "landing_within_limits": false
+    }
+  },
+  "prompt": "You are the dispatcher preparing the load sheet for a light business jet. All arms are in inches aft of the datum.\n\n**Loading**\n\n| Item | Weight (lb) | Arm (in) |\n|---|---|---|\n| Basic empty weight | 9,850 | 312.4 |\n| Crew (2 × 190 lb) | 380 | 128.0 |\n| Passengers, club seats (4 × 185 lb) | 740 | 335.0 |\n| Passengers, aft bench (2 × 185 lb) | 370 | 372.0 |\n| Aft baggage | 350 | 455.0 |\n\n**Fuel**\n- Ramp fuel: 660 US gal of Jet-A at 6.75 lb/US gal\n- Taxi fuel burned before takeoff: 200 lb. Planned trip fuel burned from takeoff to landing: 2,600 lb.\n- The fuel's centre of gravity moves as the tanks drain. Use this fuel moment table from the flight manual (moment ÷ 1000, in·lb, already at 6.75 lb/gal), interpolating linearly in moment between rows:\n\n| US gal | 0 | 100 | 200 | 300 | 400 | 500 | 600 | 700 |\n|---|---|---|---|---|---|---|---|---|\n| Moment/1000 | 0.0 | 214.7 | 426.6 | 634.8 | 839.7 | 1041.2 | 1239.3 | 1436.4 |\n\n**Limits**\n- LEMAC = 288.0 in; MAC = 80.0 in; %MAC = (CG − LEMAC) / MAC × 100\n- CG envelope at all weights: 15.0 % to 32.0 % MAC\n- Maximum takeoff weight 16,600 lb; maximum landing weight 15,200 lb\n\n**Report**\n1. Takeoff weight (lb) and takeoff CG (%MAC)\n2. Planned landing weight (lb) and landing CG (%MAC)\n3. Whether the takeoff condition is within all the limits above (true/false)\n4. Whether the planned landing condition is within all the limits above (true/false)\n\nShow your working. End your answer with a single JSON object in a ```json code block, with exactly these keys, plain numbers and JSON booleans:\n\n```json\n{\"takeoff_weight_lb\": 0, \"takeoff_cg_pct_mac\": 0, \"landing_weight_lb\": 0, \"landing_cg_pct_mac\": 0, \"takeoff_within_limits\": true, \"landing_within_limits\": true}\n```\n",
+  "response": "Here’s the load sheet computation.\n\n## 1) Fixed load items\n\n| Item | Weight (lb) | Arm (in) | Moment (lb·in) |\n|---|---:|---:|---:|\n| Basic empty weight | 9,850 | 312.4 | 3,077,140 |\n| Crew | 380 | 128.0 | 48,640 |\n| Passengers, club seats | 740 | 335.0 | 247,900 |\n| Passengers, aft bench | 370 | 372.0 | 137,640 |\n| Aft baggage | 350 | 455.0 | 159,250 |\n\n**Subtotal fixed weight:** 11,690 lb  \n**Subtotal fixed moment:** 3,670,570 lb·in\n\n---\n\n## 2) Fuel calculations\n\nRamp fuel:\n- 660 US gal × 6.75 lb/gal = **4,455 lb**\n\n### Fuel moment interpolation\nFuel moment table is given in **moment/1000**.\n\n### Ramp fuel moment at 660 gal\nBetween 600 and 700 gal:\n\n- 600 gal → 1239.3\n- 700 gal → 1436.4\n- Slope = (1436.4 − 1239.3) / 100 = **1.971 per gal**\n\nSo at 660 gal:\n\n- Moment/1000 = 1239.3 + 60 × 1.971 = **1357.56**\n- Fuel moment = **1,357,560 lb·in**\n\n### Takeoff fuel after taxi burn\nTaxi burn = 200 lb, so fuel at takeoff:\n\n- 4,455 − 200 = **4,255 lb**\n- In gallons: 4,255 / 6.75 = **630.37 gal**\n\nInterpolating at 630.37 gal:\n\n- Moment/1000 = 1239.3 + 30.37 × 1.971 = **1299.16**\n- Fuel moment = **1,299,160 lb·in**\n\n### Landing fuel after trip burn\nTrip burn = 2,600 lb, so fuel at landing:\n\n- 4,255 − 2,600 = **1,655 lb**\n- In gallons: 1,655 / 6.75 = **245.19 gal**\n\nInterpolating between 200 and 300 gal:\n\n- 200 gal → 426.6\n- 300 gal → 634.8\n- Slope = (634.8 − 426.6) / 100 = **2.082 per gal**\n\nAt 245.19 gal:\n\n- Moment/1000 = 426.6 + 45.19 × 2.082 = **520.68**\n- Fuel moment = **520,676 lb·in** (rounded)\n\n---\n\n## 3) Takeoff condition\n\n### Takeoff weight\n- 11,690 + 4,255 = **15,945 lb**\n\n### Takeoff moment\n- 3,670,570 + 1,299,160 = **4,969,730 lb·in**\n\n### Takeoff CG\n- CG = 4,969,730 / 15,945 = **311.68 in**\n- %MAC = (311.68 − 288.0) / 80.0 × 100 = **29.60% MAC**\n\n### Takeoff limits check\n- Weight limit: 15,945 ≤ 16,600 → **OK**\n- CG envelope: 29.60% between 15.0% and 32.0% → **OK**\n\n**Takeoff within limits: true**\n\n---\n\n## 4) Planned landing condition\n\n### Landing weight\n- 11,690 + 1,655 = **13,345 lb**\n\n### Landing moment\n- 3,670,570 + 520,676 = **4,191,246 lb·in**\n\n### Landing CG\n- CG = 4,191,246 / 13,345 = **314.07 in**\n- %MAC = (314.07 − 288.0) / 80.0 × 100 = **32.59% MAC**\n\n### Landing limits check\n- Weight limit: 13,345 ≤ 15,200 → **OK**\n- CG envelope: 32.59% > 32.0% → **NOT OK**\n\n**Landing within limits: false**\n\n```json\n{\"takeoff_weight_lb\":15945,\"takeoff_cg_pct_mac\":29.6,\"landing_weight_lb\":13345,\"landing_cg_pct_mac\":32.59,\"takeoff_within_limits\":true,\"landing_within_limits\":false}\n```"
+}

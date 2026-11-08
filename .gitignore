@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+media/build/
+media/node_modules/
+dist/
+scratch/

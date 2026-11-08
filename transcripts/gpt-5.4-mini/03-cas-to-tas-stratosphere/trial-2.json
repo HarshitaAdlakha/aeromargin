@@ -1,0 +1,65 @@
+{
+  "model": "gpt-5.4-mini",
+  "variant": "realistic",
+  "task": "03-cas-to-tas-stratosphere",
+  "trial": 2,
+  "at": "2026-11-08T18:32:27+00:00",
+  "latency_s": 54.6,
+  "settings": {
+    "model": "gpt-5.4-mini",
+    "max_completion_tokens": 32000,
+    "reasoning_effort": "medium"
+  },
+  "usage": {
+    "input_tokens": 304,
+    "output_tokens": 12564,
+    "reasoning_tokens": 11773,
+    "finish_reason": "stop",
+    "served_model": "gpt-5.4-mini-2026-03-17"
+  },
+  "cost_usd": 0.05677,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "static_pressure_pa": {
+        "ok": true,
+        "why": "got 17874, want 17874 ± 53.622",
+        "critical": true
+      },
+      "oat_k": {
+        "ok": true,
+        "why": "got 226.65, want 226.65 ± 0.2",
+        "critical": false
+      },
+      "mach": {
+        "ok": true,
+        "why": "got 0.84, want 0.84 ± 0.003",
+        "critical": true
+      },
+      "tas_kt": {
+        "ok": true,
+        "why": "got 493, want 492.8 ± 1.5",
+        "critical": true
+      },
+      "density_altitude_ft": {
+        "ok": true,
+        "why": "got 41939, want 41939 ± 100",
+        "critical": true
+      }
+    },
+    "answer": {
+      "static_pressure_pa": 17874,
+      "oat_k": 226.65,
+      "mach": 0.84,
+      "tas_kt": 493.0,
+      "density_altitude_ft": 41939
+    }
+  },
+  "prompt": "A business jet is in level cruise. The crew wants a hand check of the flight-management system's air data.\n\n**Conditions**\n- Pressure altitude 41,000 ft (standard altimeter setting)\n- Outside air temperature ISA + 10 °C\n- Calibrated airspeed 250 kt (no instrument or position error)\n\n**Constants to use**\nICAO Standard Atmosphere: 101,325 Pa and 288.15 K at sea level, lapse rate 0.0065 K/m to 11,000 m; g₀ = 9.80665 m/s²; R = 287.05287 J/(kg·K); γ = 1.4; 1 ft = 0.3048 m; 1 kt = 0.514444 m/s. Treat pressure altitude as geopotential altitude.\n\n**Report**\n1. Static pressure at the aircraft (Pa)\n2. Outside air temperature (K)\n3. Mach number\n4. True airspeed (kt)\n5. Density altitude (ft): the ICAO Standard Atmosphere altitude whose density equals the actual air density\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers:\n\n```json\n{\"static_pressure_pa\": 0, \"oat_k\": 0, \"mach\": 0, \"tas_kt\": 0, \"density_altitude_ft\": 0}\n```\n",
+  "response": "Working summary:\n\n- Pressure altitude:  \n  \\(h = 41000 \\,\\text{ft} \\times 0.3048 = 12496.8 \\,\\text{m}\\)\n\n- ISA up to 11 km, then isothermal at \\(T_{ISA}=216.65\\) K.  \n  Using \\(p_{11} = 22632.04\\) Pa:\n\n\\[\np = p_{11}\\exp\\!\\left(-\\frac{g_0(h-11000)}{RT_{ISA}}\\right)\n\\approx 1.7874\\times 10^4 \\text{ Pa}\n\\]\n\nSo:\n\n1. **Static pressure** \\(\\approx 17874\\) Pa\n\n- Outside air temperature:\n\n\\[\nT = 216.65 + 10 = 226.65\\text{ K}\n\\]\n\n2. **OAT** = **226.65 K**\n\n- Calibrated airspeed:\n\n\\[\nV_c = 250 \\times 0.514444 = 128.611 \\text{ m/s}\n\\]\n\nSea-level speed of sound:\n\n\\[\na_0 = \\sqrt{\\gamma RT_0} \\approx 340.294 \\text{ m/s}\n\\]\n\nImpact pressure from CAS:\n\n\\[\nq_c = p_0\\left[\\left(1+\\frac{\\gamma-1}{2}\\left(\\frac{V_c}{a_0}\\right)^2\\right)^{\\gamma/(\\gamma-1)}-1\\right]\n\\approx 1.0505\\times10^4 \\text{ Pa}\n\\]\n\nMach from \\(q_c/p\\):\n\n\\[\nM=\\sqrt{5\\left[\\left(1+\\frac{q_c}{p}\\right)^{2/7}-1\\right]}\n\\approx 0.840\n\\]\n\n3. **Mach number** = **0.840**\n\n- Speed of sound at actual temperature:\n\n\\[\na=\\sqrt{\\gamma RT} \\approx 301.8 \\text{ m/s}\n\\]\n\n\\[\nTAS = Ma \\approx 253.5 \\text{ m/s} \\approx 493 \\text{ kt}\n\\]\n\n4. **True airspeed** = **493.0 kt**\n\n- Density:\n\n\\[\n\\rho = \\frac{p}{RT} \\approx 0.2746 \\text{ kg/m}^3\n\\]\n\nIn the ISA isothermal layer, density altitude is:\n\n\\[\nDA = 12496.8 + \\frac{RT_{ISA}}{g_0}\\ln\\!\\left(\\frac{T}{T_{ISA}}\\right)\n\\approx 12783 \\text{ m}\n\\]\n\n\\[\nDA \\approx 41939 \\text{ ft}\n\\]\n\n5. **Density altitude** = **41939 ft**\n\n```json\n{\"static_pressure_pa\":17874,\"oat_k\":226.65,\"mach\":0.84,\"tas_kt\":493.0,\"density_altitude_ft\":41939}\n```"
+}

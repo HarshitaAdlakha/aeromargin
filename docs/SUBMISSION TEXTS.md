@@ -50,22 +50,31 @@ The narrated video is built by `python media/video.py` from `docs/slides/s1–s9
 
 ---
 
-## LinkedIn post (team voice)
+## LinkedIn post (Harshita, team voice)
 
-> A stress engineer once told us: "The arithmetic is the easy part. The hard part is knowing which way the load goes."
+Attach: `docs/img/linkedin-cover.png`, `docs/img/linkedin-example.png`, `docs/img/linkedin-results.png` (or the 2-minute video, `docs/video/AeroMargin-2min.mp4`).
+
+> Can an AI model tell which way the load goes?
 >
-> So for the micro1 Eval Hackathon we built **AeroMargin**: 10 aerospace hand calculations (lug fittings, struts, tapered beams, fatigue, gusts, takeoff planning), each with one condition that reverses a textbook default. Every task is graded by code against a reference solution.
+> For the micro1 Eval Hackathon, Paras and I built **AeroMargin**: 10 aerospace hand calculations, the kind of checks stress, fatigue, loads and performance engineers sign off every day. Each one hides a single condition that reverses a textbook default: a beam that gets deeper toward its tip, a Z-section that bends sideways, a METAR wind given in degrees true. Every answer is graded by code against a reference solution. No AI judge.
 >
-> What we found:
-> • At medium reasoning, GPT-5.6 Sol and GPT-5.5 got every trial right.
-> • Turn reasoning off and the same models fall to 60% and 57%. The wrong answers were the textbook shortcuts themselves: a lug interaction that passes a failing fitting, a relief formula applied to a beam that tapers the other way, a METAR wind read as magnetic.
-> • o3, last year's frontier reasoning model, passed 47%. It cited "Bruhn's elliptical interaction" on every lug trial. Bruhn's curve is the 1.6 power.
+> What we found, 3 trials per task:
+> • With full reasoning, GPT-5.6 Sol and GPT-5.5 got every trial right.
+> • With reasoning switched off, the same models dropped to 60% and 57%.
+> • o3, last year's frontier reasoning model, passed 47%. The open Gemma 4 model passed 40%.
 >
-> Our takeaway: the gap is recall versus re-derive. If your team uses AI for engineering checks, the reasoning setting matters more than the leaderboard. Ask for the governing case and every load's direction before any number.
+> The moment that stayed with us: with reasoning off, GPT-5.6 Sol correctly wrote that both flange forces point upward, then subtracted them anyway, because the formula it remembered subtracts. It knew the physics and still wrote the textbook line. Three trials out of three.
 >
-> Code, transcripts and all 10 tasks: https://github.com/ParasAdlakha/aeromargin
+> Our takeaway: the gap is recall versus re-derive. If your team uses AI for engineering checks, the reasoning setting matters more than the leaderboard.
 >
-> #AerospaceEngineering #AIEvals #StressAnalysis #micro1
+> Try it yourself: run any task against a model with your own key, or paste any answer to grade it 👇
+> https://parasadlakha.github.io/aeromargin/app/
+>
+> Code, every transcript and all 10 tasks: https://github.com/ParasAdlakha/aeromargin
+>
+> Thank you, micro1 and HackerRank, for a hackathon about rigour.
+>
+> #AIEvals #AerospaceEngineering #StressAnalysis #micro1
 
 ---
 

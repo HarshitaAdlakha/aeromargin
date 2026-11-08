@@ -18,6 +18,8 @@ Ready to paste into the HackerRank submission form, plus the video script, a liv
 
 **Project page:** https://parasadlakha.github.io/aeromargin/
 
+**Live app:** https://parasadlakha.github.io/aeromargin/app/#mode=live&task=09-inverted-taper-spar-web (run any task with your own key, or grade any answer; replay mode shows every saved transcript)
+
 **Short description:**
 
 > AeroMargin is an aerospace engineering eval (airframe stress, fatigue, loads, flight performance, weight and balance) that tests whether a model picks the right method, and the right sign, before it calculates. Each of its 10 single-turn tasks contains one realistic condition that reverses a textbook default: a lug under oblique load, a short strut where Johnson governs, a tapered beam that is deeper at its free end, a METAR wind given in degrees true, a Z-section in unsymmetric bending. Every task has a reference solution and a deterministic code grader, validated by 133 checks (including 24 trap answers) before any model ran.

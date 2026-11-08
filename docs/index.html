@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AeroMargin</title>
 <meta name="description" content="An aerospace engineering eval: does the model pick the right method and the right sign before it calculates? Ten code-graded tasks.">
+<meta property="og:title" content="AeroMargin: does the model pick the right method, and the right sign?">
+<meta property="og:description" content="Ten aerospace hand calculations, each reversing a textbook default, graded by code. Replay every transcript or run a task live.">
+<meta property="og:image" content="https://parasadlakha.github.io/aeromargin/img/linkedin-cover.png">
+<meta property="og:url" content="https://parasadlakha.github.io/aeromargin/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%88%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root { --bg:#0b1220; --card:#121c2e; --ink:#eef2f7; --ink2:#b7c2d1; --mut:#7d8aa0; --line:#22304a; --acc:#ff7a1a; --ok:#34d399; --bad:#f87171; --mid:#fbbf24; --okbg:#0f3b2c; --badbg:#401818; --midbg:#3d3110; }
@@ -39,6 +45,12 @@
   code, pre { font-family:'JetBrains Mono',monospace; font-size:13.5px }
   pre { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; overflow-x:auto }
   footer { margin-top:64px; color:var(--mut); font-size:14px }
+  .cta { display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 4px }
+  .cta a { padding:12px 20px; border-radius:12px; font-weight:700; text-decoration:none }
+  .cta .p { background:var(--acc); color:#111 } .cta .s { border:1px solid var(--line); color:var(--ink); background:var(--card) }
+  video { width:100%; border-radius:14px; border:1px solid var(--line); background:#000 }
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px }
+  .steps .card b { display:block; color:var(--acc); font:700 12px 'JetBrains Mono',monospace; letter-spacing:.1em; margin-bottom:4px }
 </style>
 </head>
 <body>
@@ -46,11 +58,25 @@
   <div class="kick">micro1 Eval Hackathon · Nov 2026 · Paras Adlakha &amp; Harshita Adlakha</div>
   <h1>Aero<em>Margin</em></h1>
   <p class="lead">Does the model pick the right method, <b>and the right sign</b>, before it calculates? Ten aerospace hand calculations (stress, fatigue, loads, performance, weight and balance), each with one condition that reverses a textbook default. Every task is graded by code against a reference solution.</p>
-  <div class="links"><a href="app/">Transcript explorer</a><a href="https://github.com/ParasAdlakha/aeromargin">Code &amp; transcripts</a><a href="video/AeroMargin-walkthrough.mp4">Video (4½ min)</a><a href="video/AeroMargin-2min.mp4">2-min cut</a><a href="video/AeroMargin-silent-captioned.mp4">Silent, captioned</a><a href="slides/AeroMargin-slides.pdf">Slides (PDF)</a><a href="research-brief.html">Research brief</a><a href="market-brief.html">Market brief</a></div>
+  <div class="cta"><a class="p" href="app/#mode=live&task=09-inverted-taper-spar-web">▶ Open the live app</a><a class="s" href="app/#mode=replay&task=09-inverted-taper-spar-web&model=gpt-5.6-sol-none">Replay every transcript</a></div>
+  <p class="sub" style="font-size:14px">Live: run any task against OpenAI or Gemini with your own key and grade it in your browser, or paste any answer to grade it. Replay: every graded trial from our runs.</p>
+  <div class="links"><a href="https://github.com/ParasAdlakha/aeromargin">Code &amp; transcripts</a><a href="slides/AeroMargin-slides.pdf">Slides (PDF)</a><a href="research-brief.html">Research brief</a><a href="market-brief.html">Market brief</a></div>
+
+  <h2>See it <em>work</em></h2>
+  <video controls preload="metadata" poster="slides/s1.png" src="video/AeroMargin-walkthrough.mp4"></video>
+  <p class="sub" style="font-size:14px">4½-minute walkthrough with an AI voice · <a href="video/AeroMargin-2min.mp4">2-minute cut</a> · <a href="video/AeroMargin-silent-captioned.mp4">silent, captioned</a></p>
+
+  <h2>How it <em>works</em></h2>
+  <div class="steps">
+    <div class="card"><b>1 · A REAL CHECK</b>Each task is a check a stress, fatigue, loads or performance engineer signs off, with full data and every output stated, and one condition that reverses a textbook default.</div>
+    <div class="card"><b>2 · A FRESH RUN</b>Each trial is a single fresh request with the same prompt for every model, three trials per task. Every transcript is saved.</div>
+    <div class="card"><b>3 · A CODE GRADER</b>The last JSON is checked field by field against a reference solution with stated tolerances. No AI judge. 133 checks prove the grader before any model runs.</div>
+    <div class="card"><b>4 · RE-GRADED RESULTS</b>Every number on this page is re-computed from the saved transcripts, so nothing can drift from the grader.</div>
+  </div>
 
   <div class="stats">
     <div class="stat"><div class="n">10</div><div class="d">expert tasks, each with a reference solution and a code grader</div></div>
-    <div class="stat"><div class="n">133</div><div class="d">grader validation checks: references in, 20 trap answers and gaming out</div></div>
+    <div class="stat"><div class="n">133</div><div class="d">grader validation checks: references in, 24 trap answers and gaming out</div></div>
     <div class="stat"><div class="n">60%</div><div class="d">GPT-5.6 Sol with reasoning off (100% with it on)</div></div>
     <div class="stat"><div class="n">47%</div><div class="d">o3, 2025's frontier reasoning model; pass^3 20%</div></div>
   </div>
@@ -90,13 +116,23 @@
   <h2>The <em>hot take</em></h2>
   <p class="lead">The gap is not arithmetic. It is <b>recall versus re-derive</b>. The same model is right on every trial when it reasons, and confidently wrong when it answers from memory. For engineering teams, the reasoning setting matters more than the leaderboard. Ask for the governing case and every load's direction before any number, as a senior checker would.</p>
 
+  <h2>Grounded in <em>research</em></h2>
+  <div class="two">
+    <div class="card"><h3>Pattern-matching, not reasoning</h3><p>Changing only the numbers, or adding one plausible clause, drops model accuracy by up to 65% (GSM-Symbolic, Mirzadeh et al., 2024). Our traps are the engineering version: one clause that reverses the textbook case.</p></div>
+    <div class="card"><h3>Why no AI judge</h3><p>Repeated LLM-judge runs flip pairwise verdicts 13.6% of the time (Yagubyan, 2026), and cross-judge agreement is only κ = 0.51. Every task here has a defensible number, so every grader is code.</p></div>
+    <div class="card"><h3>What exists for aerospace</h3><p>ALUE (MITRE/FAA), Pre-Flight, the AIAA evaluation set and FEM-Bench test recall, language or code. None tests choosing the governing method and its sign before calculating.</p></div>
+    <div class="card"><h3>Why it matters now</h3><p>79% of aerospace design engineers whose companies have not approved AI tools use them anyway (Molex, 2025). <a href="market-brief.html">Market brief</a> · <a href="research-brief.html">all sources and what we took from each →</a></p></div>
+  </div>
+
   <h2>Run it</h2>
 <pre>python validate_graders.py                      # 133 grader checks, no API key
 python run_eval.py --oracle                     # reference solutions through the harness
 python run_eval.py --models gpt-5.6-sol --trials 3
 python summarize.py                             # re-grades every transcript</pre>
   <p>Python ≥ 3.10, standard library only. About $3–4 per full run for a frontier model at medium reasoning, 3–6 minutes.</p>
-  <footer>AeroMargin · MIT licence · Paras Adlakha &amp; Harshita Adlakha · numbers on this page are generated from <code>results/summary.json</code></footer>
+  <h2>Thank <em>you</em></h2>
+  <p>To <b>micro1</b> for a hackathon about finding what AI can't do yet, and for a participant guide that is itself good eval methodology. To <b>HackerRank</b> for hosting it. And to Bruhn, Megson and Niu, whose methods every task rests on.</p>
+  <footer>Built by Paras Adlakha and Harshita Adlakha · <a href="https://github.com/ParasAdlakha/aeromargin">github.com/ParasAdlakha/aeromargin</a> · all task data is synthetic · MIT licence · numbers on this page are generated from <code>results/summary.json</code></footer>
 </main>
 </body>
 </html>

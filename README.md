@@ -4,7 +4,7 @@
 
 Built by **Paras Adlakha** and **Harshita Adlakha** for the [micro1 Eval Hackathon](https://www.hackerrank.com/event/micro1-eval-hackathon) (30 Oct – 9 Nov 2026).
 
-🎬 [Video walkthrough (4½ min)](https://parasadlakha.github.io/aeromargin/video/AeroMargin-walkthrough.mp4) · 🌐 [Project page](https://parasadlakha.github.io/aeromargin/) · 📑 [Slides (PDF)](https://parasadlakha.github.io/aeromargin/slides/AeroMargin-slides.pdf) · [Research brief](https://parasadlakha.github.io/aeromargin/research-brief.html) · [Market brief](https://parasadlakha.github.io/aeromargin/market-brief.html) · Code: [github.com/ParasAdlakha/aeromargin](https://github.com/ParasAdlakha/aeromargin) (mirror: [HarshitaAdlakha/aeromargin](https://github.com/HarshitaAdlakha/aeromargin))
+▶️ **[Open the live app](https://parasadlakha.github.io/aeromargin/app/#mode=live&task=09-inverted-taper-spar-web)** (run any task against a model with your own key, or grade any answer) · [Replay every transcript](https://parasadlakha.github.io/aeromargin/app/#mode=replay&task=09-inverted-taper-spar-web&model=gpt-5.6-sol-none) · 🎬 [Video walkthrough (4½ min)](https://parasadlakha.github.io/aeromargin/video/AeroMargin-walkthrough.mp4) · 🌐 [Project page](https://parasadlakha.github.io/aeromargin/) · 📑 [Slides (PDF)](https://parasadlakha.github.io/aeromargin/slides/AeroMargin-slides.pdf) · [Research brief](https://parasadlakha.github.io/aeromargin/research-brief.html) · [Market brief](https://parasadlakha.github.io/aeromargin/market-brief.html) · Code: [github.com/ParasAdlakha/aeromargin](https://github.com/ParasAdlakha/aeromargin) (mirror: [HarshitaAdlakha/aeromargin](https://github.com/HarshitaAdlakha/aeromargin))
 
 
 ![Task 09: the textbook relief formula says MS +0.71 (pass); the free body says MS -0.08 (fail)](docs/slides/s4.png)
@@ -197,7 +197,15 @@ flowchart LR
 
 ## Transcript explorer
 
-**[Open the explorer](https://parasadlakha.github.io/aeromargin/app/)**: pick a task and a model and see every trial's final JSON next to the reference, which fields failed and why, and the full response. Links are shareable, for example [task 09, GPT-5.6 Sol with reasoning off](https://parasadlakha.github.io/aeromargin/app/#task=09-inverted-taper-spar-web&model=gpt-5.6-sol-none) or [task 01, o3](https://parasadlakha.github.io/aeromargin/app/#task=01-oblique-lug-fitting&model=o3). It is a static page built from the transcripts by `media/build_app.py`.
+**[Open the explorer](https://parasadlakha.github.io/aeromargin/app/)**. It has two modes:
+
+- **Replay**: our saved runs. Pick a task and a model and see every trial's final JSON next to the reference, which fields failed and why, and the full response.
+- **Live**: a real, working app.
+  - *Run a model now*: pick OpenAI or Gemini, a model and a reasoning effort, and paste your own API key. Your browser sends the task's unchanged prompt straight to the provider and grades the reply on the spot. The key is held only in the page's memory: it is never stored, logged or sent anywhere except the provider.
+  - *Grade any answer*: paste a response from any model or chat app and get the verdict, with no key needed.
+  - Live grading uses [docs/app/grader.js](docs/app/grader.js), a JavaScript port of the Python grader. It gives identical verdicts and scores on all 455 parity cases (every saved transcript, plus the references, reformatted answers, traps and hedges).
+
+Try GPT-5.6 Sol on [task 09 in live mode](https://parasadlakha.github.io/aeromargin/app/#mode=live&task=09-inverted-taper-spar-web) with effort `none`, then with `medium`, to reproduce the headline finding. Links are shareable, for example [task 09, GPT-5.6 Sol with reasoning off](https://parasadlakha.github.io/aeromargin/app/#task=09-inverted-taper-spar-web&model=gpt-5.6-sol-none) or [task 01, o3](https://parasadlakha.github.io/aeromargin/app/#task=01-oblique-lug-fitting&model=o3). It is a static page built from the transcripts by `media/build_app.py`.
 
 ![Transcript explorer: task 09, GPT-5.6 Sol with reasoning off, three failing trials with the graded fields](docs/img/explorer.png)
 
@@ -209,6 +217,7 @@ flowchart LR
 python -m unittest discover -s tests -v   # 17 unit tests, under a second
 python validate_graders.py                # 133 grader checks
 python run_eval.py --oracle               # 10/10 references through the full harness
+python tests/dump_parity_cases.py && node tests/grader_parity.mjs   # browser grader = Python grader on 455 cases
 ```
 
 The [unit tests](tests/test_grader.py) cover:

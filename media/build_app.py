@@ -17,7 +17,7 @@ for t in task_ids():
     task = load_task(t)
     tasks.append({"id": t, "title": task["title"], "area": task["area"], "why_hard": task["why_hard"], "failure_cost": task["failure_cost"],
                   "who": task["who"], "sources": task["sources"], "instruction": task["instruction"],
-                  "reference": {k: task["reference"][k] for k in task["fields"]},
+                  "reference": {k: task["reference"][k] for k in task["fields"]}, "fields": task["fields"],
                   "critical": [k for k, r in task["fields"].items() if r.get("critical")]})
 
 runs = {}

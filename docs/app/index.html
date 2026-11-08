@@ -4,18 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AeroMargin explorer</title>
-<meta name="description" content="Browse every AeroMargin task, its reference answer and every graded model transcript.">
+<meta name="description" content="Replay every graded AeroMargin transcript, or run any task live against a model with your own key and grade it in the browser.">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root { --bg:#0b1220; --card:#121c2e; --card2:#0f1828; --ink:#eef2f7; --ink2:#b7c2d1; --mut:#7d8aa0; --line:#22304a; --acc:#ff7a1a; --ok:#34d399; --bad:#f87171; --mid:#fbbf24; --okbg:#0f3b2c; --badbg:#401818; --midbg:#3d3110; }
   @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg:#f3f5f8; --card:#fff; --card2:#f7f9fb; --ink:#0f1720; --ink2:#3c4856; --mut:#6b7686; --line:#d8dee5; --okbg:#dff5ea; --badbg:#fde2e2; --midbg:#fdf1d2; --ok:#0f7a4f; --bad:#b42318; --mid:#8a5a00; } }
   * { box-sizing:border-box }
   body { margin:0; background:var(--bg); color:var(--ink); font:15.5px/1.55 Inter,system-ui,sans-serif }
-  header { padding:22px 16px 10px; max-width:1280px; margin:0 auto }
+  header { padding:22px 16px 6px; max-width:1280px; margin:0 auto }
   header a { color:var(--mut); font-size:14px }
   h1 { font:400 40px/1 'Instrument Serif',serif; margin:6px 0 4px } h1 em { color:var(--acc) }
   .sub { color:var(--ink2); margin:0 }
-  .wrap { max-width:1280px; margin:0 auto; padding:10px 16px 60px; display:grid; grid-template-columns:270px 1fr; gap:16px }
+  .modes { max-width:1280px; margin:0 auto; padding:10px 16px 0; display:flex; gap:8px; flex-wrap:wrap }
+  .modes button { background:var(--card); border:1px solid var(--line); color:var(--ink2); border-radius:12px; padding:10px 16px; cursor:pointer; font:600 15px Inter,sans-serif }
+  .modes button.on { color:var(--ink); border-color:var(--acc); box-shadow:inset 0 -3px 0 var(--acc) }
+  .modes small { display:block; font-weight:400; font-size:12px; color:var(--mut) }
+  .wrap { max-width:1280px; margin:0 auto; padding:12px 16px 60px; display:grid; grid-template-columns:270px 1fr; gap:16px }
   @media (max-width:860px) { .wrap { grid-template-columns:1fr } }
   .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px }
   .side button { display:block; width:100%; text-align:left; background:none; border:0; color:var(--ink2); padding:8px 10px; border-radius:10px; cursor:pointer; font:inherit }
@@ -39,58 +43,147 @@
   .tabs button.on { color:var(--ink); border-color:var(--acc) }
   details summary { cursor:pointer; color:var(--ink2) }
   .stack > * + * { margin-top:14px }
+  .form { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin:10px 0 }
+  .form label { font-size:12.5px; color:var(--mut); display:block }
+  input, select, textarea { width:100%; background:var(--card2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:9px 10px; font:14px Inter,sans-serif; margin-top:4px }
+  textarea { min-height:150px; font:13px/1.5 'JetBrains Mono',monospace }
+  .go { background:var(--acc); color:#111; border:0; border-radius:10px; padding:10px 18px; font:700 14px Inter,sans-serif; cursor:pointer }
+  .go:disabled { opacity:.5; cursor:wait }
+  .note { font-size:13px; color:var(--mut) }
+  .verdict { font:700 20px 'JetBrains Mono',monospace }
 </style>
 </head>
 <body>
 <header>
   <a href="../">← AeroMargin</a>
-  <h1>Transcript <em>explorer</em></h1>
-  <p class="sub">Every task, its reference answer, and every graded trial from every model: the final JSON, the fields it got wrong, and the full response.</p>
+  <h1>AeroMargin <em>explorer</em></h1>
+  <p class="sub">Replay every graded trial from our runs, or run any task live against a model of your choice and grade it in your browser with the same grader.</p>
 </header>
+<div class="modes" id="modes"></div>
 <div class="wrap">
   <nav class="card side" id="tasks" aria-label="Tasks"></nav>
   <main class="stack" id="main"><div class="card">Loading…</div></main>
 </div>
-<script>
+<script type="module">
+import { grade } from './grader.js';
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const fmt = (v) => typeof v === 'number' ? (Math.abs(v) < 0.001 && v !== 0 ? v.toExponential(3) : +v.toFixed(4)) : String(v);
-let D, task, model, trialIx = 0;
+const fmt = (v) => typeof v === 'number' ? (Math.abs(v) < 0.001 && v !== 0 ? v.toExponential(3) : +v.toFixed(4)) : (v === undefined ? '—' : typeof v === 'object' ? JSON.stringify(v) : String(v));
+const S = { mode: 'replay', task: null, model: null, trialIx: 0, live: { provider: 'openai', model: 'gpt-5.6-sol', effort: 'none', busy: false, result: null, pasted: '' } };
+let D, KEY = '';   // the API key lives only in this variable: never stored, never sent anywhere but the provider
 const params = new URLSearchParams(location.hash.slice(1));
 fetch('data.json').then((r) => r.json()).then((d) => {
   D = d;
-  task = params.get('task') || D.tasks[0].id;
-  model = params.get('model') || D.models[0].name;
+  S.task = params.get('task') || D.tasks[0].id;
+  S.model = params.get('model') || D.models[0].name;
+  S.mode = params.get('mode') === 'live' ? 'live' : 'replay';
   render();
-}).catch(() => { document.getElementById('main').innerHTML = '<div class="card">Could not load data.json. Open this page over http (e.g. GitHub Pages or <code>python -m http.server</code> in docs/).</div>'; });
+}).catch(() => { document.getElementById('main').innerHTML = '<div class="card">Could not load data.json. Open this page over http (GitHub Pages, or <code>python -m http.server</code> in docs/).</div>'; });
+
+const set = (patch) => { Object.assign(S, patch); render(); };
+window.A = { set, setLive: (p) => { Object.assign(S.live, p); render(); }, run, gradePasted, setKey: (v) => { KEY = v; } };
+
+function gradedTable(T, g) {
+  return `<table><tr><th>Field</th><th>Reference</th><th>Answer</th><th>Grader note</th></tr>${Object.entries(T.reference).map(([k, v]) => {
+    const f = g && g.fields[k];
+    return `<tr><td>${esc(k)}${T.critical.includes(k) ? '<span class="crit">CRITICAL</span>' : ''}</td><td>${esc(fmt(v))}</td><td class="${g ? (f.ok ? 'ok' : 'bad') : ''}">${g ? esc(fmt(g.answer ? g.answer[k] : undefined)) : ''}</td><td class="sub" style="font-size:12px">${f && !f.ok ? esc(f.why) : ''}</td></tr>`;
+  }).join('')}</table>`;
+}
+
+function taskCard(T) {
+  return `<div class="card"><p class="label">${esc(T.area)} · task ${T.id.slice(0, 2)}</p><h2>${esc(T.title)}</h2>
+    <p><b>Why it's hard.</b> ${esc(T.why_hard)}</p><p class="sub"><b>Who relies on it:</b> ${esc(T.who)}. <b>Cost of a wrong answer:</b> ${esc(T.failure_cost)}</p>
+    <details><summary>Prompt given to every model</summary><pre>${esc(T.instruction)}</pre></details>
+    <details><summary>Sources</summary><ul>${T.sources.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></details></div>`;
+}
 
 function render() {
-  location.hash = `task=${task}&model=${encodeURIComponent(model)}`;
+  location.hash = `mode=${S.mode}&task=${S.task}&model=${encodeURIComponent(S.model)}`;
+  document.getElementById('modes').innerHTML = [['replay', 'Replay', 'saved transcripts from our runs'], ['live', 'Live', 'run a model now, or grade any answer']]
+    .map(([m, t, s]) => `<button class="${S.mode === m ? 'on' : ''}" onclick="A.set({mode:'${m}'})">${t}<small>${s}</small></button>`).join('');
   document.getElementById('tasks').innerHTML = '<p class="label">Tasks</p>' + D.tasks.map((t) =>
-    `<button class="${t.id === task ? 'on' : ''}" onclick="task='${t.id}';trialIx=0;render()"><span class="n">${t.id.slice(0, 2)}</span>${esc(t.title.split(':')[0])}</button>`).join('');
-  const T = D.tasks.find((t) => t.id === task);
+    `<button class="${t.id === S.task ? 'on' : ''}" onclick="A.set({task:'${t.id}',trialIx:0});A.setLive({result:null})"><span class="n">${t.id.slice(0, 2)}</span>${esc(t.title.split(':')[0])}</button>`).join('');
+  const T = D.tasks.find((t) => t.id === S.task);
+  document.getElementById('main').innerHTML = taskCard(T) + (S.mode === 'replay' ? replay(T) : live(T));
+}
+
+function replay(T) {
   const models = D.models.map((m) => {
-    const tr = (D.runs[m.name] || {})[task] || [];
+    const tr = (D.runs[m.name] || {})[S.task] || [];
     const dots = tr.map((x) => `<span class="dot ${x.passed ? 'ok' : 'bad'}">${x.passed ? '✓' : '✗'}</span>`).join('') || '<span class="sub" style="font-size:12px">no valid trials</span>';
-    return `<div class="m ${m.name === model ? 'on' : ''}" onclick="model='${m.name}';trialIx=0;render()"><div class="nm">${esc(m.name)}</div><div class="sub" style="font-size:12px">reasoning: ${esc(m.effort)}</div><div class="dots">${dots}</div></div>`;
+    return `<div class="m ${m.name === S.model ? 'on' : ''}" onclick="A.set({model:'${m.name}',trialIx:0})"><div class="nm">${esc(m.name)}</div><div class="sub" style="font-size:12px">reasoning: ${esc(m.effort)}</div><div class="dots">${dots}</div></div>`;
   }).join('');
-  const trials = (D.runs[model] || {})[task] || [];
-  const tr = trials[Math.min(trialIx, trials.length - 1)];
-  const refRows = Object.entries(T.reference).map(([k, v]) => {
-    const got = tr && tr.answer ? tr.answer[k] : undefined;
-    const bad = tr && tr.wrong[k];
-    return `<tr><td>${esc(k)}${T.critical.includes(k) ? '<span class="crit">CRITICAL</span>' : ''}</td><td>${esc(fmt(v))}</td><td class="${tr ? (bad ? 'bad' : 'ok') : ''}">${tr ? esc(got === undefined ? '—' : fmt(got)) : ''}</td><td class="sub" style="font-size:12px">${bad ? esc(bad) : ''}</td></tr>`;
-  }).join('');
-  document.getElementById('main').innerHTML = `
-    <div class="card"><p class="label">${esc(T.area)} · task ${T.id.slice(0, 2)}</p><h2>${esc(T.title)}</h2>
-      <p><b>Why it's hard.</b> ${esc(T.why_hard)}</p><p class="sub"><b>Who relies on it:</b> ${esc(T.who)}. <b>Cost of a wrong answer:</b> ${esc(T.failure_cost)}</p>
-      <details><summary>Prompt given to every model</summary><pre>${esc(T.instruction)}</pre></details>
-      <details><summary>Sources</summary><ul>${T.sources.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></details></div>
-    <div class="card"><p class="label">Models (✓/✗ per trial)</p><div class="grid">${models}</div></div>
-    <div class="card"><p class="label">${esc(model)} · graded answer</p>
-      <div class="tabs">${trials.map((x, i) => `<button class="${i === trialIx ? 'on' : ''}" onclick="trialIx=${i};render()">Trial ${x.trial} ${x.passed ? '✓' : '✗'}</button>`).join('') || '<span class="sub">No valid trials for this model on this task.</span>'}</div>
+  const trials = (D.runs[S.model] || {})[S.task] || [];
+  const tr = trials[Math.min(S.trialIx, trials.length - 1)];
+  const g = tr ? { answer: tr.answer, fields: Object.fromEntries(Object.keys(T.reference).map((k) => [k, { ok: !(k in tr.wrong), why: tr.wrong[k] || '' }])) } : null;
+  return `<div class="card"><p class="label">Models (✓/✗ per trial)</p><div class="grid">${models}</div></div>
+    <div class="card"><p class="label">${esc(S.model)} · graded answer</p>
+      <div class="tabs">${trials.map((x, i) => `<button class="${i === S.trialIx ? 'on' : ''}" onclick="A.set({trialIx:${i}})">Trial ${x.trial} ${x.passed ? '✓' : '✗'}</button>`).join('') || '<span class="sub">No valid trials for this model on this task.</span>'}</div>
       ${tr ? `<p class="sub">Score ${tr.score.toFixed(2)} · ${tr.passed ? '<b class="ok">PASS</b>' : '<b class="bad">FAIL</b>'} · ${tr.tokens ?? '?'} output tokens · ${tr.latency}s · served as ${esc(tr.served || '?')}</p>` : ''}
-      <table><tr><th>Field</th><th>Reference</th><th>Model</th><th>Grader note</th></tr>${refRows}</table></div>
+      ${gradedTable(T, g)}</div>
     ${tr ? `<div class="card"><p class="label">Full response</p><pre>${esc(tr.response)}</pre></div>` : ''}`;
+}
+
+function live(T) {
+  const L = S.live;
+  const r = L.result;
+  const models = L.provider === 'openai' ? ['gpt-5.6-sol', 'gpt-5.5', 'gpt-5.4', 'o3', 'gpt-5.4-mini'] : ['gemini-3.5-flash', 'gemini-3.1-pro-preview', 'gemma-4-31b-it'];
+  return `<div class="card"><p class="label">Run a model now</p>
+      <p class="note">Sends this task's prompt, unchanged, from your browser straight to the provider and grades the reply here with the same grader as the eval (a JavaScript port checked against the Python grader on 455 cases). Your key is held only in this page's memory: it is not saved, logged or sent anywhere except the provider. One task costs roughly $0.01–0.15 on your account.</p>
+      <div class="form">
+        <label>Provider<select onchange="A.setLive({provider:this.value, model:this.value==='openai'?'gpt-5.6-sol':'gemini-3.5-flash'})">
+          <option value="openai" ${L.provider === 'openai' ? 'selected' : ''}>OpenAI</option><option value="gemini" ${L.provider === 'gemini' ? 'selected' : ''}>Google Gemini</option></select></label>
+        <label>Model<input list="mlist" value="${esc(L.model)}" onchange="A.setLive({model:this.value})"><datalist id="mlist">${models.map((m) => `<option value="${m}">`).join('')}</datalist></label>
+        ${L.provider === 'openai' ? `<label>Reasoning effort<select onchange="A.setLive({effort:this.value})">${['none', 'low', 'medium', 'high'].map((e) => `<option ${L.effort === e ? 'selected' : ''}>${e}</option>`).join('')}</select></label>` : ''}
+        <label>Your API key<input type="password" autocomplete="off" placeholder="${L.provider === 'openai' ? 'sk-…' : 'Gemini API key'}" value="${esc(KEY)}" oninput="A.setKey(this.value)"></label>
+      </div>
+      <button class="go" ${L.busy ? 'disabled' : ''} onclick="A.run()">${L.busy ? 'Running… (reasoning models can take a minute or two)' : 'Run task ' + T.id.slice(0, 2)}</button>
+      <p class="note" style="margin-top:10px">Tip: GPT-5.6 Sol with effort <b>none</b> versus <b>medium</b> on task 09 reproduces the headline finding.</p></div>
+    <div class="card"><p class="label">Or grade any answer</p>
+      <p class="note">Paste a response from any model or chat app (it must end with the JSON object the prompt asks for). No key needed.</p>
+      <textarea id="paste" placeholder="Paste the full response here">${esc(L.pasted)}</textarea>
+      <p style="margin-top:8px"><button class="go" onclick="A.gradePasted()">Grade it</button></p></div>
+    ${r ? `<div class="card"><p class="label">${esc(r.source)}</p>
+      ${r.error ? `<p class="bad">${esc(r.error)}</p>` : `<p class="verdict ${r.g.passed ? 'ok' : 'bad'}">${r.g.passed ? 'PASS' : 'FAIL'} <span class="sub" style="font:400 14px Inter">· score ${r.g.score.toFixed(2)}${r.meta ? ' · ' + esc(r.meta) : ''}</span></p>${gradedTable(T, r.g)}`}</div>
+      ${r.text ? `<div class="card"><p class="label">Response</p><pre>${esc(r.text)}</pre></div>` : ''}` : ''}`;
+}
+
+function gradePasted() {
+  const T = D.tasks.find((t) => t.id === S.task);
+  const text = document.getElementById('paste').value;
+  S.live.pasted = text;
+  S.live.result = { source: 'Pasted answer · graded in your browser', g: grade(T, text), text };
+  render();
+}
+
+async function run() {
+  const T = D.tasks.find((t) => t.id === S.task);
+  const L = S.live;
+  if (!KEY) { L.result = { source: 'Live run', error: 'Enter your API key first.' }; render(); return; }
+  L.busy = true; L.result = null; render();
+  const t0 = performance.now();
+  try {
+    let text, meta;
+    if (L.provider === 'openai') {
+      const body = { model: L.model, messages: [{ role: 'user', content: T.instruction }], max_completion_tokens: 32000 };
+      if (L.effort) body.reasoning_effort = L.effort;
+      const r = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${KEY}` }, body: JSON.stringify(body) });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error?.message || `HTTP ${r.status}`);
+      text = j.choices[0].message.content || '';
+      meta = `${j.model} · effort ${L.effort} · ${j.usage?.completion_tokens ?? '?'} output tokens`;
+    } else {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(L.model)}:generateContent`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': KEY }, body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: T.instruction }] }], generationConfig: { maxOutputTokens: 32000 } }) });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error?.message || `HTTP ${r.status}`);
+      const c = (j.candidates || [{}])[0];
+      text = (c.content?.parts || []).filter((p) => !p.thought).map((p) => p.text || '').join('');
+      meta = `${j.modelVersion || L.model} · ${(j.usageMetadata?.candidatesTokenCount ?? 0) + (j.usageMetadata?.thoughtsTokenCount ?? 0)} output tokens`;
+    }
+    L.result = { source: `Live run · ${L.model} · graded in your browser`, g: grade(T, text), text, meta: `${meta} · ${((performance.now() - t0) / 1000).toFixed(1)} s` };
+  } catch (e) {
+    L.result = { source: `Live run · ${L.model}`, error: `The provider returned an error: ${e.message}` };
+  }
+  L.busy = false; render();
 }
 </script>
 </body>

@@ -65,13 +65,13 @@
   <main class="stack" id="main"><div class="card">Loading…</div></main>
 </div>
 <script type="module">
-import { grade } from './grader.js';
+import { grade } from './grader.js?v=2';
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const fmt = (v) => typeof v === 'number' ? (Math.abs(v) < 0.001 && v !== 0 ? v.toExponential(3) : +v.toFixed(4)) : (v === undefined ? '—' : typeof v === 'object' ? JSON.stringify(v) : String(v));
 const S = { mode: 'replay', task: null, model: null, trialIx: 0, live: { provider: 'openai', model: 'gpt-5.6-sol', effort: 'none', busy: false, result: null, pasted: '' } };
 let D, KEY = '';   // the API key lives only in this variable: never stored, never sent anywhere but the provider
 const params = new URLSearchParams(location.hash.slice(1));
-fetch('data.json').then((r) => r.json()).then((d) => {
+fetch('data.json', { cache: 'no-cache' }).then((r) => r.json()).then((d) => {
   D = d;
   S.task = params.get('task') || D.tasks[0].id;
   S.model = params.get('model') || D.models[0].name;

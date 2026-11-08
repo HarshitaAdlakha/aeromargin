@@ -1,6 +1,7 @@
 """Builds the narrated walkthrough (<= 5 min) from the rendered slides.
 Narration numbers come from results/summary.json. Voice: edge-tts (en-US-AvaNeural, an AI voice; needs edge-tts >= 7.3.1, set EDGE_TTS to its path) and ffmpeg.
     python media/video.py            -> media/build/AeroMargin-walkthrough.mp4 (+ narration.txt)"""
+import hashlib
 import json
 import os
 import subprocess
@@ -55,7 +56,7 @@ def main():
     (OUT / "narration.txt").write_text("\n\n".join(f"[Slide {i + 1}] {t}" for i, t in enumerate(LINES)), encoding="utf-8")
     parts = []
     for i, text in enumerate(LINES, 1):
-        mp3 = OUT / f"line-{i}.mp3"
+        mp3 = OUT / f"line-{i}-{hashlib.sha1(text.encode()).hexdigest()[:8]}.mp3"   # re-voiced only when the text changes
         if not mp3.exists():
             tts(text, mp3)
         d = dur(mp3) + 0.8

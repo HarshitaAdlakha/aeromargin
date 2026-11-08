@@ -1,0 +1,70 @@
+{
+  "model": "gemma-4-31b",
+  "variant": "realistic",
+  "task": "08-eccentric-mixed-bolt-group",
+  "trial": 2,
+  "at": "2026-11-08T18:58:58+00:00",
+  "latency_s": 297.0,
+  "settings": {
+    "model": "gemma-4-31b-it",
+    "maxOutputTokens": 32000
+  },
+  "usage": {
+    "input_tokens": 532,
+    "output_tokens": 6628,
+    "reasoning_tokens": 5154,
+    "finish_reason": "STOP",
+    "served_model": "gemma-4-31b-it"
+  },
+  "cost_usd": 0.0,
+  "error": null,
+  "passed": true,
+  "score": 1.0,
+  "grade": {
+    "parsed": true,
+    "score": 1.0,
+    "passed": true,
+    "fields": {
+      "centroid_x_in": {
+        "ok": true,
+        "why": "got 1.08, want 1.08 ± 0.01",
+        "critical": false
+      },
+      "eccentricity_in": {
+        "ok": true,
+        "why": "got 7.92, want 7.92 ± 0.01",
+        "critical": false
+      },
+      "critical_bolt": {
+        "ok": true,
+        "why": "got 'R1', want one of ['r1', 'r3']",
+        "critical": true
+      },
+      "critical_bolt_load_lbf": {
+        "ok": true,
+        "why": "got 2359.1, want 2357.5 ± 23.575",
+        "critical": true
+      },
+      "min_ms": {
+        "ok": true,
+        "why": "got 0.112, want 0.1127 ± 0.01",
+        "critical": true
+      },
+      "verdict": {
+        "ok": true,
+        "why": "got 'pass', want one of ['pass']",
+        "critical": true
+      }
+    },
+    "answer": {
+      "centroid_x_in": 1.08,
+      "eccentricity_in": 7.92,
+      "critical_bolt": "R1",
+      "critical_bolt_load_lbf": 2359.1,
+      "min_ms": 0.112,
+      "verdict": "pass"
+    }
+  },
+  "prompt": "Stress check request: a bracket bolted to a frame, loaded in its own plane by an eccentric shear load.\n\n**Bolts** (x to the right from the left bolt column, y up from the middle row; all in single shear)\n\n| Bolt | x (in) | y (in) | Diameter (in) |\n|---|---|---|---|\n| L1 | 0.0 | +2.5 | 0.250 |\n| L2 | 0.0 | 0.0 | 0.250 |\n| L3 | 0.0 | −2.5 | 0.250 |\n| R1 | 3.0 | +2.5 | 0.1875 |\n| R2 | 3.0 | 0.0 | 0.1875 |\n| R3 | 3.0 | −2.5 | 0.1875 |\n\nAll bolts are the same steel, ultimate shear strength 95,000 psi on the full-diameter area (allowable = 95,000 × πd²/4). Bearing and the bracket do not govern.\n\n**Load**\nUltimate 4,200 lbf, straight down (−y), line of action at x = 9.0 in.\n\n**Scope**\nUse the elastic method for an eccentrically loaded fastener group (Bruhn, Section D1), taking each bolt's shear stiffness as proportional to its shear area.\n\n**Report**\n1. The x-coordinate of the fastener group's centroid (in)\n2. The load's eccentricity from that centroid (in)\n3. The critical bolt (lowest margin of safety), its resultant load (lbf) and its margin, MS = allowable/load − 1\n4. The verdict: `pass` if every bolt has MS ≥ 0, otherwise `fail`\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers (bolt by name, e.g. \"L2\"; if two bolts tie, give either):\n\n```json\n{\"centroid_x_in\": 0, \"eccentricity_in\": 0, \"critical_bolt\": \"L1\", \"critical_bolt_load_lbf\": 0, \"min_ms\": 0, \"verdict\": \"pass|fail\"}\n```\n",
+  "response": "To perform the stress check on the bracket's fastener group, we use the elastic method for eccentrically loaded fasteners, where the shear load is distributed based on the shear stiffness (proportional to the shear area $A = \\frac{\\pi d^2}{4}$).\n\n### 1. Fastener Areas and Centroid\n**Areas:**\n- Area of L bolts ($d = 0.250\\text{ in}$): $A_L = \\frac{\\pi(0.250)^2}{4} \\approx 0.049087\\text{ in}^2$\n- Area of R bolts ($d = 0.1875\\text{ in}$): $A_R = \\frac{\\pi(0.1875)^2}{4} \\approx 0.027612\\text{ in}^2$\n- Total Area: $A_{total} = 3(A_L + A_R) \\approx 3(0.076699) = 0.230097\\text{ in}^2$\n\n**Centroid ($x_c$):**\n$x_c = \\frac{\\sum (A_i x_i)}{A_{total}} = \\frac{3(A_L \\cdot 0) + 3(A_R \\cdot 3.0)}{0.230097} = \\frac{3 \\cdot 0.027612 \\cdot 3.0}{0.230097} \\approx 1.08\\text{ in}$\n\n### 2. Eccentricity and Moment\n- **Eccentricity ($e$):** $e = x_{load} - x_c = 9.0 - 1.08 = 7.92\\text{ in}$\n- **Moment ($M$):** $M = P \\cdot e = 4,200\\text{ lbf} \\cdot 7.92\\text{ in} = 33,264\\text{ lb-in}$\n\n### 3. Load Distribution\n**Direct Shear ($P_{dir}$):**\n- $P_{dir, L} = P \\frac{A_L}{A_{total}} = 4,200 \\frac{0.049087}{0.230097} \\approx 896.0\\text{ lbf}$\n- $P_{dir, R} = P \\frac{A_R}{A_{total}} = 4,200 \\frac{0.027612}{0.230097} \\approx 504.0\\text{ lbf}$\n\n**Moment Shear ($P_{mom}$):**\nWe calculate the polar moment of inertia equivalent for the group: $J = \\sum A_i r_i^2$.\n- $r^2$ values from centroid $(1.08, 0)$:\n  - L1, L3: $(0-1.08)^2 + 2.5^2 = 7.4164$\n  - L2: $(0-1.08)^2 + 0^2 = 1.1664$\n  - R1, R3: $(3-1.08)^2 + 2.5^2 = 9.9364$\n  - R2: $(3-1.08)^2 + 0^2 = 3.6864$\n- $J = 2(0.049087 \\cdot 7.4164) + (0.049087 \\cdot 1.1664) + 2(0.027612 \\cdot 9.9364) + (0.027612 \\cdot 3.6864) \\approx 1.4358\\text{ in}^4$\n\n**Resultant Loads ($P_{res}$):**\n$P_{mom, x} = \\frac{M \\cdot y_i \\cdot A_i}{J}$, $P_{mom, y} = \\frac{-M \\cdot x_i \\cdot A_i}{J}$\n- **Bolt L1:** $P_x = \\frac{33264 \\cdot 2.5 \\cdot 0.049087}{1.4358} = 2843.0$; $P_y = \\frac{-33264 \\cdot (-1.08) \\cdot 0.049087}{1.4358} - 896 = 334.3 \\implies P_{res} = 2862.6\\text{ lbf}$\n- **Bolt R1:** $P_x = \\frac{33264 \\cdot 2.5 \\cdot 0.027612}{1.4358} = 1599.2$; $P_y = \\frac{-33264 \\cdot 1.92 \\cdot 0.027612}{1.4358} - 504 = -1734.3 \\implies P_{res} = 2359.1\\text{ lbf}$\n\n### 4. Margin of Safety (MS)\n- **Allowable L:** $95,000 \\cdot A_L = 4663.3\\text{ lbf}$\n- **Allowable R:** $95,000 \\cdot A_R = 2623.1\\text{ lbf}$\n- $MS_{L1} = \\frac{4663.3}{2862.6} - 1 = 0.632$\n- $MS_{R1} = \\frac{2623.1}{2359.1} - 1 = 0.112$\n\nThe critical bolts are R1 and R3 with the lowest margin of safety. Since $MS \\ge 0$, the design passes.\n\n```json\n{\"centroid_x_in\": 1.08, \"eccentricity_in\": 7.92, \"critical_bolt\": \"R1\", \"critical_bolt_load_lbf\": 2359.1, \"min_ms\": 0.112, \"verdict\": \"pass\"}\n```"
+}

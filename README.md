@@ -4,7 +4,7 @@
 
 Built by **Paras Adlakha** and **Harshita Adlakha** for the [micro1 Eval Hackathon](https://www.hackerrank.com/event/micro1-eval-hackathon) (30 Oct – 9 Nov 2026).
 
-🎬 Video walkthrough: _link in the submission form_ · 🌐 [Project page](docs/index.html) · 📑 [Slides (PDF)](docs/slides/AeroMargin-slides.pdf) · [Research brief](docs/research-brief.html) · [Market brief](docs/market-brief.html)
+🎬 [Video walkthrough (4½ min)](https://parasadlakha.github.io/aeromargin/video/AeroMargin-walkthrough.mp4) · 🌐 [Project page](https://parasadlakha.github.io/aeromargin/) · 📑 [Slides (PDF)](https://parasadlakha.github.io/aeromargin/slides/AeroMargin-slides.pdf) · [Research brief](https://parasadlakha.github.io/aeromargin/research-brief.html) · [Market brief](https://parasadlakha.github.io/aeromargin/market-brief.html) · Code: [github.com/ParasAdlakha/aeromargin](https://github.com/ParasAdlakha/aeromargin) (mirror: [HarshitaAdlakha/aeromargin](https://github.com/HarshitaAdlakha/aeromargin))
 
 ---
 
@@ -42,7 +42,7 @@ Same 10 tasks, same prompt, same grader for every model. A trial passes when eve
 | **o3** (`o3`, reasoning_effort=medium) | 3 | 47% | 0.66 | 70% | 20% | 30%–70% | $1.69 | 44 s |
 | **gpt-5.4-mini** (`gpt-5.4-mini`, reasoning_effort=medium) | 3 | 63% | 0.79 | 80% | 40% | 60%–70% | $1.07 | 34 s |
 | **gemini-3.5-flash** (`gemini-3.5-flash`, provider defaults) — **partial: 6/30 trials** (provider quota) | 3 | 100% | 1.00 | 100% | 33% | 100%–100% | $0.54 | 38 s |
-| **gemma-4-31b** (`gemma-4-31b-it`, provider defaults) — **partial: 18/30 trials** (provider quota) | 3 | 33% | 0.64 | 50% | 17% | 17%–50% | $0.00 | 277 s |
+| **gemma-4-31b** (`gemma-4-31b-it`, provider defaults) — **partial: 21/30 trials** (provider quota) | 3 | 33% | 0.61 | 50% | 12% | 14%–50% | $0.00 | 279 s |
 | **gpt-5.5@guided** (`gpt-5.5`, reasoning_effort=medium) | 3 | 100% | 1.00 | 100% | 100% | 100%–100% | $3.73 | 53 s |
 | **o3@guided** (`o3`, reasoning_effort=medium) | 3 | 60% | 0.76 | 90% | 30% | 50%–80% | $2.05 | 64 s |
 | **gpt-5.4-mini@guided** (`gpt-5.4-mini`, reasoning_effort=medium) | 3 | 70% | 0.85 | 80% | 50% | 60%–80% | $1.10 | 36 s |
@@ -57,8 +57,8 @@ Same 10 tasks, same prompt, same grader for every model. A trial passes when eve
 | 04-weight-balance-fuel-burn | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | – | 3/3 | 3/3 | 3/3 | 3/3 |
 | 05-rainflow-fatigue-life | 3/3 | 3/3 | 2/3 | 3/3 | 3/3 | 2/3 | 3/3 | 1/3 | 3/3 | – | 1/3 | 3/3 | 1/3 | 2/3 |
 | 06-takeoff-true-wind | 3/3 | 3/3 | 1/3 | 3/3 | 1/3 | 0/3 | 3/3 | 3/3 | 2/3 | – | 0/3 | 3/3 | 3/3 | 3/3 |
-| 07-gust-light-weight | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 | 3/3 | – | – | 3/3 | 2/3 | 2/3 |
-| 08-eccentric-mixed-bolt-group | 3/3 | 3/3 | 2/3 | 3/3 | 1/3 | 2/3 | 3/3 | 0/3 | 0/3 | – | – | 3/3 | 2/3 | 0/3 |
+| 07-gust-light-weight | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 | 3/3 | – | 0/2 | 3/3 | 2/3 | 2/3 |
+| 08-eccentric-mixed-bolt-group | 3/3 | 3/3 | 2/3 | 3/3 | 1/3 | 2/3 | 3/3 | 0/3 | 0/3 | – | 1/1 | 3/3 | 2/3 | 0/3 |
 | 09-inverted-taper-spar-web | 3/3 | 3/3 | 0/3 | 3/3 | 3/3 | 0/3 | 3/3 | 0/3 | 1/3 | – | – | 3/3 | 2/3 | 3/3 |
 | 10-z-section-unsymmetric-bending | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 | – | – | 3/3 | 1/3 | 2/3 |
 
@@ -214,6 +214,7 @@ The same model, the same prompts, only `reasoning_effort` changed (see the resul
 - Exact commands, dependencies (none) and Python version above. Data: everything is in the prompts; no external files.
 - Model ids, served versions, reasoning settings, token limits and dates are recorded in every transcript (`settings`, `usage.served_model`, `at`).
 - `summarize.py` re-grades from the transcripts, so anyone can verify our table from the submitted files without an API key.
+- Clean-room test: we unzipped the submission ZIP into an empty folder and ran `validate_graders.py` (133/133), `run_eval.py --oracle` (10/10) and `summarize.py` (identical table) with no keys and no installs.
 - Expected results: the table above. Model outputs vary between runs; with 3 trials, expect about ±1 task per model.
 
 ## Provenance and licences

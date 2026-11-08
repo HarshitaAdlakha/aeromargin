@@ -12,7 +12,11 @@ Ready to paste into the HackerRank submission form, plus the video script and a 
 
 **ZIP:** `dist/aeromargin.zip` (built by `python package_zip.py`; code, tasks, graders, results and transcripts; no videos, no keys)
 
-**Video (≤ 5 min):** _paste the public link to `AeroMargin-walkthrough.mp4` here (must open without a permission request)_
+**Video (≤ 5 min):** https://parasadlakha.github.io/aeromargin/video/AeroMargin-walkthrough.mp4
+
+**Repository:** https://github.com/ParasAdlakha/aeromargin (mirror: https://github.com/HarshitaAdlakha/aeromargin)
+
+**Project page:** https://parasadlakha.github.io/aeromargin/
 
 **Short description:**
 
@@ -57,6 +61,6 @@ The narrated video is built by `python media/video.py` from `docs/slides/s1–s9
 >
 > Our takeaway: the gap is recall versus re-derive. If your team uses AI for engineering checks, the reasoning setting matters more than the leaderboard. Ask for the governing case and every load's direction before any number.
 >
-> Code, transcripts and all 10 tasks: [repository link]
+> Code, transcripts and all 10 tasks: https://github.com/ParasAdlakha/aeromargin
 >
 > #AerospaceEngineering #AIEvals #StressAnalysis #micro1

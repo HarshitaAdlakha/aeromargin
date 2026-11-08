@@ -1,0 +1,47 @@
+{
+  "model": "gemma-4-31b",
+  "variant": "realistic",
+  "task": "08-eccentric-mixed-bolt-group",
+  "trial": 3,
+  "at": "2026-11-08T19:00:32+00:00",
+  "latency_s": 389.7,
+  "settings": {},
+  "usage": {},
+  "cost_usd": 0.0,
+  "error": "HTTP 500: {\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n",
+  "passed": false,
+  "score": 0.0,
+  "grade": {
+    "parsed": false,
+    "score": 0.0,
+    "passed": false,
+    "fields": {
+      "centroid_x_in": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "eccentricity_in": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "critical_bolt": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "critical_bolt_load_lbf": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "min_ms": {
+        "ok": false,
+        "why": "no JSON answer found"
+      },
+      "verdict": {
+        "ok": false,
+        "why": "no JSON answer found"
+      }
+    }
+  },
+  "prompt": "Stress check request: a bracket bolted to a frame, loaded in its own plane by an eccentric shear load.\n\n**Bolts** (x to the right from the left bolt column, y up from the middle row; all in single shear)\n\n| Bolt | x (in) | y (in) | Diameter (in) |\n|---|---|---|---|\n| L1 | 0.0 | +2.5 | 0.250 |\n| L2 | 0.0 | 0.0 | 0.250 |\n| L3 | 0.0 | −2.5 | 0.250 |\n| R1 | 3.0 | +2.5 | 0.1875 |\n| R2 | 3.0 | 0.0 | 0.1875 |\n| R3 | 3.0 | −2.5 | 0.1875 |\n\nAll bolts are the same steel, ultimate shear strength 95,000 psi on the full-diameter area (allowable = 95,000 × πd²/4). Bearing and the bracket do not govern.\n\n**Load**\nUltimate 4,200 lbf, straight down (−y), line of action at x = 9.0 in.\n\n**Scope**\nUse the elastic method for an eccentrically loaded fastener group (Bruhn, Section D1), taking each bolt's shear stiffness as proportional to its shear area.\n\n**Report**\n1. The x-coordinate of the fastener group's centroid (in)\n2. The load's eccentricity from that centroid (in)\n3. The critical bolt (lowest margin of safety), its resultant load (lbf) and its margin, MS = allowable/load − 1\n4. The verdict: `pass` if every bolt has MS ≥ 0, otherwise `fail`\n\nShow your working. End with a single JSON object in a ```json code block, with exactly these keys and plain numbers (bolt by name, e.g. \"L2\"; if two bolts tie, give either):\n\n```json\n{\"centroid_x_in\": 0, \"eccentricity_in\": 0, \"critical_bolt\": \"L1\", \"critical_bolt_load_lbf\": 0, \"min_ms\": 0, \"verdict\": \"pass|fail\"}\n```\n",
+  "response": ""
+}

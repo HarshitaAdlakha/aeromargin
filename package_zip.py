@@ -10,7 +10,7 @@ OUT = ROOT / "dist" / "aeromargin.zip"
 SKIP_DIRS = {".git", "node_modules", "__pycache__", "dist", "build", ".venv", "scratch"}
 SKIP_EXT = {".mp4", ".mp3", ".webm", ".mov", ".wav", ".pptx", ".pyc"}
 SKIP_FILES = {".env"}
-KEY = re.compile(r"(sk-(proj-)?[A-Za-z0-9_-]{20,}|nvapi-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{30,}|AQ\.[A-Za-z0-9_-]{30,})")
+KEY = re.compile(r"(sk-proj-[A-Za-z0-9_-]{40,}|sk-[A-Za-z0-9]{40,}|nvapi-[A-Za-z0-9_-]{40,}|AIza[0-9A-Za-z_-]{35}|AQ\.[A-Za-z0-9_-]{40,})")
 
 
 def files():

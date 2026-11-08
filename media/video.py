@@ -1,6 +1,6 @@
 """Builds the narrated walkthrough (<= 5 min) from the rendered slides.
 Narration numbers come from results/summary.json. Voice: edge-tts (en-US-AvaNeural, an AI voice; needs edge-tts >= 7.3.1, set EDGE_TTS to its path) and ffmpeg.
-    python media/video.py            -> media/build/AeroMargin-walkthrough.mp4 (+ narration.txt)"""
+    python media/video.py   -> media/build/AeroMargin-walkthrough.mp4 (4.5 min), AeroMargin-2min.mp4, AeroMargin-silent-captioned.mp4"""
 import hashlib
 import json
 import os
@@ -52,25 +52,67 @@ def dur(f):
     return float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(f)]).decode().strip())
 
 
-def main():
-    (OUT / "narration.txt").write_text("\n\n".join(f"[Slide {i + 1}] {t}" for i, t in enumerate(LINES)), encoding="utf-8")
-    parts = []
-    for i, text in enumerate(LINES, 1):
-        mp3 = OUT / f"line-{i}-{hashlib.sha1(text.encode()).hexdigest()[:8]}.mp3"   # re-voiced only when the text changes
-        if not mp3.exists():
-            tts(text, mp3)
-        d = dur(mp3) + 0.8
-        clip = OUT / f"clip-{i}.mp4"
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-i", str(SL / f"s{i}.png"), "-i", str(mp3),
-                        "-af", "apad=pad_dur=0.8", "-t", f"{d:.2f}", "-r", "30", "-c:v", "libx264", "-tune", "stillimage",
-                        "-pix_fmt", "yuv420p", "-vf", "scale=1920:1080", "-c:a", "aac", "-b:a", "160k", str(clip)], check=True)
-        parts.append(clip)
-        print(f"slide {i}: {d:.1f}s")
-    lst = OUT / "list.txt"
+SHORT = [  # 2-minute cut: (slide, narration)
+    (1, "AeroMargin: ten aerospace hand calculations, each with one condition that reverses a textbook default, graded by code. Does the model pick the right method, and the right sign, before it calculates?"),
+    (2, "Engineers already ask chat models for margins of safety, and a wrong margin looks exactly like a right one. Plus zero point seven one, pass, versus minus zero point zero eight, fail, for the same beam."),
+    (4, "Task nine: a beam that is deeper at its free end. The textbook relief formula gives four thousand two hundred pounds of web shear and a pass. The free body gives seven thousand eight hundred and a fail."),
+    (6, f"At medium reasoning, GPT five point six Sol and GPT five point five pass every trial. o3 passes {p('o3')} percent, GPT five point four mini {p('gpt-5.4-mini')}, and the open Gemma 4 model {p('gemma-4-31b')}."),
+    (5, "Grading is code only. Before any model ran, one hundred thirty-three checks confirmed that the grader accepts every reference answer, rejects twenty-four trap answers built from real engineering mistakes, and resists gaming."),
+    (7, f"Turn reasoning off and the same frontier models drop to {p('gpt-5.6-sol-none')} and {p('gpt-5.5-none')} percent, and the wrong answers are the textbook shortcuts themselves."),
+    (8, "The transcripts show the shortcuts word for word. o3 claims Bruhn uses an elliptical lug interaction. Without reasoning, GPT five point six Sol writes that both flange components point up, then subtracts them anyway."),
+    (9, "The gap is recall versus re-derive. For engineering teams, the reasoning setting matters more than the leaderboard: ask for the governing case and every load's direction before any number."),
+]
+CAPTIONS = [  # silent, captioned cut: (slide, line 1, line 2)
+    (1, "AEROMARGIN", "Right method and right sign, before the arithmetic?"),
+    (2, "THE PROBLEM", "Textbook says MS +0.71 pass. The free body says MS -0.08 fail."),
+    (3, "TEN TASKS", "Each one reverses a textbook default"),
+    (4, "TASK 09", "Deeper at the tip: the flanges ADD shear (7,800 lbf, not 4,200)"),
+    (5, "GRADING", "Code only. 133 checks, 24 trap answers, oracle 10/10"),
+    (6, "RESULTS", f"Medium reasoning: Sol and GPT-5.5 100%. o3 {p('o3')}%. Gemma {p('gemma-4-31b')}%"),
+    (7, "REASONING EFFORT", f"Reasoning off: Sol {p('gpt-5.6-sol-none')}%, GPT-5.5 {p('gpt-5.5-none')}%"),
+    (8, "TRANSCRIPTS", "The wrong answers are the shortcuts, word for word"),
+    (9, "TAKEAWAY", "Recall versus re-derive. Ask for the governing case first."),
+]
+FONT = r"C\:/Windows/Fonts/segoeuib.ttf"
+dt = lambda t: t.replace("\\", "\\\\").replace("'", "’").replace(":", r"\:").replace(",", r"\,")
+
+
+def clip_voiced(i, slide, text):
+    mp3 = OUT / f"line-{slide}-{hashlib.sha1(text.encode()).hexdigest()[:8]}.mp3"   # re-voiced only when the text changes
+    if not mp3.exists():
+        tts(text, mp3)
+    d = dur(mp3) + 0.8
+    clip = OUT / f"clip-{i}-{slide}-{hashlib.sha1(text.encode()).hexdigest()[:6]}.mp4"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-i", str(SL / f"s{slide}.png"), "-i", str(mp3),
+                    "-af", "apad=pad_dur=0.8", "-t", f"{d:.2f}", "-r", "30", "-c:v", "libx264", "-tune", "stillimage",
+                    "-pix_fmt", "yuv420p", "-vf", "scale=1920:1080", "-c:a", "aac", "-b:a", "160k", str(clip)], check=True)
+    return clip
+
+
+def clip_captioned(i, slide, l1, l2, seconds=11.0):
+    vf = ("scale=1920:1080,drawbox=x=0:y=ih-190:w=iw:h=190:color=black@0.78:t=fill,"
+          f"drawtext=fontfile='{FONT}':text='{dt(l1)}':expansion=none:fontcolor=0xff7a1a:fontsize=34:x=120:y=h-160,"
+          f"drawtext=fontfile='{FONT}':text='{dt(l2)}':expansion=none:fontcolor=white:fontsize=46:x=120:y=h-108")
+    clip = OUT / f"cap-{i}.mp4"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-loop", "1", "-i", str(SL / f"s{slide}.png"), "-f", "lavfi",
+                    "-i", "anullsrc=r=44100:cl=stereo", "-t", f"{seconds}", "-r", "30", "-vf", vf, "-c:v", "libx264",
+                    "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", str(clip)], check=True)
+    return clip
+
+
+def concat(parts, name):
+    lst = OUT / f"list-{name}.txt"
     lst.write_text("".join(f"file '{c.as_posix()}'\n" for c in parts), encoding="utf-8")
-    final = OUT / "AeroMargin-walkthrough.mp4"
+    final = OUT / name
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(lst), "-c", "copy", str(final)], check=True)
     print("wrote", final, f"{dur(final):.0f}s")
+
+
+def main():
+    (OUT / "narration.txt").write_text("\n\n".join(f"[Slide {i + 1}] {t}" for i, t in enumerate(LINES)), encoding="utf-8")
+    concat([clip_voiced(i, i, t) for i, t in enumerate(LINES, 1)], "AeroMargin-walkthrough.mp4")
+    concat([clip_voiced(100 + i, s, t) for i, (s, t) in enumerate(SHORT)], "AeroMargin-2min.mp4")
+    concat([clip_captioned(i, s, a, b) for i, (s, a, b) in enumerate(CAPTIONS)], "AeroMargin-silent-captioned.mp4")
 
 
 if __name__ == "__main__":

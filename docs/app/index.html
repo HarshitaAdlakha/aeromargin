@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AeroMargin explorer</title>
+<meta name="description" content="Browse every AeroMargin task, its reference answer and every graded model transcript.">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b1220; --card:#121c2e; --card2:#0f1828; --ink:#eef2f7; --ink2:#b7c2d1; --mut:#7d8aa0; --line:#22304a; --acc:#ff7a1a; --ok:#34d399; --bad:#f87171; --mid:#fbbf24; --okbg:#0f3b2c; --badbg:#401818; --midbg:#3d3110; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg:#f3f5f8; --card:#fff; --card2:#f7f9fb; --ink:#0f1720; --ink2:#3c4856; --mut:#6b7686; --line:#d8dee5; --okbg:#dff5ea; --badbg:#fde2e2; --midbg:#fdf1d2; --ok:#0f7a4f; --bad:#b42318; --mid:#8a5a00; } }
+  * { box-sizing:border-box }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15.5px/1.55 Inter,system-ui,sans-serif }
+  header { padding:22px 16px 10px; max-width:1280px; margin:0 auto }
+  header a { color:var(--mut); font-size:14px }
+  h1 { font:400 40px/1 'Instrument Serif',serif; margin:6px 0 4px } h1 em { color:var(--acc) }
+  .sub { color:var(--ink2); margin:0 }
+  .wrap { max-width:1280px; margin:0 auto; padding:10px 16px 60px; display:grid; grid-template-columns:270px 1fr; gap:16px }
+  @media (max-width:860px) { .wrap { grid-template-columns:1fr } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px }
+  .side button { display:block; width:100%; text-align:left; background:none; border:0; color:var(--ink2); padding:8px 10px; border-radius:10px; cursor:pointer; font:inherit }
+  .side button.on { background:var(--card2); color:var(--ink); outline:1px solid var(--line) }
+  .side .n { font:700 12px 'JetBrains Mono',monospace; color:var(--acc); margin-right:6px }
+  .label { font:700 11px 'JetBrains Mono',monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--mut); margin:0 0 6px }
+  h2 { margin:2px 0 6px; font-size:22px }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; margin-top:10px }
+  .m { border:1px solid var(--line); border-radius:12px; padding:9px 10px; cursor:pointer; background:var(--card2) }
+  .m.on { outline:2px solid var(--acc) }
+  .m .nm { font-weight:600; font-size:14px }
+  .dots { margin-top:6px; display:flex; gap:4px }
+  .dot { width:22px; height:22px; border-radius:6px; display:grid; place-items:center; font:700 11px 'JetBrains Mono',monospace }
+  .dot.ok { background:var(--okbg); color:var(--ok) } .dot.bad { background:var(--badbg); color:var(--bad) }
+  pre { white-space:pre-wrap; word-wrap:break-word; background:var(--card2); border:1px solid var(--line); border-radius:12px; padding:12px; font:13px/1.5 'JetBrains Mono',monospace; color:var(--ink2); max-height:460px; overflow:auto }
+  table { border-collapse:collapse; width:100%; font-size:14px } td, th { padding:6px 8px; border-top:1px solid var(--line); text-align:left; vertical-align:top }
+  th { font:600 11px 'JetBrains Mono',monospace; text-transform:uppercase; color:var(--mut) }
+  .ok { color:var(--ok) } .bad { color:var(--bad) }
+  .crit { font:700 10px 'JetBrains Mono',monospace; color:var(--acc); margin-left:4px }
+  .tabs button { background:var(--card2); border:1px solid var(--line); color:var(--ink2); border-radius:999px; padding:6px 12px; margin:0 6px 6px 0; cursor:pointer; font:inherit; font-size:13px }
+  .tabs button.on { color:var(--ink); border-color:var(--acc) }
+  details summary { cursor:pointer; color:var(--ink2) }
+  .stack > * + * { margin-top:14px }
+</style>
+</head>
+<body>
+<header>
+  <a href="../">← AeroMargin</a>
+  <h1>Transcript <em>explorer</em></h1>
+  <p class="sub">Every task, its reference answer, and every graded trial from every model: the final JSON, the fields it got wrong, and the full response.</p>
+</header>
+<div class="wrap">
+  <nav class="card side" id="tasks" aria-label="Tasks"></nav>
+  <main class="stack" id="main"><div class="card">Loading…</div></main>
+</div>
+<script>
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = (v) => typeof v === 'number' ? (Math.abs(v) < 0.001 && v !== 0 ? v.toExponential(3) : +v.toFixed(4)) : String(v);
+let D, task, model, trialIx = 0;
+const params = new URLSearchParams(location.hash.slice(1));
+fetch('data.json').then((r) => r.json()).then((d) => {
+  D = d;
+  task = params.get('task') || D.tasks[0].id;
+  model = params.get('model') || D.models[0].name;
+  render();
+}).catch(() => { document.getElementById('main').innerHTML = '<div class="card">Could not load data.json. Open this page over http (e.g. GitHub Pages or <code>python -m http.server</code> in docs/).</div>'; });
+
+function render() {
+  location.hash = `task=${task}&model=${encodeURIComponent(model)}`;
+  document.getElementById('tasks').innerHTML = '<p class="label">Tasks</p>' + D.tasks.map((t) =>
+    `<button class="${t.id === task ? 'on' : ''}" onclick="task='${t.id}';trialIx=0;render()"><span class="n">${t.id.slice(0, 2)}</span>${esc(t.title.split(':')[0])}</button>`).join('');
+  const T = D.tasks.find((t) => t.id === task);
+  const models = D.models.map((m) => {
+    const tr = (D.runs[m.name] || {})[task] || [];
+    const dots = tr.map((x) => `<span class="dot ${x.passed ? 'ok' : 'bad'}">${x.passed ? '✓' : '✗'}</span>`).join('') || '<span class="sub" style="font-size:12px">no valid trials</span>';
+    return `<div class="m ${m.name === model ? 'on' : ''}" onclick="model='${m.name}';trialIx=0;render()"><div class="nm">${esc(m.name)}</div><div class="sub" style="font-size:12px">reasoning: ${esc(m.effort)}</div><div class="dots">${dots}</div></div>`;
+  }).join('');
+  const trials = (D.runs[model] || {})[task] || [];
+  const tr = trials[Math.min(trialIx, trials.length - 1)];
+  const refRows = Object.entries(T.reference).map(([k, v]) => {
+    const got = tr && tr.answer ? tr.answer[k] : undefined;
+    const bad = tr && tr.wrong[k];
+    return `<tr><td>${esc(k)}${T.critical.includes(k) ? '<span class="crit">CRITICAL</span>' : ''}</td><td>${esc(fmt(v))}</td><td class="${tr ? (bad ? 'bad' : 'ok') : ''}">${tr ? esc(got === undefined ? '—' : fmt(got)) : ''}</td><td class="sub" style="font-size:12px">${bad ? esc(bad) : ''}</td></tr>`;
+  }).join('');
+  document.getElementById('main').innerHTML = `
+    <div class="card"><p class="label">${esc(T.area)} · task ${T.id.slice(0, 2)}</p><h2>${esc(T.title)}</h2>
+      <p><b>Why it's hard.</b> ${esc(T.why_hard)}</p><p class="sub"><b>Who relies on it:</b> ${esc(T.who)}. <b>Cost of a wrong answer:</b> ${esc(T.failure_cost)}</p>
+      <details><summary>Prompt given to every model</summary><pre>${esc(T.instruction)}</pre></details>
+      <details><summary>Sources</summary><ul>${T.sources.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></details></div>
+    <div class="card"><p class="label">Models (✓/✗ per trial)</p><div class="grid">${models}</div></div>
+    <div class="card"><p class="label">${esc(model)} · graded answer</p>
+      <div class="tabs">${trials.map((x, i) => `<button class="${i === trialIx ? 'on' : ''}" onclick="trialIx=${i};render()">Trial ${x.trial} ${x.passed ? '✓' : '✗'}</button>`).join('') || '<span class="sub">No valid trials for this model on this task.</span>'}</div>
+      ${tr ? `<p class="sub">Score ${tr.score.toFixed(2)} · ${tr.passed ? '<b class="ok">PASS</b>' : '<b class="bad">FAIL</b>'} · ${tr.tokens ?? '?'} output tokens · ${tr.latency}s · served as ${esc(tr.served || '?')}</p>` : ''}
+      <table><tr><th>Field</th><th>Reference</th><th>Model</th><th>Grader note</th></tr>${refRows}</table></div>
+    ${tr ? `<div class="card"><p class="label">Full response</p><pre>${esc(tr.response)}</pre></div>` : ''}`;
+}
+</script>
+</body>
+</html>

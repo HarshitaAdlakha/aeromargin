@@ -1,0 +1,35 @@
+"""Writes media/social.html: LinkedIn images (1200x627) with numbers from results/summary.json.
+Render with:  cd media && node render.mjs social.html ../docs/img"""
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+S = json.loads((ROOT / "results" / "summary.json").read_text(encoding="utf-8"))
+p = lambda m: f"{round(100 * S[m]['pass_rate'])}%"
+css = """@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+body{margin:0;background:#05080f}.frame{width:1200px;height:627px;margin:0 0 20px;position:relative;overflow:hidden;color:#eef2f7;font-family:Inter;
+background:radial-gradient(800px 500px at 90% -10%,#1a2a46 0%,#0b1220 62%);padding:56px 64px;box-sizing:border-box}
+.k{font:700 15px 'JetBrains Mono';letter-spacing:.16em;color:#ff7a1a;text-transform:uppercase}
+h1{font:400 92px/1 'Instrument Serif';margin:18px 0 0}h1 em,h2 em{color:#ff7a1a}h2{font:400 54px/1.05 'Instrument Serif';margin:14px 0 0}
+p{font-size:23px;line-height:1.4;color:#b7c2d1;max-width:1000px}.f{position:absolute;left:64px;right:64px;bottom:34px;display:flex;justify-content:space-between;font:500 15px 'JetBrains Mono';color:#7d8aa0}
+.row{display:flex;gap:18px;margin-top:30px}.b{flex:1;background:#121c2e;border:1px solid #22304a;border-radius:18px;padding:20px 22px}
+.b .n{font:400 64px/1 'Instrument Serif';color:#ff7a1a}.b .d{font-size:18px;color:#b7c2d1;margin-top:8px;line-height:1.35}
+.v{font:700 34px 'JetBrains Mono';margin-top:8px}.ok{color:#34d399}.bad{color:#f87171}.mono{font:500 21px 'JetBrains Mono';color:#b7c2d1}"""
+html = f"""<!doctype html><html><head><meta charset="utf-8"><style>{css}</style></head><body>
+<div class="frame" id="linkedin-cover"><div class="k">micro1 Eval Hackathon · AeroMargin</div><h1>Does the model pick<br>the right <em>sign</em>?</h1>
+<p>Ten aerospace hand calculations. Each one reverses a textbook default. Graded by code against a reference solution.</p>
+<div class="f"><span>Paras Adlakha · Harshita Adlakha</span><span>github.com/ParasAdlakha/aeromargin</span></div></div>
+<div class="frame" id="linkedin-results"><div class="k">Same model · same prompts · 3 trials × 10 tasks</div><h2>Reasoning on: <em>right every time.</em><br>Reasoning off: the textbook shortcut.</h2>
+<div class="row"><div class="b"><div class="n">{p('gpt-5.6-sol')}</div><div class="d">GPT-5.6 Sol, medium reasoning</div></div>
+<div class="b"><div class="n">{p('gpt-5.6-sol-none')}</div><div class="d">GPT-5.6 Sol, reasoning off</div></div>
+<div class="b"><div class="n">{p('o3')}</div><div class="d">o3 (2025 frontier reasoning model)</div></div>
+<div class="b"><div class="n">{p('gemma-4-31b')}</div><div class="d">Gemma 4 31B (open weights)</div></div></div>
+<div class="f"><span>AeroMargin · results 8–9 Nov 2026</span><span>code graders · 133 validation checks</span></div></div>
+<div class="frame" id="linkedin-example"><div class="k">Task 09 · tapered beam, deeper at the tip</div><h2>Same beam. Same numbers. <em>Opposite verdicts.</em></h2>
+<div class="row"><div class="b"><div class="mono">Textbook relief formula</div><div class="mono">V − (M/h)Σtan α = 4,200 lbf</div><div class="v ok">MS +0.71 · PASS</div></div>
+<div class="b"><div class="mono">Free body of the outboard part</div><div class="mono">V + 2(M/h)tan α = 7,800 lbf</div><div class="v bad">MS −0.08 · FAIL</div></div></div>
+<p style="margin-top:26px">GPT-5.6 Sol with reasoning off wrote that both flange components point up, then subtracted them anyway. Three trials out of three.</p>
+<div class="f"><span>AeroMargin</span><span>Megson ch. 16 · Bruhn A11</span></div></div>
+</body></html>"""
+(ROOT / "media" / "social.html").write_text(html, encoding="utf-8")
+print("wrote media/social.html")

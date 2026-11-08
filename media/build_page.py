@@ -67,7 +67,7 @@ html = f"""<!doctype html>
   <div class="kick">micro1 Eval Hackathon · Nov 2026 · Paras Adlakha &amp; Harshita Adlakha</div>
   <h1>Aero<em>Margin</em></h1>
   <p class="lead">Does the model pick the right method, <b>and the right sign</b>, before it calculates? Ten aerospace hand calculations (stress, fatigue, loads, performance, weight and balance), each with one condition that reverses a textbook default. Every task is graded by code against a reference solution.</p>
-  <div class="links"><a href="https://github.com/ParasAdlakha/aeromargin">Code &amp; transcripts</a><a href="slides/AeroMargin-slides.pdf">Slides (PDF)</a><a href="video/AeroMargin-walkthrough.mp4">Video walkthrough</a><a href="research-brief.html">Research brief</a><a href="market-brief.html">Market brief</a></div>
+  <div class="links"><a href="app/">Transcript explorer</a><a href="https://github.com/ParasAdlakha/aeromargin">Code &amp; transcripts</a><a href="video/AeroMargin-walkthrough.mp4">Video (4½ min)</a><a href="video/AeroMargin-2min.mp4">2-min cut</a><a href="video/AeroMargin-silent-captioned.mp4">Silent, captioned</a><a href="slides/AeroMargin-slides.pdf">Slides (PDF)</a><a href="research-brief.html">Research brief</a><a href="market-brief.html">Market brief</a></div>
 
   <div class="stats">
     <div class="stat"><div class="n">10</div><div class="d">expert tasks, each with a reference solution and a code grader</div></div>

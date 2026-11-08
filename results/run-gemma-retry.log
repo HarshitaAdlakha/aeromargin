@@ -1,0 +1,2 @@
+1 trials: ['gemma-4-31b'] x 10 tasks x 3
+fail gemma-4-31b          08-eccentric-mixed-bolt-group      t3 score=0.57 282.2s 

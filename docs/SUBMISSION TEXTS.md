@@ -1,6 +1,6 @@
 # Submission texts
 
-Ready to paste into the HackerRank submission form, plus the video script and a social post. All numbers come from `results/summary.md` (runs on 8–9 Nov 2026).
+Ready to paste into the HackerRank submission form, plus the video script, a live demo script and social posts. All numbers come from `results/summary.md` (runs on 8–9 Nov 2026).
 
 ---
 
@@ -64,3 +64,64 @@ The narrated video is built by `python media/video.py` from `docs/slides/s1–s9
 > Code, transcripts and all 10 tasks: https://github.com/ParasAdlakha/aeromargin
 >
 > #AerospaceEngineering #AIEvals #StressAnalysis #micro1
+
+---
+
+## Judging criteria, one line each
+
+| Criterion | AeroMargin |
+|---|---|
+| Real-world relevance (15) | Ten checks that stress, fatigue, loads and operations people sign off; a wrong answer flips a certification verdict |
+| Task design (20) | Every graded key stated, all data given, standard cited methods, a reference solution per task, one realistic trap each |
+| Grader reliability (20) | Code-only graders; 133 validation checks incl. 24 traps and 5 gaming patterns; 17 unit tests; oracle 10/10; transcript audit |
+| Evidence of model limitations (15) | 6 models × 3 trials plus effort, guided and robustness ablations; every failure explained with a transcript |
+| Reproducibility (15) | Stdlib-only Python; 3 commands; `summarize.py` re-grades without keys; clean-room test of the ZIP |
+| Human expertise and review (10) | Traps from practice; hand-derived references; tolerance changes justified from transcripts |
+| Insight (5) | Recall versus re-derive: the reasoning setting matters more than the leaderboard |
+
+---
+
+## Live demo script (2 minutes)
+
+Open https://parasadlakha.github.io/aeromargin/ and the explorer in a second tab.
+
+1. **(15 s) Hook.** "A margin of safety of +0.71 and one of −0.08 look the same on a screen. Only one of them flies. AeroMargin asks whether a model picks the right method, and the right sign, before it calculates."
+2. **(25 s) A task.** Explorer → task 09. Open *Prompt given to every model*. "The beam is deeper at its free end. Every textbook's relief formula assumes the opposite."
+3. **(30 s) A failure.** Click `gpt-5.6-sol-none`. "Reasoning off: 4,200 lbf, pass, on three of three trials. It even writes that both flange components point up, then subtracts them." Click `gpt-5.6-sol`: "Reasoning on: 7,800 lbf, fail. Correct."
+4. **(20 s) The grader.** In a terminal: `python validate_graders.py` → 133 checks, 0 failures. "Code only: references in, 24 trap answers out."
+5. **(20 s) Results.** Project page table: medium reasoning 100% for the newest two; reasoning off 60% and 57%; o3 47%.
+6. **(10 s) Close.** "The gap is recall versus re-derive. Ask for the governing case before any number."
+
+---
+
+## Event post (LinkedIn, team voice)
+
+> We just submitted AeroMargin to the micro1 Eval Hackathon 🛩️
+>
+> The brief: find what AI can't do yet in a field you know, and measure it properly. Ours is aerospace hand calculations, the checks stress and performance engineers sign off every day.
+>
+> 10 tasks · reference solutions · code graders checked 133 ways before a single model ran · 6 models · 3 trials each · every transcript public.
+>
+> Explore every answer: https://parasadlakha.github.io/aeromargin/app/
+>
+> Thank you, micro1 and HackerRank, for a hackathon about rigour rather than demos.
+>
+> #AIEvals #AerospaceEngineering #micro1
+
+## LinkedIn post (Paras, personal)
+
+> In stress analysis we say the arithmetic is the easy part. The hard part is knowing which way the load goes.
+>
+> This week I tested that on language models. I wrote 10 aerospace hand calculations, each with one condition that reverses a textbook default: a beam that gets deeper toward its tip, a Z-section that bends sideways, a METAR wind given in degrees true.
+>
+> With full reasoning, the newest models got all of them right. With reasoning off, the same model wrote "both flange components point up", then subtracted them, because the formula it remembered subtracts.
+>
+> A requirement is a promise. A margin of safety is too. If you use AI for engineering checks, check the reasoning setting before you trust the number.
+>
+> Built with Harshita Adlakha for the micro1 Eval Hackathon. Code and transcripts: https://github.com/ParasAdlakha/aeromargin
+>
+> Views are my own.
+
+## X post (under 280 characters)
+
+> AeroMargin: 10 aerospace stress & performance checks, each reversing a textbook default. Newest models: 100% with reasoning on, ~60% with it off, and the misses are the textbook shortcuts themselves. Code-graded, every transcript public: github.com/ParasAdlakha/aeromargin

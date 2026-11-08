@@ -1,0 +1,38 @@
+30 trials: ['gemma-4-31b'] x 10 tasks x 3
+fail gemma-4-31b          01-oblique-lug-fitting             t3 score=0.56 227.2s 
+PASS gemma-4-31b          02-short-strut-buckling            t1 score=1.00 321.2s 
+fail gemma-4-31b          01-oblique-lug-fitting             t2 score=0.56 340.2s 
+fail gemma-4-31b          01-oblique-lug-fitting             t1 score=0.56 379.4s 
+fail gemma-4-31b          02-short-strut-buckling            t2 score=0.11 181.0s 
+PASS gemma-4-31b          02-short-strut-buckling            t3 score=1.00 144.2s 
+fail gemma-4-31b          03-cas-to-tas-stratosphere         t2 score=0.57 273.2s 
+fail gemma-4-31b          03-cas-to-tas-stratosphere         t3 score=0.57 264.4s 
+fail gemma-4-31b          03-cas-to-tas-stratosphere         t1 score=0.57 376.2s 
+PASS gemma-4-31b          04-weight-balance-fuel-burn        t1 score=1.00 301.5s 
+PASS gemma-4-31b          04-weight-balance-fuel-burn        t2 score=1.00 193.8s 
+PASS gemma-4-31b          04-weight-balance-fuel-burn        t3 score=1.00 185.1s 
+fail gemma-4-31b          05-rainflow-fatigue-life           t1 score=0.50 319.3s 
+fail gemma-4-31b          06-takeoff-true-wind               t1 score=0.38 253.9s 
+PASS gemma-4-31b          05-rainflow-fatigue-life           t3 score=1.00 310.8s 
+fail gemma-4-31b          05-rainflow-fatigue-life           t2 score=0.33 436.0s 
+fail gemma-4-31b          06-takeoff-true-wind               t2 score=0.38 209.5s 
+fail gemma-4-31b          06-takeoff-true-wind               t3 score=0.38 261.6s 
+fail gemma-4-31b          07-gust-light-weight               t2 score=0.29 267.9s 
+fail gemma-4-31b          07-gust-light-weight               t1 score=0.14 314.7s 
+PASS gemma-4-31b          08-eccentric-mixed-bolt-group      t1 score=1.00 301.4s 
+PASS gemma-4-31b          08-eccentric-mixed-bolt-group      t2 score=1.00 297.0s 
+fail gemma-4-31b          07-gust-light-weight               t3 score=0.29 553.4s 
+ERR  gemma-4-31b          08-eccentric-mixed-bolt-group      t3 score=0.00 389.7s HTTP 500: {
+  "error": {
+    "code": 500,
+    "message": "Internal error encountered.",
+    "status": "INTERNAL"
+  }
+}
+
+PASS gemma-4-31b          09-inverted-taper-spar-web         t3 score=1.00 191.9s 
+PASS gemma-4-31b          09-inverted-taper-spar-web         t2 score=1.00 227.8s 
+PASS gemma-4-31b          09-inverted-taper-spar-web         t1 score=1.00 329.3s 
+fail gemma-4-31b          10-z-section-unsymmetric-bending   t1 score=0.30 240.9s 
+fail gemma-4-31b          10-z-section-unsymmetric-bending   t2 score=0.50 319.9s 
+PASS gemma-4-31b          10-z-section-unsymmetric-bending   t3 score=1.00 338.8s 

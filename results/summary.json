@@ -56,17 +56,17 @@
     },
     "tier": "open",
     "trials_per_task": 3,
-    "n_trials": 21,
+    "n_trials": 30,
     "api_errors_excluded": 0,
-    "pass_rate": 0.3333333333333333,
-    "mean_score": 0.6132857142857142,
-    "pass_at_k": 0.5,
-    "pass_hat_k": 0.125,
-    "trial_pass_rate_min": 0.14285714285714285,
+    "pass_rate": 0.4,
+    "mean_score": 0.6512033333333334,
+    "pass_at_k": 0.6,
+    "pass_hat_k": 0.2,
+    "trial_pass_rate_min": 0.3,
     "trial_pass_rate_max": 0.5,
     "cost_usd_full_run": 0.0,
-    "mean_latency_s": 279.1666666666667,
-    "mean_output_tokens": 7762.428571428572,
+    "mean_latency_s": 288.12333333333333,
+    "mean_output_tokens": 7961.366666666667,
     "dates": [
       "2026-11-08"
     ],
@@ -131,21 +131,42 @@
       },
       "07-gust-light-weight": {
         "passes": 0,
-        "trials": 2,
-        "mean_score": 0.214,
+        "trials": 3,
+        "mean_score": 0.238,
         "failed_fields": {
-          "n_gust_max_weight": 2,
-          "n_gust_min_weight": 2,
-          "design_n_max_weight": 2,
-          "design_n_min_weight": 2,
+          "n_gust_max_weight": 3,
+          "n_gust_min_weight": 3,
+          "design_n_max_weight": 3,
+          "design_n_min_weight": 3,
           "va_min_weight_keas": 1
         }
       },
       "08-eccentric-mixed-bolt-group": {
-        "passes": 1,
-        "trials": 1,
+        "passes": 2,
+        "trials": 3,
+        "mean_score": 0.857,
+        "failed_fields": {
+          "critical_bolt_load_lbf": 1,
+          "min_ms": 1
+        }
+      },
+      "09-inverted-taper-spar-web": {
+        "passes": 3,
+        "trials": 3,
         "mean_score": 1.0,
         "failed_fields": {}
+      },
+      "10-z-section-unsymmetric-bending": {
+        "passes": 1,
+        "trials": 3,
+        "mean_score": 0.6,
+        "failed_fields": {
+          "stress_A_psi": 2,
+          "stress_B_psi": 2,
+          "stress_C_psi": 2,
+          "stress_D_psi": 2,
+          "max_abs_stress_psi": 1
+        }
       }
     }
   },

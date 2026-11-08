@@ -6,6 +6,39 @@ Built by **Paras Adlakha** and **Harshita Adlakha** for the [micro1 Eval Hackath
 
 🎬 [Video walkthrough (4½ min)](https://parasadlakha.github.io/aeromargin/video/AeroMargin-walkthrough.mp4) · 🌐 [Project page](https://parasadlakha.github.io/aeromargin/) · 📑 [Slides (PDF)](https://parasadlakha.github.io/aeromargin/slides/AeroMargin-slides.pdf) · [Research brief](https://parasadlakha.github.io/aeromargin/research-brief.html) · [Market brief](https://parasadlakha.github.io/aeromargin/market-brief.html) · Code: [github.com/ParasAdlakha/aeromargin](https://github.com/ParasAdlakha/aeromargin) (mirror: [HarshitaAdlakha/aeromargin](https://github.com/HarshitaAdlakha/aeromargin))
 
+
+![Task 09: the textbook relief formula says MS +0.71 (pass); the free body says MS -0.08 (fail)](docs/slides/s4.png)
+
+*Task 09, one of ten. The beam is deeper at its free end, so the inclined flanges add shear instead of relieving it. GPT-5.6 Sol with reasoning off wrote that "both flange components point up", then subtracted them anyway, on all three trials.*
+
+**Contents:** [The hackathon](#the-hackathon) · [What it tests](#what-it-tests) · [Who it's for](#who-its-for-and-why-it-matters) · [Headline results](#headline-results) · [The tasks](#the-tasks) · [Grading](#grading) · [Architecture](#architecture) · [Transcript explorer](#transcript-explorer) · [Tests](#tests) · [How to run](#how-to-run) · [Results in detail](#results-in-detail) · [Hot take](#main-failure-mode-and-hot-take) · [Reproducibility](#reproducibility-checklist) · [Provenance](#provenance-and-licences) · [AI use](#ai-use) · [What we learned](#what-we-learned) · [Limitations and roadmap](#limitations-and-roadmap) · [Repository layout](#repository-layout) · [Thank you](#thank-you) · [Team](#team) · [References](#references) · [Licence](#licence)
+
+---
+
+## The hackathon
+
+| | |
+|---|---|
+| **Event** | [micro1 Eval Hackathon](https://www.hackerrank.com/event/micro1-eval-hackathon), run by [micro1](https://www.micro1.ai) on HackerRank. Global, online |
+| **Dates** | Challenge open 30 Oct 2026, 07:15 GMT; submissions close 9 Nov 2026, 05:15 GMT; winners announced 23 Nov 2026 |
+| **Brief** | *Find what AI can't do yet.* Find a real failure in a field you know well and turn it into a rigorous, reproducible eval of 5–10 tasks |
+| **Submission** | A ZIP of code (≤ 50 MB, with README), a video walkthrough (≤ 5 min) and a short description |
+| **Our field** | Aerospace engineering: airframe stress, fatigue, loads, flight performance, weight and balance |
+
+### What the judges asked for, and where it is in AeroMargin
+
+| Criterion (points) | Where it is |
+|---|---|
+| **Real-world relevance (15)** | [Who it's for](#who-its-for-and-why-it-matters); `who` and `failure_cost` in every `task.json`; [market brief](docs/market-brief.html) |
+| **Task design (20)** | [The tasks](#the-tasks): every graded key, unit and label stated in the prompt; all data given; standard methods cited; a reference `solution.py` per task |
+| **Grader reliability (20)** | [Grading](#grading): code-only graders, 133 validation checks (references accepted, 24 traps and 5 gaming patterns rejected), an oracle run, 17 unit tests, a transcript audit with documented tolerance fixes |
+| **Evidence of model limitations (15)** | [Headline results](#headline-results) and [task-by-task notes](#task-by-task-what-failed-and-why): 6 models, 3 trials each, a reasoning-effort ablation, a guided-prompt ablation, 12 robustness variants, transcript links, the [explorer](#transcript-explorer) |
+| **Reproducibility (15)** | [How to run](#how-to-run): stdlib-only Python, exact commands, model ids and served versions, settings, dates, cost and runtime, and a clean-room test of the ZIP |
+| **Human expertise and review (10)** | Traps chosen from practice, references derived by hand ([AI use](#ai-use)), tolerance changes justified from transcripts |
+| **Insight / hot take (5)** | [Recall versus re-derive](#main-failure-mode-and-hot-take) |
+
+Our own scoring against the rubric and the guide's pre-submission checklist is in [docs/SELF-REVIEW.md](docs/SELF-REVIEW.md).
+
 ---
 
 ## What it tests
@@ -42,7 +75,7 @@ Same 10 tasks, same prompt, same grader for every model. A trial passes when eve
 | **o3** (`o3`, reasoning_effort=medium) | 3 | 47% | 0.66 | 70% | 20% | 30%–70% | $1.69 | 44 s |
 | **gpt-5.4-mini** (`gpt-5.4-mini`, reasoning_effort=medium) | 3 | 63% | 0.79 | 80% | 40% | 60%–70% | $1.07 | 34 s |
 | **gemini-3.5-flash** (`gemini-3.5-flash`, provider defaults) — **partial: 6/30 trials** (provider quota) | 3 | 100% | 1.00 | 100% | 33% | 100%–100% | $0.54 | 38 s |
-| **gemma-4-31b** (`gemma-4-31b-it`, provider defaults) — **partial: 21/30 trials** (provider quota) | 3 | 33% | 0.61 | 50% | 12% | 14%–50% | $0.00 | 279 s |
+| **gemma-4-31b** (`gemma-4-31b-it`, provider defaults) | 3 | 40% | 0.65 | 60% | 20% | 30%–50% | $0.00 | 288 s |
 | **gpt-5.5@guided** (`gpt-5.5`, reasoning_effort=medium) | 3 | 100% | 1.00 | 100% | 100% | 100%–100% | $3.73 | 53 s |
 | **o3@guided** (`o3`, reasoning_effort=medium) | 3 | 60% | 0.76 | 90% | 30% | 50%–80% | $2.05 | 64 s |
 | **gpt-5.4-mini@guided** (`gpt-5.4-mini`, reasoning_effort=medium) | 3 | 70% | 0.85 | 80% | 50% | 60%–80% | $1.10 | 36 s |
@@ -57,10 +90,10 @@ Same 10 tasks, same prompt, same grader for every model. A trial passes when eve
 | 04-weight-balance-fuel-burn | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | – | 3/3 | 3/3 | 3/3 | 3/3 |
 | 05-rainflow-fatigue-life | 3/3 | 3/3 | 2/3 | 3/3 | 3/3 | 2/3 | 3/3 | 1/3 | 3/3 | – | 1/3 | 3/3 | 1/3 | 2/3 |
 | 06-takeoff-true-wind | 3/3 | 3/3 | 1/3 | 3/3 | 1/3 | 0/3 | 3/3 | 3/3 | 2/3 | – | 0/3 | 3/3 | 3/3 | 3/3 |
-| 07-gust-light-weight | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 | 3/3 | – | 0/2 | 3/3 | 2/3 | 2/3 |
-| 08-eccentric-mixed-bolt-group | 3/3 | 3/3 | 2/3 | 3/3 | 1/3 | 2/3 | 3/3 | 0/3 | 0/3 | – | 1/1 | 3/3 | 2/3 | 0/3 |
-| 09-inverted-taper-spar-web | 3/3 | 3/3 | 0/3 | 3/3 | 3/3 | 0/3 | 3/3 | 0/3 | 1/3 | – | – | 3/3 | 2/3 | 3/3 |
-| 10-z-section-unsymmetric-bending | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 | – | – | 3/3 | 1/3 | 2/3 |
+| 07-gust-light-weight | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 | 3/3 | – | 0/3 | 3/3 | 2/3 | 2/3 |
+| 08-eccentric-mixed-bolt-group | 3/3 | 3/3 | 2/3 | 3/3 | 1/3 | 2/3 | 3/3 | 0/3 | 0/3 | – | 2/3 | 3/3 | 2/3 | 0/3 |
+| 09-inverted-taper-spar-web | 3/3 | 3/3 | 0/3 | 3/3 | 3/3 | 0/3 | 3/3 | 0/3 | 1/3 | – | 3/3 | 3/3 | 2/3 | 3/3 |
+| 10-z-section-unsymmetric-bending | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 | 2/3 | 2/3 | – | 1/3 | 3/3 | 1/3 | 2/3 |
 
 *Pass* = every critical field correct on that trial. *pass@k* / *pass^k* = share of tasks passed on at least one / on all of k trials. Cost per full run = 10 tasks × 3 trials at list prices. API errors (provider quota) are excluded and shown as partial coverage. Generated by `python summarize.py` from the saved transcripts.
 <!-- RESULTS:END -->
@@ -130,6 +163,67 @@ After these changes no failure in the transcripts is a rounding or format artefa
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph T["tasks/&lt;id&gt;/"]
+      I["instruction.md<br/>(realistic prompt)"]
+      G["instruction_guided.md<br/>(ablation)"]
+      S["solution.py<br/>(reference)"]
+      J["task.json<br/>(field rules, why hard, sources)"]
+    end
+    I & G --> H["run_eval.py<br/>models × tasks × trials<br/>fresh single-turn call each"]
+    H -->|OpenAI · Gemini API| M[("models")]
+    M --> X[("transcripts/&lt;model&gt;/&lt;task&gt;/trial-n.json<br/>prompt · response · usage · settings")]
+    S & J --> GR["graders/grader.py<br/>last JSON · tolerances · critical fields"]
+    X --> SU["summarize.py<br/>re-grades every transcript"]
+    GR --> SU
+    SU --> R["results/summary.md · summary.json<br/>README table, slides, page, explorer"]
+    TR["graders/traps.py<br/>24 wrong answers"] --> V["validate_graders.py<br/>133 checks, no API"]
+    S & J & GR --> V
+    RB["robustness.py<br/>sign-reversed variants"] --> M
+```
+
+| Piece | What it does | Why it is built that way |
+|---|---|---|
+| `tasks/<id>/` | One folder per task in the Terminal-Bench / Harbor spirit: instruction, reference solution, grading rules | Reference and rules are kept out of the prompt. A unit test checks that no reference number appears in any prompt |
+| `run_eval.py` | Sends each prompt as a fresh request; retries API errors with backoff; `--oracle`, `--variant guided`, `--only-missing` | Clean state per trial; API failures are never scored as model failures |
+| `graders/grader.py` | Parses the **last** JSON, normalises numbers, labels and booleans, and applies per-field tolerances; partial credit plus critical fields | Grades the outcome, not the path; robust to formatting; rejects hedges |
+| `summarize.py` | Re-grades every saved transcript and writes the tables (and this README's results block) | Results can never drift from the grader, and judges can verify them without API keys |
+| `validate_graders.py`, `tests/` | Grader validation and unit tests | The grader is tested on right and wrong answers before any model runs |
+
+---
+
+## Transcript explorer
+
+**[Open the explorer](https://parasadlakha.github.io/aeromargin/app/)**: pick a task and a model and see every trial's final JSON next to the reference, which fields failed and why, and the full response. Links are shareable, for example [task 09, GPT-5.6 Sol with reasoning off](https://parasadlakha.github.io/aeromargin/app/#task=09-inverted-taper-spar-web&model=gpt-5.6-sol-none) or [task 01, o3](https://parasadlakha.github.io/aeromargin/app/#task=01-oblique-lug-fitting&model=o3). It is a static page built from the transcripts by `media/build_app.py`.
+
+![Transcript explorer: task 09, GPT-5.6 Sol with reasoning off, three failing trials with the graded fields](docs/img/explorer.png)
+
+---
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -v   # 17 unit tests, under a second
+python validate_graders.py                # 133 grader checks
+python run_eval.py --oracle               # 10/10 references through the full harness
+```
+
+The [unit tests](tests/test_grader.py) cover:
+- JSON extraction: the last block wins, braces inside strings, no answer
+- normalisation: thousands separators, Unicode minus, units, hedged labels
+- tolerances
+- task completeness: all four files per task
+- **every graded key named in both prompt variants**
+- **no reference value leaking into a prompt**
+- every reference passing and every trap failing
+- independent re-derivations of key numbers: the lug interaction, the tapered-web shear, the Z-section properties and the tension at its flange tip
+- the mirror symmetry of the robustness variants
+
+---
+
 ## How to run
 
 Requirements: **Python ≥ 3.10, standard library only** (tested on Python 3.14.6, Windows 11). No packages to install.
@@ -150,6 +244,14 @@ python robustness.py --models gpt-5.6-sol --trials 1                # 5. sign-re
 - Model settings live in [models.json](models.json): API model id, reasoning effort, and list prices used for the cost column. OpenAI models use `max_completion_tokens = 32000`; Gemini models use `maxOutputTokens = 32000`. Temperature is left at each provider's default (reasoning models do not accept other values).
 - **Cost and runtime.** One full run (10 tasks × 3 trials) costs about **$3–4** for gpt-5.6-sol or gpt-5.5 at medium effort, **$1–2** for gpt-5.4, o3 or gpt-5.4-mini, and **under $1** with reasoning off. Gemma ran on the free tier. With 16 parallel workers an OpenAI model takes **3–6 minutes**. Gemini Flash and Gemma take 30–60 minutes because of free-tier rate limits (use `--workers 2` and `--only-missing`). Exact per-model costs and latencies are in the results table.
 
+### Media
+
+Everything under `docs/` is generated from the results, so the numbers on the slides, page and videos match the graded transcripts. The tools are in [media/](media). Run `cd media && npm ci` once; you also need Chrome, ffmpeg and edge-tts ≥ 7.3.1.
+
+- `build_slides.py` → `docs/slides/slides.html`; `render.mjs` → slide PNGs; `deck.mjs` → [PDF](docs/slides/AeroMargin-slides.pdf) and PowerPoint (narration in the speaker notes)
+- `video.py` → the [4½-minute walkthrough](https://parasadlakha.github.io/aeromargin/video/AeroMargin-walkthrough.mp4), a [2-minute cut](https://parasadlakha.github.io/aeromargin/video/AeroMargin-2min.mp4) and a [silent captioned cut](https://parasadlakha.github.io/aeromargin/video/AeroMargin-silent-captioned.mp4). Narration is an AI voice (edge-tts, en-US-AvaNeural)
+- `build_page.py` → the [project page](https://parasadlakha.github.io/aeromargin/); `build_app.py` → the [transcript explorer](https://parasadlakha.github.io/aeromargin/app/); `build_social.py` + `render.mjs` → [LinkedIn images](docs/img); `shot.mjs` → README screenshots
+
 ---
 
 ## Results in detail
@@ -166,7 +268,7 @@ python robustness.py --models gpt-5.6-sol --trials 1                # 5. sign-re
 | gemini-3.5-flash | `gemini-3.5-flash` (served as `gemini-3.6-flash`) | provider defaults | Small / fast. **Partial**: the free-tier daily quota ran out after 6 valid trials (tasks 01–03) |
 | gemma-4-31b | `gemma-4-31b-it` (open weights, via the Gemini API) | provider defaults | Open model (free tier; see coverage in the table) |
 
-Not tested, and why: **Gemini 3.1 Pro** returned HTTP 429 (quota exhausted) on every request with our key. **NVIDIA-hosted open models** (DeepSeek, Kimi, gpt-oss, Llama, Mistral) returned 404/410 or timed out on 8 Nov; the harness supports them (`provider: nvidia`). API errors are excluded from scores, and the affected trials were re-run.
+Not tested, and why: **Gemini 3.1 Pro** returned HTTP 429 (quota exhausted) on every request with our key. **NVIDIA-hosted open models** (DeepSeek, Kimi, gpt-oss, Llama, Mistral) returned 404/410 or timed out on 8 Nov; the harness supports them (`provider: nvidia`). API errors are excluded from scores. Gemini Flash could not be re-run because its daily quota was exhausted, so it is reported as partial.
 
 <!-- TASKNOTES:START -->
 ### Task by task: what failed and why
@@ -178,11 +280,11 @@ Representative transcripts are linked; every trial is in `transcripts/<model>/<t
 - **03 CAS → TAS: the method was right, the arithmetic slipped.** GPT-5.6 Sol with reasoning off used the isothermal layer and the compressible relation correctly, but miscalculated the impact pressure (10,636 Pa instead of 10,499 Pa), giving Mach 0.826–0.835 and TAS 484–490 kt instead of 0.840 and 493 kt on all three trials ([transcript](transcripts/gpt-5.6-sol-none/03-cas-to-tas-stratosphere/trial-1.json)). This is the one task where a calculator tool would likely fix the failure.
 - **04 Load sheet: robust.** Only one GPT-5.4 mini trial failed (takeoff CG 29.19% vs 29.60%). No model used a constant fuel arm. The rounding fail we found here led to the ±0.2% MAC tolerance (see *Grader audit*).
 - **05 Fatigue: rainflow is where o3 breaks.** Two of three o3 trials count 10.5–11 cycles without a closed ground-air-ground cycle (largest cycle 14 ksi instead of −6 → 24 ksi), which understates damage by over 20× ([transcript](transcripts/o3/05-rainflow-fatigue-life/trial-2.json)).
-- **06 Takeoff: the METAR convention.** With reasoning off, GPT-5.5 (3/3 trials) and GPT-5.6 Sol (2/3) took the METAR wind as magnetic: 2.0 kt of headwind instead of 5.5 kt ([transcript](transcripts/gpt-5.5-none/06-takeoff-true-wind/trial-1.json)). No model missed the NOTAM, and every verdict on the school rule was right; the misses are in the distances.
-- **07 Gust: robust.** Every model saw that light weight gives the higher gust load factor. Misses: GPT-5.4 scaled V<sub>A</sub> wrongly once (112.6 kt), and one o3 trial gave no final JSON.
+- **06 Takeoff: the METAR convention.** With reasoning off, GPT-5.5 (3/3 trials) and GPT-5.6 Sol (2/3), and the open Gemma 4 (3/3), took the METAR wind as magnetic: 2.0 kt of headwind instead of 5.5 kt ([transcript](transcripts/gpt-5.5-none/06-takeoff-true-wind/trial-1.json)). No model missed the NOTAM, and every verdict on the school rule was right; the misses are in the distances.
+- **07 Gust: robust.** Every model saw that light weight gives the higher gust load factor. Misses: GPT-5.4 scaled V<sub>A</sub> wrongly once (112.6 kt), one o3 trial gave no final JSON, and Gemma 4 inflated both gust load factors on all three trials (4.06 and 5.37 instead of 3.29 and 4.08), consistent with leaving out the gust alleviation factor.
 - **08 Bolt group: most-loaded ≠ critical.** o3 (0/3) and GPT-5.4 mini (0/3) compute the area-weighted centroid correctly, then declare the large corner bolt L1 critical without checking the small R1/R3 bolts, whose margin is lowest ([transcript](transcripts/gpt-5.4-mini/08-eccentric-mixed-bolt-group/trial-1.json)).
 - **09 Tapered beam: the sign.** o3 (0/3) either ignored the taper (6,000 lbf) or applied the textbook relief (4,200 lbf). GPT-5.6 Sol with reasoning off applied the relief on all three trials ([transcript](transcripts/gpt-5.6-sol-none/09-inverted-taper-spar-web/trial-1.json)). Guided prompts fix most of these: GPT-5.4 mini goes from 1/3 to 3/3 and o3 from 0/3 to 2/3.
-- **10 Z-section: mostly right.** Misses flip every sign (o3) or use the wrong I<sub>x</sub> (GPT-5.4 mini, 0.9 instead of 0.675 in⁴), which halves the peak stress.
+- **10 Z-section: mostly right.** Misses flip every sign (o3), use the wrong I<sub>x</sub> (GPT-5.4 mini, 0.9 instead of 0.675 in⁴, which halves the peak stress), or put the peak in the wrong place (Gemma 4, one trial: +22,222 psi at the flange tip and −11,111 at the corner, the two values swapped).
 <!-- TASKNOTES:END -->
 
 ### Ablation 1: reasoning effort
@@ -203,7 +305,7 @@ The same model, the same prompts, only `reasoning_effort` changed (see the resul
 
 ## Main failure mode and hot take
 
-**The failure is not arithmetic. It is the reflex of using the textbook default.** Across models, the wrong answers are the specific shortcuts in our trap list, reproduced almost exactly: Ra² + Rtr² = 1 instead of the 1.6 exponent (MS +0.055, in 20 of the 22 failing lug trials), V − (M/h)Σtan α regardless of which way the beam tapers (4,200 lbf), the METAR wind used as magnetic (2 kt), the most-loaded bolt taken as critical. One o3 transcript states that "Bruhn D1 gives an elliptical interaction", which it does not.
+**The failure is not arithmetic. It is the reflex of using the textbook default.** Across models, the wrong answers are the specific shortcuts in our trap list, reproduced almost exactly: Ra² + Rtr² = 1 instead of the 1.6 exponent (MS +0.055, in 20 of the 22 failing lug trials), V − (M/h)Σtan α regardless of which way the beam tapers (4,200 lbf), the METAR wind used as magnetic (2 kt), the most-loaded bolt taken as critical. All three o3 lug transcripts state that Bruhn D1 gives an "elliptical interaction". It does not.
 
 **Hot take: in this domain, the gap between a passing model and a failing one is whether it *re-derives* or *recalls*.** The same model (gpt-5.6-sol) is 100% correct when allowed to reason, and with reasoning off it fails at least two of three trials on four of the ten tasks, choosing the familiar formula with total confidence. For engineering teams that means two things. A model's score on textbook-style questions says little about its use as a checker's assistant: what matters is the reasoning setting it is run at. And the cheapest guard is procedural: require the model to state the governing case and the direction of every load before any number, which is exactly what a senior checker asks of a junior engineer. Closing the gap for good needs training data where the textbook case is reversed, the kind of variants `robustness.py` generates.
 
@@ -228,18 +330,35 @@ The same model, the same prompts, only `reasoning_effort` changed (see the resul
 
 We used an AI coding assistant to draft the harness, the grader, the validation script, the HTML pages and parts of this README, and to search the literature. The tasks are ours. We chose each trap because it is a mistake we know practitioners make, and we wrote or checked every reference solution by hand: free-body diagrams for tasks 01, 08 and 09, the Z-section properties for task 10 (I<sub>x</sub> = 0.675, I<sub>y</sub> = 0.0667, I<sub>xy</sub> = 0.15 in⁴), and the atmosphere, compressible-flow and rainflow numbers for tasks 03 and 05, against independent calculations. We read every failing transcript before writing the analysis, and that reading is what led to the three tolerance changes listed under *Grader audit*. Where a draft task turned out ambiguous or too easy we rewrote it and say so above (the "guided" prompts are the first drafts).
 
-## Limitations
+## What we learned
+
+- **Our first drafts were too easy.** The first version of every prompt named the method ("use the oblique-load interaction curve of Bruhn D1.8"), and the newest models scored 100%. What made the eval measure expertise was removing the method from the prompt without removing any information needed to answer. We kept the drafts as the guided ablation.
+- **Choose tasks for the trap, then confirm.** We picked each trap because practitioners make that mistake. The models confirmed some (the lug exponent, the METAR wind, the Resal sign) and not others (no model used a constant fuel arm or missed the NOTAM). We report both.
+- **Read the transcripts before trusting the grader.** Three "failures" were rounding: a CG rounded to 0.1 in, a headwind rounded to a whole knot, a fatigue stress rounded to 3 significant figures (life goes as stress to the 6.7th power). We widened those tolerances and documented why.
+- **A wrong answer can contradict its own working.** With reasoning off, GPT-5.6 Sol correctly wrote that both flange components point upward, then subtracted them, because the formula it remembered subtracts. The model *knew* the physics and still wrote the textbook line.
+- **Provider limits are part of reproducibility.** Gemini 3.1 Pro was quota-blocked, Gemini Flash's free daily quota ran out mid-run, and NVIDIA's hosted open models had been retired. So the harness never scores API errors, and `--only-missing` resumes a run.
+
+## Limitations and roadmap
 
 - Ten tasks is a small sample. One trial more or less moves a model by 3 percentage points, so treat differences under ~10 points as noise.
 - Only one provider's frontier models could be run at medium/high effort (Gemini 3.1 Pro was quota-blocked), so "frontier" here means OpenAI's frontier plus Gemini Flash and Gemma.
 - Single-turn tasks: no tools, no code execution. Several failures (e.g. the arithmetic slip in task 03 with reasoning off) would likely disappear with a calculator tool; the method errors (01, 06, 09) would not.
 - At medium effort the newest models saturate this set. The next version needs more reversed-default tasks per area, which `robustness.py` shows how to generate.
 
+**Roadmap**
+
+1. **Scale the traps.** Generate number- and configuration-varied instances of every task, not only 09 and 10, so that each failure mode has dozens of graded variants (GSM-Symbolic style).
+2. **Harder tiers.** Multi-step work packages that chain several checks, such as a complete fitting substantiation (lug, pin bending, bushing, attachment bolts), where the governing case only appears at the end.
+3. **Agentic version.** Give the model a calculator and the raw documents (a manual table, a METAR, a NOTAM file) in a Harbor-style container, and grade the stress report it writes.
+4. **More providers.** Re-run Gemini 3.1 Pro, Gemini Flash and hosted open models when quota allows (`--only-missing` resumes).
+5. **Expert calibration.** Have two independent stress engineers solve each task blind, and report their agreement alongside the models'.
+
 ## Repository layout
 
 ```
 aeromargin/
 ├── README.md               this file
+├── tests/                unit tests (stdlib unittest)
 ├── tasks/<id>/             instruction.md (prompt), instruction_guided.md (ablation), solution.py (reference), task.json (grading rules, why hard, sources)
 ├── graders/grader.py       code-based grader (parse last JSON, tolerances, partial credit, critical fields)
 ├── graders/traps.py        24 deliberately wrong answers, each from a known mistake
@@ -250,11 +369,59 @@ aeromargin/
 ├── models.json             model ids, reasoning settings, list prices
 ├── results/                summary.md, summary.json, grader_validation.json, robustness.json, run logs
 ├── transcripts/            every trial: prompt, full response, usage, settings, grade
-├── docs/                   project page, research and market briefs, slides
+├── docs/                   project page, transcript explorer (app/), briefs, slides, videos, images, submission texts, self-review
+├── media/                  builders for slides, page, explorer, videos and social images (not needed to run the eval)
+├── package_zip.py          builds the submission ZIP (no keys, no media, under 50 MB)
 ├── requirements.txt        (none: standard library only)
 └── .env.example            key names only
 ```
 
-## Authors
+## Thank you
 
-**Paras Adlakha** and **Harshita Adlakha**. Questions and corrections are welcome as GitHub issues.
+To **micro1** for an eval hackathon that asks the right question, where models still fall short in real expert work, and for a participant guide that is itself a good piece of eval methodology. To **HackerRank** for hosting the event. And to Bruhn, Megson and Niu, whose textbooks sit on every stress engineer's desk and whose methods every task here rests on.
+
+---
+
+## Team
+
+| | |
+|---|---|
+| **Paras Adlakha** | Aerospace systems engineer · [github.com/ParasAdlakha](https://github.com/ParasAdlakha) |
+| **Harshita Adlakha** | [github.com/HarshitaAdlakha](https://github.com/HarshitaAdlakha) |
+
+A mirror lives at [github.com/HarshitaAdlakha/aeromargin](https://github.com/HarshitaAdlakha/aeromargin). Questions and corrections are welcome as GitHub issues.
+
+## References
+
+**Eval design**
+- Anthropic. [Demystifying evals for AI agents](https://www.anthropic.com/research/demystifying-evals-for-ai-agents). The hackathon's recommended reading.
+- micro1. *Find What AI Can't Do Yet: A Participant's Guide to the micro1 Eval Hackathon*. 2026.
+- Jimenez et al. SWE-bench, 2024, and OpenAI, SWE-bench Verified, 2024. Terminal-Bench team, Terminal-Bench 2.0 and the Harbor task format, 2025. Yao et al. τ-bench (pass^k), 2024.
+- Mirzadeh et al. [GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models](https://consensus.app/papers/details/cd3618ac46e15447b9a943510708dc4b/). 2024.
+- Song et al. [Large Language Model Reasoning Failures](https://consensus.app/papers/details/a42b2be99eaa508f924c859bb3e684e0/). *TMLR*, 2026.
+- Yagubyan. [The Coin Flip Judge? Reliability and Bias in LLM-as-a-Judge Evaluation](https://consensus.app/papers/details/88dc4cd88c44598a90a595dd43372d92/). 2026.
+- Norman et al. [Reliability without Validity: A Systematic, Large-Scale Evaluation of LLM-as-a-Judge](https://consensus.app/papers/details/c1e804dd3c1d5f39bab35205905f683f/). 2026.
+- Chang et al. [A Survey on Evaluation of Large Language Models](https://consensus.app/papers/details/c5c5431d8668551da76c9c3d9f71db77/). *ACM TIST*, 2023.
+
+**Aerospace benchmarks**
+- MITRE and FAA. [ALUE](https://www.executivegov.com/articles/mitre-faa-alue-benchmark-aerospace-llm-evaluation). 2025.
+- [Pre-Flight: A Benchmark for Evaluating LLMs on Aviation Operational Knowledge](https://arxiv.org/abs/2607.01829). arXiv 2607.01829, 2026.
+- [Development of an Aerospace Engineering Evaluation Set for LLM Benchmarking](https://arc.aiaa.org/doi/10.2514/6.2025-0702). AIAA SciTech, 2025.
+- [FEM-Bench](https://arxiv.org/abs/2512.20732). arXiv 2512.20732. [LOGIC](https://arxiv.org/abs/2610.07580). arXiv 2610.07580.
+
+**Engineering**
+- Bruhn, E. F. *Analysis and Design of Flight Vehicle Structures*. Jacobs, 1973. Sections A5, A11, C2, D1 and D1.8.
+- Megson, T. H. G. *Aircraft Structures for Engineering Students*, 6th ed. Butterworth-Heinemann, 2017.
+- Niu, M. C. Y. *Airframe Structural Design* and *Airframe Stress Analysis and Sizing*.
+- Schijve, J. *Fatigue of Structures and Materials*, 2nd ed. Springer, 2009. ASTM E1049-85 (2017), *Standard Practices for Cycle Counting in Fatigue Analysis*.
+- Pratt, K. G. and Walker, W. G. NACA Report 1206, 1954 (the gust alleviation factor).
+- ICAO Doc 7488/3, *Manual of the ICAO Standard Atmosphere*; ISO 2533:1975. ICAO Annex 3 and WMO-No. 306 (METAR).
+- 14 CFR 23.341 (before Amendment 23-64), 25.303 and 25.625. FAA-H-8083-1B, *Aircraft Weight and Balance Handbook*. FAA-H-8083-25, *Pilot's Handbook of Aeronautical Knowledge*. FAA *Aeronautical Information Manual*, chapter 7.
+
+**Market context**
+- Molex. [The State of Design Engineering in Aerospace and Defense](https://www.molex.com/en-us/industries-applications/defense-connectors/the-state-of-design-engineering-in-aerospace-and-defense). 2025.
+- FAA. Roadmap for Artificial Intelligence Safety Assurance, 2024. EASA. [Artificial Intelligence Roadmap 2.0](https://www.easa.europa.eu/en/node/137921), 2023.
+
+## Licence
+
+Code and documentation: [MIT](LICENSE), © 2026 Paras Adlakha and Harshita Adlakha. Model outputs in `transcripts/` were generated through the providers' APIs under their terms of service. The cited textbooks and standards are referenced, not reproduced.
